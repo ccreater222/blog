@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - master
+      - config
 
 # 自定义环境变量
 
