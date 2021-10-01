@@ -1,3 +1,4 @@
+date: 2020-03-20
 categories:
 - 杂
 title:   vpn搭建

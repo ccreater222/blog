@@ -1,3 +1,4 @@
+date: 2020-04-01
 categories:
 - cve复现
 title: CTFd任意密码重置复现

@@ -1,3 +1,4 @@
+date: 2020-07-09
 categories:
 - web
 title: bypass CORS

@@ -1,3 +1,4 @@
+date: 2020-05-20
 categories:
 - web
 title: bypass_csp
