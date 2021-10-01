@@ -14,32 +14,32 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-				with:
-					ref: config
+        with:
+          ref: config
       - name: Checkout
         uses: actions/checkout@v2
-				with:
-					ref: master
-					path: source
+        with:
+          ref: master
+          path: source
       - name: Checkout
         uses: actions/checkout@v2
-				with:
-					ref: website
-					path: public
-			- uses: actions/setup-node@v2
-			  with:
-			    node-version: '14'
-			    cache: 'npm'
-			- run: npm install
+        with:
+          ref: website
+          path: public
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+          cache: 'npm'
+      - run: npm install
 
 
       # 生成并部署
       - name: Deploy
         run: |
           npx hexo generate
-					cd public 
-					git config --global user.name 'ccreater222'
-					git config --global user.email 'ccreater222@users.noreply.github.com'
-					git add *
-					git commit -am "Automated generation"
-					git push origin website
+          cd public 
+          git config --global user.name 'ccreater222'
+          git config --global user.email 'ccreater222@users.noreply.github.com'
+          git add *
+          git commit -am "Automated generation"
+          git push origin website
