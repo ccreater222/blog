@@ -1,6 +1,7 @@
 date: 2021-10-04
 categories:
 - web
+- 比赛
 tags:
 - web
 - ctf
