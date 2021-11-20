@@ -71,6 +71,75 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-某misc" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/02/19/%E6%9F%90misc/" class="article-date">
+  <time class="dt-published" datetime="2020-02-19T16:00:00.000Z" itemprop="datePublished">2020-02-20</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%81%9A%E9%A2%98%E7%AC%94%E8%AE%B0/">做题笔记</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2020/02/19/%E6%9F%90misc/">某misc</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="不知道哪里的misc"><a href="#不知道哪里的misc" class="headerlink" title="不知道哪里的misc"></a>不知道哪里的misc</h1><p>题目给了一个压缩包</p>
+<p>里面有一个加密的视频文件和未加密的图片</p>
+<p><img src="https://i.loli.net/2020/02/19/ptInrs6axclk12u.png" alt="image105"></p>
+<p>想着图片会不会有提示,用hxd打开发现末尾果然有提示</p>
+<p>kobe code</p>
+<p><img src="https://i.loli.net/2020/02/19/mVqDzgoHdyOWBnT.png" alt="image211"></p>
+<p>得到密码:<code>OAEBEYTKNRBANB</code>,成功拿到视频文件</p>
+<p>但是提示文件无法打开,用binwalk啥的弄了一会,发现里面没有藏啥</p>
+<p>于是换了个思路,猜测这题是要让我们修复mp4文件?头大</p>
+<blockquote>
+<p>一个MP4文件首先会有且只有一个“ftyp”类型的box，作为MP4格式的标志并包含关于文件的一些信息；之后会有且只有一个“moov”类型的box（Movie Box），它是一种container box，子box包含了媒体的metadata信息；MP4文件的媒体数据包含在“mdat”类型的box（Midia Data Box）中，该类型的box也是container box，可以有很多个，也可以没有（当媒体数据全部引用其他文件时），媒体数据的结构由metadata进行描述。</p>
+</blockquote>
+<p><img src="https://i.loli.net/2020/02/19/NVA3PtERXBqfwcd.png" alt="image622"></p>
+<p>图中方框即为第一个box的head,原本应该是<code>ftyp(0x66747970)</code>而这里确实<code>66459707</code>,位置反了</p>
+<p>恢复脚本</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&#x27;NBA.mp4&#x27;</span>, <span class="string">&#x27;rb&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">    keydata =f.read()</span><br><span class="line">t= keydata.encode(<span class="string">&quot;hex&quot;</span>)</span><br><span class="line">l=<span class="built_in">len</span>(t)</span><br><span class="line">t2=<span class="string">&quot;&quot;</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0</span>,l,<span class="number">2</span>):</span><br><span class="line">	a=t[i]</span><br><span class="line">	b=t[i+<span class="number">1</span>]</span><br><span class="line">	t2+=b</span><br><span class="line">	t2+=a</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span> t2[:<span class="number">100</span>]</span><br><span class="line">t2=t2.decode(<span class="string">&quot;hex&quot;</span>)</span><br><span class="line">f2 = <span class="built_in">open</span>(<span class="string">&#x27;NBA2.mp4&#x27;</span>, <span class="string">&#x27;wb&#x27;</span>)</span><br><span class="line">f2.write(t2)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>等脚本跑完后成功恢复原来的视频文件</p>
+<p>视频隐写通常把内容存储在视频中的某个图片,我们用 ffmpeg ,将视频分离成图片</p>
+<p><code>ffmpeg -i NBA2.mp4 -f image2 image%d.jpg</code></p>
+<p>一张一张看过去,我们发现,在第3028张突然全黑了</p>
+<p><img src="https://i.loli.net/2020/02/20/Q9dsOuiVGFgwAcm.png" alt="image1136"></p>
+<p>调整一下图片的对比对,跑出一个二维码</p>
+<p><img src="https://i.loli.net/2020/02/20/aE3PpqcrJzn852V.png" alt="image1223"></p>
+<p><code>flag&#123;I_l0v3_pl4ying_b4sk3tb4ll&#125;</code></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://site.ccreater.top/2020/02/19/%E6%9F%90misc/" data-id="ckw7zp4150082ftn7cc5q4z6d" data-title="某misc" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ctf/" rel="tag">ctf</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/misc/" rel="tag">misc</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-2020hgame" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2020/02/17/2020hgame/" class="article-date">
@@ -354,7 +423,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://site.ccreater.top/2020/02/17/2020hgame/" data-id="ckw63s4k7000aflold5a6h1ah" data-title="2020hgame" class="article-share-link">Share</a>
+      <a data-url="https://site.ccreater.top/2020/02/17/2020hgame/" data-id="ckw7zp3x1000aftn73gcd8mtq" data-title="2020hgame" class="article-share-link">Share</a>
       
       
       
@@ -481,7 +550,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://site.ccreater.top/2020/02/17/js%E5%8E%9F%E5%9E%8B%E9%93%BE%E6%B1%A1%E6%9F%93/" data-id="ckw63s4lx0053flolgeeldt4d" data-title="js原型链污染" class="article-share-link">Share</a>
+      <a data-url="https://site.ccreater.top/2020/02/17/js%E5%8E%9F%E5%9E%8B%E9%93%BE%E6%B1%A1%E6%9F%93/" data-id="ckw7zp3zj0053ftn76cp3gcfa" data-title="js原型链污染" class="article-share-link">Share</a>
       
       
       
@@ -561,7 +630,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://site.ccreater.top/2020/02/17/%E9%81%BF%E5%85%8Drm-rf-%E7%9A%84%E6%82%B2%E6%83%A8%E5%91%BD%E8%BF%90/" data-id="ckw63s4nn00b0flol89wdgr9p" data-title="避免rm -rf *的悲惨命运" class="article-share-link">Share</a>
+      <a data-url="https://site.ccreater.top/2020/02/17/%E9%81%BF%E5%85%8Drm-rf-%E7%9A%84%E6%82%B2%E6%83%A8%E5%91%BD%E8%BF%90/" data-id="ckw7zp41b008jftn799n39w75" data-title="避免rm -rf *的悲惨命运" class="article-share-link">Share</a>
       
       
       
@@ -680,7 +749,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://site.ccreater.top/2020/02/16/vulnstackATT&CK%E7%BA%A2%E9%98%9F%E8%AF%84%E4%BC%B0%E9%9D%B6%E5%9C%BA1%E6%B8%97%E9%80%8F%E8%AE%B0%E5%BD%95/" data-id="ckw63s4mv006yflolfm4k33l4" data-title="vulnstackATT&amp;CK红队评估靶场1渗透记录" class="article-share-link">Share</a>
+      <a data-url="https://site.ccreater.top/2020/02/16/vulnstackATT&CK%E7%BA%A2%E9%98%9F%E8%AF%84%E4%BC%B0%E9%9D%B6%E5%9C%BA1%E6%B8%97%E9%80%8F%E8%AE%B0%E5%BD%95/" data-id="ckw7zp40p0072ftn7crlu6rse" data-title="vulnstackATT&amp;CK红队评估靶场1渗透记录" class="article-share-link">Share</a>
       
       
       
@@ -811,7 +880,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://site.ccreater.top/2020/02/16/%E5%9F%9F%E6%B8%97%E9%80%8F/" data-id="ckw63s4mz007fflola81agfjn" data-title="域渗透" class="article-share-link">Share</a>
+      <a data-url="https://site.ccreater.top/2020/02/16/%E5%9F%9F%E6%B8%97%E9%80%8F/" data-id="ckw7zp40x007jftn7c0zjbz9x" data-title="域渗透" class="article-share-link">Share</a>
       
       
       
@@ -914,7 +983,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://site.ccreater.top/2020/02/12/phpcmsv9.6.0SQL%E6%B3%A8%E5%85%A5/" data-id="ckw63s4m7005lflol6hep1x3m" data-title="phpcmsv9.6.0SQL注入" class="article-share-link">Share</a>
+      <a data-url="https://site.ccreater.top/2020/02/12/phpcmsv9.6.0SQL%E6%B3%A8%E5%85%A5/" data-id="ckw7zp3zu005lftn747zydvhj" data-title="phpcmsv9.6.0SQL注入" class="article-share-link">Share</a>
       
       
       
@@ -992,7 +1061,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://site.ccreater.top/2020/02/12/phpcmsv9.6.1%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/" data-id="ckw63s4m8005oflol16ye6aut" data-title="phpcmsv9.6.1任意文件读取" class="article-share-link">Share</a>
+      <a data-url="https://site.ccreater.top/2020/02/12/phpcmsv9.6.1%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/" data-id="ckw7zp3zv005oftn7ep22daqt" data-title="phpcmsv9.6.1任意文件读取" class="article-share-link">Share</a>
       
       
       
@@ -1087,7 +1156,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://site.ccreater.top/2020/02/11/phpcms960%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E5%A4%8D%E7%8E%B0/" data-id="ckw63s4m6005hflol71gtggs1" data-title="phpcms960任意文件上传复现" class="article-share-link">Share</a>
+      <a data-url="https://site.ccreater.top/2020/02/11/phpcms960%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E5%A4%8D%E7%8E%B0/" data-id="ckw7zp3zs005hftn7cjqz243q" data-title="phpcms960任意文件上传复现" class="article-share-link">Share</a>
       
       
       
@@ -1143,80 +1212,11 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://site.ccreater.top/2020/02/10/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98/" data-id="ckw63s4nc008bflol22zn1fvv" data-title="记一次漏洞挖掘" class="article-share-link">Share</a>
+      <a data-url="https://site.ccreater.top/2020/02/10/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98/" data-id="ckw7zp419008fftn79gzq01ub" data-title="记一次漏洞挖掘" class="article-share-link">Share</a>
       
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98/" rel="tag">漏洞挖掘</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-DedeCMS 5.7 plusguestbook.php注入漏洞" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2020/02/09/DedeCMS%205.7%20plusguestbook.php%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="article-date">
-  <time class="dt-published" datetime="2020-02-09T16:00:00.000Z" itemprop="datePublished">2020-02-10</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/cve%E5%A4%8D%E7%8E%B0/">cve复现</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2020/02/09/DedeCMS%205.7%20plusguestbook.php%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/">DedeCMS 5.7 plusguestbook.php注入漏洞</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <h1 id="DedeCMS-5-7-plus-guestbook-php-注入漏洞"><a href="#DedeCMS-5-7-plus-guestbook-php-注入漏洞" class="headerlink" title="DedeCMS 5.7 plus/guestbook.php 注入漏洞"></a>DedeCMS 5.7 plus/guestbook.php 注入漏洞</h1><h2 id="利用条件"><a href="#利用条件" class="headerlink" title="利用条件"></a>利用条件</h2><p>漏洞成功需要条件：</p>
-<ol>
-<li>php magic_quotes_gpc=off</li>
-<li>漏洞文件存在 plus/guestbook.php dede_guestbook 表当然也要存在。</li>
-</ol>
-<h2 id="漏洞复现"><a href="#漏洞复现" class="headerlink" title="漏洞复现"></a>漏洞复现</h2><p>poc:<code>www.xxx.com/plus/guestbook.php?action=admin&amp;job=editok&amp;msg=sebug&#39;&amp;id=存在的留言ID</code></p>
-<p><code>/plus/guestbook.php</code>中为对身份进行验证:</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(<span class="variable">$action</span>==<span class="string">&#x27;admin&#x27;</span>)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">include_once</span>(dirname(<span class="keyword">__FILE__</span>).<span class="string">&#x27;/guestbook/edit.inc.php&#x27;</span>);</span><br><span class="line">    <span class="keyword">exit</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><code>/plus/guestbook/edit.inc.php</code></p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(<span class="variable">$job</span>==<span class="string">&#x27;editok&#x27;</span>)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="variable">$remsg</span> = trim(<span class="variable">$remsg</span>);</span><br><span class="line">    <span class="keyword">if</span>(<span class="variable">$remsg</span>!=<span class="string">&#x27;&#x27;</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">//管理员回复不过滤HTML</span></span><br><span class="line">        <span class="keyword">if</span>(<span class="variable">$g_isadmin</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="variable">$msg</span> = <span class="string">&quot;&lt;div class=\\&#x27;rebox\\&#x27;&gt;&quot;</span>.<span class="variable">$msg</span>.<span class="string">&quot;&lt;/div&gt;\n&quot;</span>.<span class="variable">$remsg</span>; </span><br><span class="line">            <span class="comment">//$remsg &lt;br&gt;&lt;font color=red&gt;管理员回复：&lt;/font&gt;</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">        &#123;</span><br><span class="line">            <span class="variable">$row</span> = <span class="variable">$dsql</span>-&gt;GetOne(<span class="string">&quot;SELECT msg From `#@__guestbook` WHERE id=&#x27;<span class="subst">$id</span>&#x27; &quot;</span>);</span><br><span class="line">            <span class="variable">$oldmsg</span> = <span class="string">&quot;&lt;div class=\\&#x27;rebox\\&#x27;&gt;&quot;</span>.addslashes(<span class="variable">$row</span>[<span class="string">&#x27;msg&#x27;</span>]).<span class="string">&quot;&lt;/div&gt;\n&quot;</span>;</span><br><span class="line">            <span class="variable">$remsg</span> = trimMsg(cn_substrR(<span class="variable">$remsg</span>, <span class="number">1024</span>), <span class="number">1</span>);</span><br><span class="line">            <span class="variable">$msg</span> = <span class="variable">$oldmsg</span>.<span class="variable">$remsg</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; </span><br><span class="line">	<span class="variable">$msg</span> = HtmlReplace(<span class="variable">$msg</span>, -<span class="number">1</span>);</span><br><span class="line">    <span class="variable">$dsql</span>-&gt;ExecuteNoneQuery(<span class="string">&quot;UPDATE `#@__guestbook` SET `msg`=&#x27;<span class="subst">$msg</span>&#x27;, `posttime`=&#x27;&quot;</span>.time().<span class="string">&quot;&#x27; WHERE id=&#x27;<span class="subst">$id</span>&#x27; &quot;</span>);</span><br><span class="line">    ShowMsg(<span class="string">&quot;成功更改或回复一条留言！&quot;</span>, <span class="variable">$GUEST_BOOK_POS</span>);</span><br><span class="line">    <span class="keyword">exit</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>其中:</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$msg</span> = HtmlReplace(<span class="variable">$msg</span>, -<span class="number">1</span>);</span><br><span class="line">    <span class="variable">$dsql</span>-&gt;ExecuteNoneQuery(<span class="string">&quot;UPDATE `#@__guestbook` SET `msg`=&#x27;<span class="subst">$msg</span>&#x27;, `posttime`=&#x27;&quot;</span>.time().<span class="string">&quot;&#x27; WHERE id=&#x27;<span class="subst">$id</span>&#x27; &quot;</span>);</span><br></pre></td></tr></table></figure>
-
-<p>dedecms中的<code>common.inc.php</code>,有这样的一段代码</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">foreach</span>(<span class="keyword">Array</span>(<span class="string">&#x27;_GET&#x27;</span>,<span class="string">&#x27;_POST&#x27;</span>,<span class="string">&#x27;_COOKIE&#x27;</span>) <span class="keyword">as</span> <span class="variable">$_request</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">foreach</span>(<span class="variable">$$_request</span> <span class="keyword">as</span> <span class="variable">$_k</span> =&gt; <span class="variable">$_v</span>) </span><br><span class="line">		&#123;</span><br><span class="line">			<span class="keyword">if</span>(<span class="variable">$_k</span> == <span class="string">&#x27;nvarname&#x27;</span>) $&#123;<span class="variable">$_k</span>&#125; = <span class="variable">$_v</span>;</span><br><span class="line">			<span class="keyword">else</span> $&#123;<span class="variable">$_k</span>&#125; = _RunMagicQuotes(<span class="variable">$_v</span>);</span><br><span class="line">		&#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-
-<p>它将<code>_GET</code>,<code>_POST</code>,<code>_COOKIE</code>中的变量放出来,而<code>_RunMagicQuotes</code></p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">_RunMagicQuotes</span>(<span class="params">&amp;<span class="variable">$svar</span></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(!get_magic_quotes_gpc())</span><br><span class="line">    &#123;</span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="variable">$svar</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<p>所以<code>magic_quotes_gpc=off</code>的情况下便会引起sql注入</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p> <a target="_blank" rel="noopener" href="https://www.seebug.org/vuldb/ssvid-89599">https://www.seebug.org/vuldb/ssvid-89599</a> </p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://site.ccreater.top/2020/02/09/DedeCMS%205.7%20plusguestbook.php%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" data-id="ckw63s4kq001mflol9q999o3c" data-title="DedeCMS 5.7 plusguestbook.php注入漏洞" class="article-share-link">Share</a>
-      
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cve%E5%A4%8D%E7%8E%B0/" rel="tag">cve复现</a></li></ul>
 
     </footer>
   </div>
@@ -1261,7 +1261,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/LFI/" style="font-size: 10px;">LFI</a> <a href="/tags/RCE/" style="font-size: 10px;">RCE</a> <a href="/tags/SpEL/" style="font-size: 10px;">SpEL</a> <a href="/tags/ctf/" style="font-size: 20px;">ctf</a> <a href="/tags/ctf-wp/" style="font-size: 12px;">ctf,wp</a> <a href="/tags/cve%E5%A4%8D%E7%8E%B0/" style="font-size: 16px;">cve复现</a> <a href="/tags/django/" style="font-size: 10px;">django</a> <a href="/tags/htb/" style="font-size: 10px;">htb</a> <a href="/tags/java/" style="font-size: 12px;">java</a> <a href="/tags/js/" style="font-size: 10px;">js</a> <a href="/tags/misc/" style="font-size: 10px;">misc</a> <a href="/tags/php/" style="font-size: 12px;">php</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/web/" style="font-size: 18px;">web</a> <a href="/tags/wp/" style="font-size: 20px;">wp</a> <a href="/tags/xss/" style="font-size: 10px;">xss</a> <a href="/tags/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F/" style="font-size: 10px;">内网渗透</a> <a href="/tags/%E5%87%BA%E9%A2%98%E7%AC%94%E8%AE%B0/" style="font-size: 10px;">出题笔记</a> <a href="/tags/%E5%9F%9F%E6%B8%97%E9%80%8F/" style="font-size: 12px;">域渗透</a> <a href="/tags/%E5%A4%8D%E7%8E%B0/" style="font-size: 10px;">复现</a> <a href="/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" style="font-size: 10px;">学习笔记</a> <a href="/tags/%E5%B0%8F%E5%B7%A5%E5%85%B7/" style="font-size: 14px;">小工具</a> <a href="/tags/%E5%B7%A5%E5%85%B7/" style="font-size: 10px;">工具</a> <a href="/tags/%E6%9D%82/" style="font-size: 10px;">杂</a> <a href="/tags/%E6%AF%94%E8%B5%9B/" style="font-size: 10px;">比赛</a> <a href="/tags/%E6%B8%97%E9%80%8F/" style="font-size: 10px;">渗透</a> <a href="/tags/%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98/" style="font-size: 10px;">漏洞挖掘</a> <a href="/tags/%E7%BA%BF%E4%B8%8A%E8%B5%9B/" style="font-size: 10px;">线上赛</a> <a href="/tags/%E7%BC%96%E7%A8%8B/" style="font-size: 12px;">编程</a> <a href="/tags/%E8%AE%B0%E5%BD%95/" style="font-size: 10px;">记录</a> <a href="/tags/%E9%9D%B6%E5%9C%BA/" style="font-size: 10px;">靶场</a>
+      <a href="/tags/LFI/" style="font-size: 10px;">LFI</a> <a href="/tags/RCE/" style="font-size: 10px;">RCE</a> <a href="/tags/SpEL/" style="font-size: 10px;">SpEL</a> <a href="/tags/ctf/" style="font-size: 20px;">ctf</a> <a href="/tags/ctf-wp/" style="font-size: 12px;">ctf,wp</a> <a href="/tags/cve%E5%A4%8D%E7%8E%B0/" style="font-size: 16px;">cve复现</a> <a href="/tags/django/" style="font-size: 10px;">django</a> <a href="/tags/htb/" style="font-size: 10px;">htb</a> <a href="/tags/java/" style="font-size: 12px;">java</a> <a href="/tags/js/" style="font-size: 10px;">js</a> <a href="/tags/misc/" style="font-size: 10px;">misc</a> <a href="/tags/php/" style="font-size: 12px;">php</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/web/" style="font-size: 18px;">web</a> <a href="/tags/wp/" style="font-size: 20px;">wp</a> <a href="/tags/xss/" style="font-size: 10px;">xss</a> <a href="/tags/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F/" style="font-size: 10px;">内网渗透</a> <a href="/tags/%E5%87%BA%E9%A2%98%E7%AC%94%E8%AE%B0/" style="font-size: 10px;">出题笔记</a> <a href="/tags/%E5%9F%9F%E6%B8%97%E9%80%8F/" style="font-size: 12px;">域渗透</a> <a href="/tags/%E5%A4%8D%E7%8E%B0/" style="font-size: 10px;">复现</a> <a href="/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" style="font-size: 10px;">学习笔记</a> <a href="/tags/%E5%B0%8F%E5%B7%A5%E5%85%B7/" style="font-size: 14px;">小工具</a> <a href="/tags/%E5%B7%A5%E5%85%B7/" style="font-size: 10px;">工具</a> <a href="/tags/%E6%9D%82/" style="font-size: 10px;">杂</a> <a href="/tags/%E6%AF%94%E8%B5%9B/" style="font-size: 10px;">比赛</a> <a href="/tags/%E6%B8%97%E9%80%8F/" style="font-size: 10px;">渗透</a> <a href="/tags/%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98/" style="font-size: 12px;">漏洞挖掘</a> <a href="/tags/%E7%BA%BF%E4%B8%8A%E8%B5%9B/" style="font-size: 10px;">线上赛</a> <a href="/tags/%E7%BC%96%E7%A8%8B/" style="font-size: 12px;">编程</a> <a href="/tags/%E8%AE%B0%E5%BD%95/" style="font-size: 10px;">记录</a> <a href="/tags/%E9%9D%B6%E5%9C%BA/" style="font-size: 10px;">靶场</a>
     </div>
   </div>
 
@@ -1283,7 +1283,11 @@
       <ul>
         
           <li>
-            <a href="/2021/11/19/TSGCTF2021/">(no title)</a>
+            <a href="/2021/11/20/TSGCTF2021/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2021/11/19/tp6%E6%96%B0pop%E9%93%BE/">tp6新pop链</a>
           </li>
         
           <li>
@@ -1296,10 +1300,6 @@
         
           <li>
             <a href="/2021/03/01/%E6%88%91%E7%9A%842020/">我的2020</a>
-          </li>
-        
-          <li>
-            <a href="/2021/01/13/real%20world%20ctf%202020/">real world ctf 2020</a>
           </li>
         
       </ul>

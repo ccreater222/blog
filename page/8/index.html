@@ -71,6 +71,75 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-DedeCMS 5.7 plusguestbook.php注入漏洞" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/02/09/DedeCMS%205.7%20plusguestbook.php%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="article-date">
+  <time class="dt-published" datetime="2020-02-09T16:00:00.000Z" itemprop="datePublished">2020-02-10</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/cve%E5%A4%8D%E7%8E%B0/">cve复现</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2020/02/09/DedeCMS%205.7%20plusguestbook.php%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/">DedeCMS 5.7 plusguestbook.php注入漏洞</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="DedeCMS-5-7-plus-guestbook-php-注入漏洞"><a href="#DedeCMS-5-7-plus-guestbook-php-注入漏洞" class="headerlink" title="DedeCMS 5.7 plus/guestbook.php 注入漏洞"></a>DedeCMS 5.7 plus/guestbook.php 注入漏洞</h1><h2 id="利用条件"><a href="#利用条件" class="headerlink" title="利用条件"></a>利用条件</h2><p>漏洞成功需要条件：</p>
+<ol>
+<li>php magic_quotes_gpc=off</li>
+<li>漏洞文件存在 plus/guestbook.php dede_guestbook 表当然也要存在。</li>
+</ol>
+<h2 id="漏洞复现"><a href="#漏洞复现" class="headerlink" title="漏洞复现"></a>漏洞复现</h2><p>poc:<code>www.xxx.com/plus/guestbook.php?action=admin&amp;job=editok&amp;msg=sebug&#39;&amp;id=存在的留言ID</code></p>
+<p><code>/plus/guestbook.php</code>中为对身份进行验证:</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(<span class="variable">$action</span>==<span class="string">&#x27;admin&#x27;</span>)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">include_once</span>(dirname(<span class="keyword">__FILE__</span>).<span class="string">&#x27;/guestbook/edit.inc.php&#x27;</span>);</span><br><span class="line">    <span class="keyword">exit</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>/plus/guestbook/edit.inc.php</code></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(<span class="variable">$job</span>==<span class="string">&#x27;editok&#x27;</span>)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="variable">$remsg</span> = trim(<span class="variable">$remsg</span>);</span><br><span class="line">    <span class="keyword">if</span>(<span class="variable">$remsg</span>!=<span class="string">&#x27;&#x27;</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">//管理员回复不过滤HTML</span></span><br><span class="line">        <span class="keyword">if</span>(<span class="variable">$g_isadmin</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="variable">$msg</span> = <span class="string">&quot;&lt;div class=\\&#x27;rebox\\&#x27;&gt;&quot;</span>.<span class="variable">$msg</span>.<span class="string">&quot;&lt;/div&gt;\n&quot;</span>.<span class="variable">$remsg</span>; </span><br><span class="line">            <span class="comment">//$remsg &lt;br&gt;&lt;font color=red&gt;管理员回复：&lt;/font&gt;</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">        &#123;</span><br><span class="line">            <span class="variable">$row</span> = <span class="variable">$dsql</span>-&gt;GetOne(<span class="string">&quot;SELECT msg From `#@__guestbook` WHERE id=&#x27;<span class="subst">$id</span>&#x27; &quot;</span>);</span><br><span class="line">            <span class="variable">$oldmsg</span> = <span class="string">&quot;&lt;div class=\\&#x27;rebox\\&#x27;&gt;&quot;</span>.addslashes(<span class="variable">$row</span>[<span class="string">&#x27;msg&#x27;</span>]).<span class="string">&quot;&lt;/div&gt;\n&quot;</span>;</span><br><span class="line">            <span class="variable">$remsg</span> = trimMsg(cn_substrR(<span class="variable">$remsg</span>, <span class="number">1024</span>), <span class="number">1</span>);</span><br><span class="line">            <span class="variable">$msg</span> = <span class="variable">$oldmsg</span>.<span class="variable">$remsg</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; </span><br><span class="line">	<span class="variable">$msg</span> = HtmlReplace(<span class="variable">$msg</span>, -<span class="number">1</span>);</span><br><span class="line">    <span class="variable">$dsql</span>-&gt;ExecuteNoneQuery(<span class="string">&quot;UPDATE `#@__guestbook` SET `msg`=&#x27;<span class="subst">$msg</span>&#x27;, `posttime`=&#x27;&quot;</span>.time().<span class="string">&quot;&#x27; WHERE id=&#x27;<span class="subst">$id</span>&#x27; &quot;</span>);</span><br><span class="line">    ShowMsg(<span class="string">&quot;成功更改或回复一条留言！&quot;</span>, <span class="variable">$GUEST_BOOK_POS</span>);</span><br><span class="line">    <span class="keyword">exit</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>其中:</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$msg</span> = HtmlReplace(<span class="variable">$msg</span>, -<span class="number">1</span>);</span><br><span class="line">    <span class="variable">$dsql</span>-&gt;ExecuteNoneQuery(<span class="string">&quot;UPDATE `#@__guestbook` SET `msg`=&#x27;<span class="subst">$msg</span>&#x27;, `posttime`=&#x27;&quot;</span>.time().<span class="string">&quot;&#x27; WHERE id=&#x27;<span class="subst">$id</span>&#x27; &quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<p>dedecms中的<code>common.inc.php</code>,有这样的一段代码</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">foreach</span>(<span class="keyword">Array</span>(<span class="string">&#x27;_GET&#x27;</span>,<span class="string">&#x27;_POST&#x27;</span>,<span class="string">&#x27;_COOKIE&#x27;</span>) <span class="keyword">as</span> <span class="variable">$_request</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">foreach</span>(<span class="variable">$$_request</span> <span class="keyword">as</span> <span class="variable">$_k</span> =&gt; <span class="variable">$_v</span>) </span><br><span class="line">		&#123;</span><br><span class="line">			<span class="keyword">if</span>(<span class="variable">$_k</span> == <span class="string">&#x27;nvarname&#x27;</span>) $&#123;<span class="variable">$_k</span>&#125; = <span class="variable">$_v</span>;</span><br><span class="line">			<span class="keyword">else</span> $&#123;<span class="variable">$_k</span>&#125; = _RunMagicQuotes(<span class="variable">$_v</span>);</span><br><span class="line">		&#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>它将<code>_GET</code>,<code>_POST</code>,<code>_COOKIE</code>中的变量放出来,而<code>_RunMagicQuotes</code></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">_RunMagicQuotes</span>(<span class="params">&amp;<span class="variable">$svar</span></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(!get_magic_quotes_gpc())</span><br><span class="line">    &#123;</span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="variable">$svar</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>所以<code>magic_quotes_gpc=off</code>的情况下便会引起sql注入</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p> <a target="_blank" rel="noopener" href="https://www.seebug.org/vuldb/ssvid-89599">https://www.seebug.org/vuldb/ssvid-89599</a> </p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://site.ccreater.top/2020/02/09/DedeCMS%205.7%20plusguestbook.php%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" data-id="ckw7zp3xt001mftn7erqh8pep" data-title="DedeCMS 5.7 plusguestbook.php注入漏洞" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cve%E5%A4%8D%E7%8E%B0/" rel="tag">cve复现</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-S2-013_S2-014远程代码执行漏洞" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2020/02/07/S2-013_S2-014%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="article-date">
@@ -125,7 +194,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://site.ccreater.top/2020/02/07/S2-013_S2-014%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" data-id="ckw63s4kw001xflolgvhmaqfy" data-title="S2-013_S2-014远程代码执行漏洞" class="article-share-link">Share</a>
+      <a data-url="https://site.ccreater.top/2020/02/07/S2-013_S2-014%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" data-id="ckw7zp3y0001xftn721r4g4dm" data-title="S2-013_S2-014远程代码执行漏洞" class="article-share-link">Share</a>
       
       
       
@@ -190,7 +259,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://site.ccreater.top/2020/02/07/Tomcat%20PUT%E6%96%B9%E6%B3%95%E4%BB%BB%E6%84%8F%E5%86%99%E6%96%87%E4%BB%B6%E6%BC%8F%E6%B4%9ECVE-2017-12615/" data-id="ckw63s4l90030flolerae2zl6" data-title="Tomcat PUT方法任意写文件漏洞CVE-2017-12615" class="article-share-link">Share</a>
+      <a data-url="https://site.ccreater.top/2020/02/07/Tomcat%20PUT%E6%96%B9%E6%B3%95%E4%BB%BB%E6%84%8F%E5%86%99%E6%96%87%E4%BB%B6%E6%BC%8F%E6%B4%9ECVE-2017-12615/" data-id="ckw7zp3yj0030ftn72x3bed71" data-title="Tomcat PUT方法任意写文件漏洞CVE-2017-12615" class="article-share-link">Share</a>
       
       
       
@@ -257,7 +326,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://site.ccreater.top/2020/02/07/phpmyadmin%204.8.1%20rce/" data-id="ckw63s4ma005sflolf86tadwl" data-title="phpmyadmin 4.8.1 rce" class="article-share-link">Share</a>
+      <a data-url="https://site.ccreater.top/2020/02/07/phpmyadmin%204.8.1%20rce/" data-id="ckw7zp3zy005sftn77nxya36j" data-title="phpmyadmin 4.8.1 rce" class="article-share-link">Share</a>
       
       
       
@@ -356,7 +425,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://site.ccreater.top/2020/01/31/ThinkPHP6%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E6%93%8D%E4%BD%9C%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/" data-id="ckw63s4l6002sflolcq7g5n6x" data-title="ThinkPHP6 任意文件操作漏洞分析" class="article-share-link">Share</a>
+      <a data-url="https://site.ccreater.top/2020/01/31/ThinkPHP6%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E6%93%8D%E4%BD%9C%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/" data-id="ckw7zp3yf002sftn71mqk0mr0" data-title="ThinkPHP6 任意文件操作漏洞分析" class="article-share-link">Share</a>
       
       
       
@@ -446,7 +515,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://site.ccreater.top/2020/01/31/ThinkPHP%E6%A1%86%E6%9E%B65.0.x_SQL%E6%B3%A8%E5%85%A5%E5%88%86%E6%9E%90/" data-id="ckw63s4l8002xflold6wq0x9m" data-title="ThinkPHP框架5.0.x_SQL注入分析" class="article-share-link">Share</a>
+      <a data-url="https://site.ccreater.top/2020/01/31/ThinkPHP%E6%A1%86%E6%9E%B65.0.x_SQL%E6%B3%A8%E5%85%A5%E5%88%86%E6%9E%90/" data-id="ckw7zp3yh002xftn70doh0f8o" data-title="ThinkPHP框架5.0.x_SQL注入分析" class="article-share-link">Share</a>
       
       
       
@@ -520,7 +589,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://site.ccreater.top/2020/01/29/ThinkPHP%202.x%E4%BB%BB%E6%84%8F%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" data-id="ckw63s4l3002iflolhluc72ox" data-title="ThinkPHP 2.x任意代码执行漏洞" class="article-share-link">Share</a>
+      <a data-url="https://site.ccreater.top/2020/01/29/ThinkPHP%202.x%E4%BB%BB%E6%84%8F%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" data-id="ckw7zp3yb002iftn71buff1ag" data-title="ThinkPHP 2.x任意代码执行漏洞" class="article-share-link">Share</a>
       
       
       
@@ -641,7 +710,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://site.ccreater.top/2020/01/29/ThinkPHP%205.0.0~5.0.23%20RCE%20%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/" data-id="ckw63s4l4002kflolasaj3qns" data-title="ThinkPHP 5.0.0~5.0.23 RCE 漏洞复现" class="article-share-link">Share</a>
+      <a data-url="https://site.ccreater.top/2020/01/29/ThinkPHP%205.0.0~5.0.23%20RCE%20%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/" data-id="ckw7zp3yc002kftn75dr2b78l" data-title="ThinkPHP 5.0.0~5.0.23 RCE 漏洞复现" class="article-share-link">Share</a>
       
       
       
@@ -718,7 +787,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://site.ccreater.top/2020/01/29/ThinkPHP%205.1.x-5.2.x%E5%85%A8%E7%89%88%E6%9C%ACRCE%20%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/" data-id="ckw63s4l5002pfloledgjergh" data-title="ThinkPHP 5.1.x-5.2.x全版本RCE 漏洞分析" class="article-share-link">Share</a>
+      <a data-url="https://site.ccreater.top/2020/01/29/ThinkPHP%205.1.x-5.2.x%E5%85%A8%E7%89%88%E6%9C%ACRCE%20%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/" data-id="ckw7zp3ye002pftn7302hfj4r" data-title="ThinkPHP 5.1.x-5.2.x全版本RCE 漏洞分析" class="article-share-link">Share</a>
       
       
       
@@ -782,100 +851,11 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://site.ccreater.top/2020/01/29/tp5rce%E5%A4%8D%E7%8E%B0/" data-id="ckw63s4ml006gflol0lveci1r" data-title="tp5rce复现" class="article-share-link">Share</a>
+      <a data-url="https://site.ccreater.top/2020/01/29/tp5rce%E5%A4%8D%E7%8E%B0/" data-id="ckw7zp40c006gftn7f6p5bvcz" data-title="tp5rce复现" class="article-share-link">Share</a>
       
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cve%E5%A4%8D%E7%8E%B0/" rel="tag">cve复现</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-coursera-杜克大学 程序设计与 Web 入门" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2020/01/24/coursera-%E6%9D%9C%E5%85%8B%E5%A4%A7%E5%AD%A6%20%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E4%B8%8E%20Web%20%E5%85%A5%E9%97%A8/" class="article-date">
-  <time class="dt-published" datetime="2020-01-24T16:00:00.000Z" itemprop="datePublished">2020-01-25</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E6%9D%82/">杂</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2020/01/24/coursera-%E6%9D%9C%E5%85%8B%E5%A4%A7%E5%AD%A6%20%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E4%B8%8E%20Web%20%E5%85%A5%E9%97%A8/">coursera-杜克大学 程序设计与 Web 入门</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <h1 id="coursera-杜克大学-程序设计与-Web-入门"><a href="#coursera-杜克大学-程序设计与-Web-入门" class="headerlink" title="coursera-杜克大学 程序设计与 Web 入门"></a>coursera-杜克大学 程序设计与 Web 入门</h1><h2 id="在coursera上学习的感受"><a href="#在coursera上学习的感受" class="headerlink" title="在coursera上学习的感受"></a>在coursera上学习的感受</h2><p>我觉得最大的优点是:教学和练习同时进行,极大的帮助了我快速掌握知识,这是我最喜欢的一点.但是对于中国境内的视频 加载有点难受,不过可以通过修改hosts来改善.</p>
-<p>虽然这种教学方式我很喜欢,但是由于我的课程选择不太适合我自己(太基础了),导致我其实没学到啥,但是我还是硬着头皮看完了(闲得无聊?),选择适合自己的课程真的特别重要</p>
-<h2 id="提问问题的注意事项"><a href="#提问问题的注意事项" class="headerlink" title="提问问题的注意事项"></a>提问问题的注意事项</h2><p><strong>详细</strong>,<strong>清楚</strong>的描述自己遇到的问题,及自己尝试解决问题的结果</p>
-<h2 id="css语法"><a href="#css语法" class="headerlink" title="css语法"></a>css语法</h2><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.classname</span>&#123;</span><br><span class="line">    preperty:value;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-id">#ID</span>&#123;</span><br><span class="line">    preperty:value;</span><br><span class="line">&#125;</span><br><span class="line">tagname &#123;</span><br><span class="line">    preperty:value;</span><br><span class="line">&#125;</span><br><span class="line">;or</span><br><span class="line">tag1 tag2 &#123;</span><br><span class="line">    preperty:value;</span><br><span class="line">&#125;</span><br><span class="line">;这个会修改tag1下的tag2</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="css资料"><a href="#css资料" class="headerlink" title="css资料"></a>css资料</h2><h3 id="文档"><a href="#文档" class="headerlink" title="文档"></a>文档</h3><p> <a target="_blank" rel="noopener" href="https://www.w3schools.com/css/css_border.asp">https://www.w3schools.com/css/css_border.asp</a> </p>
-<h3 id="css-colors"><a href="#css-colors" class="headerlink" title="css colors"></a>css colors</h3><p> <a target="_blank" rel="noopener" href="https://www.w3schools.com/cssref/css_colors.asp">https://www.w3schools.com/cssref/css_colors.asp</a> </p>
-<p> <a target="_blank" rel="noopener" href="https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Colors/Color_picker_tool">https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Colors/Color_picker_tool</a></p>
-<p> <a target="_blank" rel="noopener" href="http://www.w3schools.com/colors/colors_picker.asp">http://www.w3schools.com/colors/colors_picker.asp</a></p>
-<h2 id="用编程解决问题的七步骤"><a href="#用编程解决问题的七步骤" class="headerlink" title="用编程解决问题的七步骤"></a>用编程解决问题的七步骤</h2><ol>
-<li>Work example by hand.<br>清晰的认识要解决的问题,并手动尝试解决</li>
-<li>Write down what you did.<br>写下自己解决问题的过程(只针对这个具体的例子),不要忽略我们理所当然的东西,计算机不会这么想,我们要尽可能的详细,精确的记录我们解决问题的步骤</li>
-<li>Find patterns.<br>将过程抽象成解决这个问题的一般性步骤,注意重复的步骤(变为循环语句),注意判断(变为条件语句)</li>
-<li>Check by hand.<br>用具体的例子来检验抽象的步骤是否能解决问题</li>
-<li>Translate to code. </li>
-<li> Run test cases. </li>
-<li>Debug failed test cases.<br>一般可以把问题分为:步骤问题(如没考虑某些特殊情况)和将步骤转为程序时(如函数用错)的问题</li>
-</ol>
-<h2 id="js"><a href="#js" class="headerlink" title="js"></a>js</h2><h3 id="手册"><a href="#手册" class="headerlink" title="手册"></a>手册</h3><p> <a target="_blank" rel="noopener" href="https://developer.mozilla.org/">https://developer.mozilla.org/</a> </p>
-<p> <a target="_blank" rel="noopener" href="https://www.w3schools.com/">https://www.w3schools.com/</a> </p>
-<h3 id="循环"><a href="#循环" class="headerlink" title="循环"></a>循环</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> img = <span class="keyword">new</span> SimpleImage(<span class="number">200</span>, <span class="number">200</span>);</span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">var</span> pixel <span class="keyword">of</span> img.values())</span><br><span class="line">&#123;<span class="comment">//pixel是img.values()的引用</span></span><br><span class="line">    pixel.setRed(<span class="number">255</span>);</span><br><span class="line">    pixel.setGreen(<span class="number">255</span>);</span><br><span class="line">    pixel.setBlue(<span class="number">0</span>);</span><br><span class="line">&#125;</span><br><span class="line">print(img);</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-<h3 id="canvas操作"><a href="#canvas操作" class="headerlink" title="canvas操作"></a>canvas操作</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> canvas=<span class="built_in">document</span>.getElementById(<span class="string">&quot;show2&quot;</span>);</span><br><span class="line"><span class="keyword">var</span> context = canvas.getContext(<span class="string">&#x27;2d&#x27;</span>);</span><br><span class="line">#init</span><br><span class="line">context.clearRect(<span class="number">0</span>, <span class="number">0</span>, canvas.width, canvas.height);</span><br><span class="line">#clear canvas</span><br><span class="line">context.font = <span class="string">&quot;30px Arial&quot;</span>;</span><br><span class="line">context.fillText(<span class="string">&quot;Hello World&quot;</span>, <span class="number">10</span>, <span class="number">50</span>);</span><br><span class="line">#draw a text</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">context.fillStyle = <span class="string">&quot;red&quot;</span>;</span><br><span class="line">context.fillRect(<span class="number">10</span>, <span class="number">10</span>, <span class="number">150</span>, <span class="number">80</span>);</span><br><span class="line">#draw rectangle</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="变量赋值"><a href="#变量赋值" class="headerlink" title="变量赋值"></a>变量赋值</h3><p>当变量是数字和字符串的时候,会生成一个拷贝,再赋值给目标</p>
-<p>但如果对象是数组和对象时,这会将引用赋值给目标,此时修改新变量也会影响到旧变量</p>
-<h2 id="html标签"><a href="#html标签" class="headerlink" title="html标签"></a>html标签</h2><h3 id="input"><a href="#input" class="headerlink" title="input"></a>input</h3><h4 id="color"><a href="#color" class="headerlink" title="color"></a>color</h4><p><code>&lt;input type=&quot;color&quot; id=&quot;color&quot; value=&quot;pink&quot; onchange=&quot;colorchange()&quot;&gt;</code></p>
-<h4 id="botton"><a href="#botton" class="headerlink" title="botton"></a>botton</h4><p><code>&lt;input type=&quot;button&quot; value=&quot;make pink&quot; onclick=&quot;makepink()&quot;&gt;</code></p>
-<h4 id="range"><a href="#range" class="headerlink" title="range"></a>range</h4><p><code>&lt;input type=&quot;range&quot; min=&quot;10&quot; max=&quot;100&quot; value=&quot;10&quot; id=&quot;slr&quot; oninput=doSquare()&gt;</code></p>
-<h4 id="upload"><a href="#upload" class="headerlink" title="upload"></a>upload</h4><h3 id="事件"><a href="#事件" class="headerlink" title="事件"></a>事件</h3><p>onclick,onchage,oninput</p>
-<h2 id="给自己的建议"><a href="#给自己的建议" class="headerlink" title="给自己的建议"></a>给自己的建议</h2><blockquote>
-<p>合格的程序员不应该浪费很多时间用于程序调试,他们应该一开始就不要把故障引入.</p>
-<p>—-迪杰斯特拉</p>
-</blockquote>
-<h2 id="debug"><a href="#debug" class="headerlink" title="debug"></a>debug</h2><p><img src="https://i.loli.net/2020/01/20/bmQ5AvDenOHlqP7.png" alt="image2319"></p>
-<p>发现bug-&gt;明确目的(了解bug发生的原因及解决方法)-&gt;收集信息-&gt;(多次)提出猜想(where,why)(要具有可测试性)-&gt;验证-&gt;解决</p>
-<h2 id="final-work"><a href="#final-work" class="headerlink" title="final work"></a>final work</h2><p> <a target="_blank" rel="noopener" href="https://codepen.io/explorersss/full/wvBOwmR">https://codepen.io/explorersss/full/wvBOwmR</a> </p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://site.ccreater.top/2020/01/24/coursera-%E6%9D%9C%E5%85%8B%E5%A4%A7%E5%AD%A6%20%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E4%B8%8E%20Web%20%E5%85%A5%E9%97%A8/" data-id="ckw63s4ll0040flol6wmngmyg" data-title="coursera-杜克大学 程序设计与 Web 入门" class="article-share-link">Share</a>
-      
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%BC%96%E7%A8%8B/" rel="tag">编程</a></li></ul>
 
     </footer>
   </div>
@@ -920,7 +900,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/LFI/" style="font-size: 10px;">LFI</a> <a href="/tags/RCE/" style="font-size: 10px;">RCE</a> <a href="/tags/SpEL/" style="font-size: 10px;">SpEL</a> <a href="/tags/ctf/" style="font-size: 20px;">ctf</a> <a href="/tags/ctf-wp/" style="font-size: 12px;">ctf,wp</a> <a href="/tags/cve%E5%A4%8D%E7%8E%B0/" style="font-size: 16px;">cve复现</a> <a href="/tags/django/" style="font-size: 10px;">django</a> <a href="/tags/htb/" style="font-size: 10px;">htb</a> <a href="/tags/java/" style="font-size: 12px;">java</a> <a href="/tags/js/" style="font-size: 10px;">js</a> <a href="/tags/misc/" style="font-size: 10px;">misc</a> <a href="/tags/php/" style="font-size: 12px;">php</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/web/" style="font-size: 18px;">web</a> <a href="/tags/wp/" style="font-size: 20px;">wp</a> <a href="/tags/xss/" style="font-size: 10px;">xss</a> <a href="/tags/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F/" style="font-size: 10px;">内网渗透</a> <a href="/tags/%E5%87%BA%E9%A2%98%E7%AC%94%E8%AE%B0/" style="font-size: 10px;">出题笔记</a> <a href="/tags/%E5%9F%9F%E6%B8%97%E9%80%8F/" style="font-size: 12px;">域渗透</a> <a href="/tags/%E5%A4%8D%E7%8E%B0/" style="font-size: 10px;">复现</a> <a href="/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" style="font-size: 10px;">学习笔记</a> <a href="/tags/%E5%B0%8F%E5%B7%A5%E5%85%B7/" style="font-size: 14px;">小工具</a> <a href="/tags/%E5%B7%A5%E5%85%B7/" style="font-size: 10px;">工具</a> <a href="/tags/%E6%9D%82/" style="font-size: 10px;">杂</a> <a href="/tags/%E6%AF%94%E8%B5%9B/" style="font-size: 10px;">比赛</a> <a href="/tags/%E6%B8%97%E9%80%8F/" style="font-size: 10px;">渗透</a> <a href="/tags/%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98/" style="font-size: 10px;">漏洞挖掘</a> <a href="/tags/%E7%BA%BF%E4%B8%8A%E8%B5%9B/" style="font-size: 10px;">线上赛</a> <a href="/tags/%E7%BC%96%E7%A8%8B/" style="font-size: 12px;">编程</a> <a href="/tags/%E8%AE%B0%E5%BD%95/" style="font-size: 10px;">记录</a> <a href="/tags/%E9%9D%B6%E5%9C%BA/" style="font-size: 10px;">靶场</a>
+      <a href="/tags/LFI/" style="font-size: 10px;">LFI</a> <a href="/tags/RCE/" style="font-size: 10px;">RCE</a> <a href="/tags/SpEL/" style="font-size: 10px;">SpEL</a> <a href="/tags/ctf/" style="font-size: 20px;">ctf</a> <a href="/tags/ctf-wp/" style="font-size: 12px;">ctf,wp</a> <a href="/tags/cve%E5%A4%8D%E7%8E%B0/" style="font-size: 16px;">cve复现</a> <a href="/tags/django/" style="font-size: 10px;">django</a> <a href="/tags/htb/" style="font-size: 10px;">htb</a> <a href="/tags/java/" style="font-size: 12px;">java</a> <a href="/tags/js/" style="font-size: 10px;">js</a> <a href="/tags/misc/" style="font-size: 10px;">misc</a> <a href="/tags/php/" style="font-size: 12px;">php</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/web/" style="font-size: 18px;">web</a> <a href="/tags/wp/" style="font-size: 20px;">wp</a> <a href="/tags/xss/" style="font-size: 10px;">xss</a> <a href="/tags/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F/" style="font-size: 10px;">内网渗透</a> <a href="/tags/%E5%87%BA%E9%A2%98%E7%AC%94%E8%AE%B0/" style="font-size: 10px;">出题笔记</a> <a href="/tags/%E5%9F%9F%E6%B8%97%E9%80%8F/" style="font-size: 12px;">域渗透</a> <a href="/tags/%E5%A4%8D%E7%8E%B0/" style="font-size: 10px;">复现</a> <a href="/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" style="font-size: 10px;">学习笔记</a> <a href="/tags/%E5%B0%8F%E5%B7%A5%E5%85%B7/" style="font-size: 14px;">小工具</a> <a href="/tags/%E5%B7%A5%E5%85%B7/" style="font-size: 10px;">工具</a> <a href="/tags/%E6%9D%82/" style="font-size: 10px;">杂</a> <a href="/tags/%E6%AF%94%E8%B5%9B/" style="font-size: 10px;">比赛</a> <a href="/tags/%E6%B8%97%E9%80%8F/" style="font-size: 10px;">渗透</a> <a href="/tags/%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98/" style="font-size: 12px;">漏洞挖掘</a> <a href="/tags/%E7%BA%BF%E4%B8%8A%E8%B5%9B/" style="font-size: 10px;">线上赛</a> <a href="/tags/%E7%BC%96%E7%A8%8B/" style="font-size: 12px;">编程</a> <a href="/tags/%E8%AE%B0%E5%BD%95/" style="font-size: 10px;">记录</a> <a href="/tags/%E9%9D%B6%E5%9C%BA/" style="font-size: 10px;">靶场</a>
     </div>
   </div>
 
@@ -942,7 +922,11 @@
       <ul>
         
           <li>
-            <a href="/2021/11/19/TSGCTF2021/">(no title)</a>
+            <a href="/2021/11/20/TSGCTF2021/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2021/11/19/tp6%E6%96%B0pop%E9%93%BE/">tp6新pop链</a>
           </li>
         
           <li>
@@ -955,10 +939,6 @@
         
           <li>
             <a href="/2021/03/01/%E6%88%91%E7%9A%842020/">我的2020</a>
-          </li>
-        
-          <li>
-            <a href="/2021/01/13/real%20world%20ctf%202020/">real world ctf 2020</a>
           </li>
         
       </ul>
